@@ -85,7 +85,21 @@ Move it to the `~/.pytanis` folder as `client_secret.json`. Also make sure to se
 
 ## Development
 
-This section is only relevant if you want to contribute to Pytanis itself. Your help is highly appreciated!
+This section is only relevant if you want to contribute to Pytanis itself. Your help is highly appreciated! There are two options for local development.
+
+Whilst both option are valid, the Devcontainer setup is the most convenient, as all dependencies are preconfigured.
+
+### Devcontainer Setup
+
+After having cloned this repository:
+
+1. Make sure to have a local installation of [Docker] and [VS Code] running.
+2. Open [VS Code] and make sure to have the [Dev Containers Extension] from Microsoft installed.
+3. Open the cloned project in [VS Code] and from the bottom right corner confirm to open the project to be opened within the Devcontainer.
+
+If you miss any dependencies check out the `devcontainer.json` within the `.devcontainer` folder. Otherwise, the right python environment with [pipx], [hatch], [pre-commit] and [hatch-pip-compile] as well as the initialization step for the Hatch environments are already included.
+
+### Conventional Setup
 
 After having cloned this repository:
 
@@ -93,8 +107,9 @@ After having cloned this repository:
 2. install [pre-commit] globally, e.g. `pipx install pre-commit`,
 3. \[only once\] run `hatch config set dirs.env.virtual .direnv`  to let [VS Code] find your virtual environments.
 
-and then you are already set up to start hacking. Use `hatch run` to do everything you would normally do in a virtual
-environment, e.g. `hatch run juptyer lab` to start [JupyterLab] in the default environment, `hatch run cov` for unit tests
+
+And then you are already set up to start hacking. Use `hatch run` to do everything you would normally do in a virtual
+environment, e.g. `hatch run jupyter lab` to start [JupyterLab] in the default environment, `hatch run cov` for unit tests
 and coverage (like [tox]) or `hatch run docs:serve` to build & serve the documentation. For code hygiene, execute `hatch run lint:all`
 in order to run [ruff] and [mypy] or `hatch run lint:fix` to automatically fix formatting issues.
 Check out the `[tool.hatch.envs]` sections  in [pyproject.toml](pyproject.toml) to learn about other commands.
@@ -139,3 +154,5 @@ To start this project off a lot of inspiration and code was taken from [Alexande
 [ruff]: https://github.com/astral-sh/ruff
 [VS Code]: https://code.visualstudio.com/
 [LiveChat]: https://www.livechat.com/
+[Docker]: https://www.docker.com/
+[Dev Containers Extension]: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
