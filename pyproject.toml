@@ -241,6 +241,7 @@ cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/py
 no-cov = "cov --no-cov {args}"
 debug =  "cov --no-cov -s --pdb --pdbcls=IPython.core.debugger:Pdb {args}"
 ci = "cov --cov-report lcov {args}"
+notebooks = "jupyter lab --allow-root"
 
 # Docs environment
 [tool.hatch.envs.docs]
