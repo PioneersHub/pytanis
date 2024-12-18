@@ -16,7 +16,7 @@
 			"jupyter.jupyterServerType": "local"
 		}
 	},
-	"postCreateCommand": "apt update && apt install -y pipx && pipx install hatch && pipx install pre-commit && pipx install hatch-pip-compile && hatch config set dirs.env.virtual .direnv",
+	"postCreateCommand": "bash .devcontainer/init.sh",
 	"mounts": [
 		"type=bind,source=${localEnv:HOME}/.ssh,target=/root/.ssh"
 	],
