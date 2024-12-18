@@ -20,7 +20,6 @@ repos:
   rev: 'v0.6.9'  # make sure this is always consistent with hatch configs
   hooks:
     - id: ruff
-      exclude: "notebooks/.*\\.ipynb$"
     - id: ruff-format
       args: [--check, --config, ./pyproject.toml]
 
