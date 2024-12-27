@@ -58,6 +58,11 @@ service_user_authentication = false
 account = "934jcjkdf-39df-9df-93kf-934jfhuuij39fd"
 entity_id = "email@host.com"
 token = "dal:Sx4id934C3Y-X934jldjdfjk"
+
+[Mailgun]
+token = "gguzdgshbdhjsb87239njsa"
+from_address = "PyCon DE & PyData Program Committee <program25@mg.pycon.de>"
+reply_to = "program25@pycon.de"
 ```
 
 where you need to replace the dummy values in the sections `[Pretalx]` and `[HelpDesk]` accordingly. Note that `service_user_authentication` is not required to be set if authentication via a service user is not necessary (see [GSpread using Service Account] for more details).
