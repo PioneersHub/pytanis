@@ -38,6 +38,11 @@ service_user_authentication = false
 account = ""
 entity_id = ""
 token = ""
+
+[Mailgun]
+token = ""
+from_address = ""
+reply_to = ""
 EOF
     echo "File created at $FILE"
 else
