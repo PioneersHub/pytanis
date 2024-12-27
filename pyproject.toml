@@ -141,6 +141,7 @@ target-version = "py310" # ToDo: Modify according to your needs!
 line-length = 120
 preview = true # preview features & checks, use with caution
 include = ["src/**/*.py", "src/**/*.pyi", "tests/**/*.py", "tests/**/*.pyi"]
+exclude = ["notebooks/*.ipynb"]
 
 [tool.ruff.format]
 quote-style = "single" # be more like black

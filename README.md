@@ -99,6 +99,8 @@ After having cloned this repository:
 
 If you miss any dependencies check out the `devcontainer.json` within the `.devcontainer` folder. Otherwise, the right python environment with [pipx], [hatch], [pre-commit] and [hatch-pip-compile] as well as the initialization step for the Hatch environments are already included.
 
+For the use of the `pytanis` libary some credentials and tokens are necessary (see the "Getting Started" section). With the Devcontainer setup the `config.yaml` is already created. Just navigate to `~/.pytanis/config.toml` and update the file with the corresponding tokens.
+
 ### Conventional Setup
 
 After having cloned this repository:
