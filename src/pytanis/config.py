@@ -29,6 +29,14 @@ class HelpDeskCfg(BaseModel):
     token: str | None = None
 
 
+class MailgunCfg(BaseModel):
+    """Configuration related to the Mailgun API"""
+
+    token: str | None = None
+    from_address: str | None = None
+    reply_to: str | None = None
+
+
 class PretalxCfg(BaseModel):
     """Configuration related to the Pretalx API"""
 
@@ -43,6 +51,7 @@ class Config(BaseModel):
     Pretalx: PretalxCfg
     Google: GoogleCfg
     HelpDesk: HelpDeskCfg
+    Mailgun: MailgunCfg
 
     @field_validator('Google')
     @classmethod
