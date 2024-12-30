@@ -9,3 +9,8 @@ token_json = "token.json"
 account = "934jcjkdf-39df-9df-93kf-934jfhuuij39fd"
 entity_id = "email@host.com"
 token = "dal:Sv4id934C3Y-X934jldj(dfjk"
+
+[Mailgun]
+token = "gguzdgshbdhjsb87239njsa"
+from_address = "PyCon DE & PyData Program Committee <program25@mg.pycon.de>"
+reply_to = "program25@pycon.de"
