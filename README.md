@@ -165,4 +165,3 @@ To start this project off a lot of inspiration and code was taken from [Alexande
 [Dev Containers Extension]: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
 [Mailgun]: https://www.mailgun.com/
 [pipx]: https://pipx.pypa.io/
-[]
