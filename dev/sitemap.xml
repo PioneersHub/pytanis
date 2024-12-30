@@ -1,143 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/authors/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/authors/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/changelog/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/changelog/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/contributing/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/contributing/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/license/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/license/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/reference/SUMMARY/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/SUMMARY/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/reference/pytanis/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/reference/pytanis/config/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/config/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/reference/pytanis/google/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/google/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/reference/pytanis/highs/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/highs/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/reference/pytanis/review/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/review/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/reference/pytanis/utils/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/utils/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/reference/pytanis/helpdesk/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/helpdesk/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/reference/pytanis/helpdesk/client/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/helpdesk/client/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/reference/pytanis/helpdesk/mail/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/helpdesk/mail/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/reference/pytanis/helpdesk/types/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/helpdesk/models/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/reference/pytanis/pretalx/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/mailgun/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/reference/pytanis/pretalx/client/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/mailgun/mail/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/reference/pytanis/pretalx/types/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/pretalx/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/reference/pytanis/pretalx/utils/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/pretalx/client/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/tasks/cfp/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/pretalx/models/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/tasks/review/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/pretalx/utils/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/tasks/schedule/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/tasks/cfp/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/tasks/selection/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/tasks/review/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/usage/gsheet/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/tasks/schedule/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/usage/installation/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/tasks/selection/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/usage/mail/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/usage/gsheet/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://florianwilhelm.info/pytanis/dev/usage/pretalx/</loc>
+         <loc>https://pioneershub.github.io/pytanis/dev/usage/installation/</loc>
          <lastmod>2020-02-02</lastmod>
-         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://pioneershub.github.io/pytanis/dev/usage/mail/</loc>
+         <lastmod>2020-02-02</lastmod>
+    </url>
+    <url>
+         <loc>https://pioneershub.github.io/pytanis/dev/usage/pretalx/</loc>
+         <lastmod>2020-02-02</lastmod>
     </url>
 </urlset>
