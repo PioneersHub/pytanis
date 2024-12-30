@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 0.8 (2024-12-30)
+
+- Added support for Mailgun, thanks to Nils Mohr
+- Added new notebook for calculating submission statistics, thanks to Nils Mohr
+- Added devcontainer for easier development, thanks to Nils Mohr
+- Updated all dependencies, added support for Python 3.13
+
 ## Version 0.7.2 (2024-06-18)
 
 - Matplotlib replaced with webcolors, thanks Alexander Hendorf
