@@ -17,7 +17,7 @@ from structlog import get_logger
 from tqdm.auto import tqdm
 
 from pytanis.config import Config, get_cfg
-from pytanis.pretalx.types import Answer, Event, Me, Question, Review, Room, Speaker, Submission, Tag, Talk
+from pytanis.pretalx.models import Answer, Event, Me, Question, Review, Room, Speaker, Submission, Tag, Talk
 from pytanis.utils import rm_keys, throttle
 
 _logger = get_logger()

@@ -14,7 +14,7 @@ from structlog import get_logger
 from tqdm.auto import tqdm
 
 from pytanis.helpdesk.client import HelpDeskClient
-from pytanis.helpdesk.types import Assignment, Id, Message, NewTicket, Requester, Ticket
+from pytanis.helpdesk.models import Assignment, Id, Message, NewTicket, Requester, Ticket
 
 _logger = get_logger()
 
