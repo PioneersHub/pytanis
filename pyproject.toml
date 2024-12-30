@@ -223,8 +223,12 @@ requires = ["hatch-pip-compile"]
 # Default
 [tool.hatch.envs.default]
 type = "pip-compile"
-pip-compile-hashes = false
+python = "3.10"
 features = ["all"]
+pip-compile-installer = "pip"  # or "uv"
+pip-compile-constraint = "default"  # keep locks between default & others consistent
+pip-compile-resolver = "pip-compile" # or "uv"
+pip-compile-hashes = false  # no hashes in lock files
 post-install-commands = ["pre-commit install"]
 dependencies = [
     "coverage[toml]>=6.2",
@@ -243,6 +247,8 @@ no-cov = "cov --no-cov {args}"
 debug =  "cov --no-cov -s --pdb --pdbcls=IPython.core.debugger:Pdb {args}"
 ci = "cov --cov-report lcov {args}"
 notebooks = "jupyter lab --allow-root"
+upgrade-all = "PIP_COMPILE_UPGRADE=1 hatch env run --env {env_name} -- python --version"
+upgrade-pkg = "PIP_COMPILE_UPGRADE_PACKAGE='{args}' hatch env run --env {env_name} -- python --version"
 
 # Docs environment
 [tool.hatch.envs.docs]
