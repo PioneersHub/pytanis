@@ -23,6 +23,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
     "Operating System :: OS Independent",
     "Topic :: Communications :: Email",
@@ -296,8 +297,8 @@ build-check = [
 type = "pip-compile"
 pip-compile-constraint = "default"
 dependencies = [
-    "mypy~=1.7",
-    "ruff~=0.1.14",
+    "mypy~=1.11.2",
+    "ruff~=0.6.9",
 ]
 [tool.hatch.envs.lint.scripts]
 typing = [
