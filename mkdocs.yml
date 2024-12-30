@@ -167,10 +167,4 @@ extra:
     provider: mike
   social:
     - icon: fontawesome/brands/github-alt
-      link: https://github.com/FlorianWilhelm/pytanis
-#    - icon: fontawesome/solid/blog
-#      link: https://....
-#    - icon: fontawesome/brands/twitter
-#      link: https://twitter.com/florianwilhelm
-#    - icon: fontawesome/brands/linkedin
-#      link: https://www.linkedin.com/in/florianwilhelm/
+      link: https://github.com/PioneersHub/pytanis

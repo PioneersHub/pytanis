@@ -3,8 +3,8 @@
 [git]: https://git-scm.com/
 [pre-commit]: https://pre-commit.com/
 [PyPI]: https://pypi.org/
-[repository]: https://github.com/FlorianWilhelm/pytanis
-[issue tracker]: https://github.com/FlorianWilhelm/pytanis/issues
+[repository]: https://github.com/PioneersHub/pytanis
+[issue tracker]: https://github.com/PioneersHub/pytanis/issues
 [mkdocs]: https://www.mkdocs.org/
 [hatch]: https://hatch.pypa.io/
 [virtualenv]: https://virtualenv.pypa.io/en/stable/
@@ -16,7 +16,7 @@
 [Python Quickstart for the Google API]: https://developers.google.com/sheets/api/quickstart/python
 [Pretalx user settings]: https://pretalx.com/orga/me
 [Pretalx API]: https://docs.pretalx.org/api/resources/index.html
-[documentation]: https://florianwilhelm.info/pytanis/
+[documentation]: https://pioneershub.github.io/pytanis/
 [Google Form]: https://www.google.com/forms/about/
 [Google Forms]: https://www.google.com/forms/about/
 [Google Sheet]: https://www.google.com/sheets/about/
@@ -34,4 +34,5 @@
 [mypy]: https://mypy-lang.org/
 [isort]: https://pycqa.github.io/isort/
 [pretalx-public-voting]: https://github.com/pretalx/pretalx-public-voting
-[Pytanis]: https://github.com/FlorianWilhelm/pytanis
+[Pytanis]: https://github.com/PioneersHub/pytanis
+[Mailgun]: https://www.mailgun.com/
