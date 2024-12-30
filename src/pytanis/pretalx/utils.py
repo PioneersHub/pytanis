@@ -4,7 +4,7 @@ from collections.abc import Iterable
 
 import pandas as pd
 
-from pytanis.pretalx.types import Review, Speaker, Submission
+from pytanis.pretalx.models import Review, Speaker, Submission
 
 
 class Col:

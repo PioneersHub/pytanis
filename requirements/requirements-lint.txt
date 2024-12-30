@@ -3,8 +3,8 @@
 #
 # [constraints] requirements.txt (SHA256: 5863c4e74e3c55d6333d788796a7ddaf710abc8e077d964830cf036c13456ef1)
 #
-# - mypy~=1.7
-# - ruff~=0.1.14
+# - mypy~=1.11.2
+# - ruff~=0.6.9
 # - gspread-dataframe
 # - gspread-formatting
 # - gspread<6.0
@@ -216,7 +216,7 @@ mpmath==1.3.0
     # via
     #   -c requirements.txt
     #   sympy
-mypy==1.14.0
+mypy==1.11.2
     # via hatch.envs.lint
 mypy-extensions==1.0.0
     # via mypy
@@ -390,7 +390,7 @@ rsa==4.9
     # via
     #   -c requirements.txt
     #   google-auth
-ruff==0.1.15
+ruff==0.6.9
     # via hatch.envs.lint
 scikit-learn==1.6.0
     # via

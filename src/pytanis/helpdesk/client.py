@@ -14,7 +14,7 @@ from httpx_auth import Basic
 from structlog import get_logger
 
 from pytanis.config import Config, get_cfg
-from pytanis.helpdesk.types import Agent, NewTicket, Team
+from pytanis.helpdesk.models import Agent, NewTicket, Team
 from pytanis.utils import throttle
 
 _logger = get_logger()
