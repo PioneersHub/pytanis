@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/FlorianWilhelm/pytanis/main/docs/assets/images/logo.svg" alt="Pytanis logo" width="500" role="img">
+<img src="https://raw.githubusercontent.com/pioneershub/pytanis/main/docs/assets/images/logo.svg" alt="Pytanis logo" width="500" role="img">
 </div>
 
 Pytanis includes a [Pretalx] client and all the tooling you need for conferences using [Pretalx], from handling the initial call for papers to creating the final program.
@@ -8,9 +8,9 @@ Pytanis includes a [Pretalx] client and all the tooling you need for conferences
 
 |         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 |---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| CI/CD   | [![CI - Test](https://github.com/FlorianWilhelm/pytanis/actions/workflows/run-tests.yml/badge.svg)](https://github.com/FlorianWilhelm/pytanis/actions/workflows/run-tests.yml) [![Coverage](https://img.shields.io/coveralls/github/FlorianWilhelm/pytanis/main.svg?logo=coveralls&label=Coverage)](https://coveralls.io/r/FlorianWilhelm/pytanis) [![CD - Build](https://github.com/FlorianWilhelm/pytanis/actions/workflows/publish-pkg.yml/badge.svg)](https://github.com/FlorianWilhelm/pytanis/actions/workflows/publish-pkg.yml) [![Docs - Build](https://github.com/FlorianWilhelm/pytanis/actions/workflows/build-rel-docs.yml/badge.svg)](https://github.com/FlorianWilhelm/pytanis/actions/workflows/build-rel-docs.yml)                                                                                                            |
+| CI/CD   | [![CI - Test](https://github.com/pioneershub/pytanis/actions/workflows/run-tests.yml/badge.svg)](https://github.com/pioneershub/pytanis/actions/workflows/run-tests.yml) [![Coverage](https://img.shields.io/coveralls/github/pioneershub/pytanis/main.svg?logo=coveralls&label=Coverage)](https://coveralls.io/r/pioneershub/pytanis) [![CD - Build](https://github.com/pioneershub/pytanis/actions/workflows/publish-pkg.yml/badge.svg)](https://github.com/pioneershub/pytanis/actions/workflows/publish-pkg.yml) [![Docs - Build](https://github.com/pioneershub/pytanis/actions/workflows/build-rel-docs.yml/badge.svg)](https://github.com/pioneershub/pytanis/actions/workflows/build-rel-docs.yml)                                                                                                            |
 | Package | [![PyPI - Version](https://img.shields.io/pypi/v/pytanis.svg?logo=pypi&label=PyPI&logoColor=gold)](https://pypi.org/project/pytanis/) [![PyPI - Downloads](https://img.shields.io/pypi/dm/pytanis.svg?color=blue&label=Downloads&logo=pypi&logoColor=gold)](https://pepy.tech/project/pytanis) [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pytanis.svg?logo=python&label=Python&logoColor=gold)](https://pypi.org/project/pytanis/)                                                                                                                                                                                                                                                                                                                                                                                        |
-| Details | [![Hatch project](https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg)](https://github.com/pypa/hatch) [![linting - Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/charliermarsh/ruff) [![types - Mypy](https://img.shields.io/badge/Types-Mypy-blue.svg)](https://github.com/python/mypy) [![License - MIT](https://img.shields.io/badge/License-MIT-9400d3.svg)](https://spdx.org/licenses/) [![GitHub Sponsors](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=ff69b4)](https://github.com/sponsors/FlorianWilhelm) |
+| Details | [![Hatch project](https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg)](https://github.com/pypa/hatch) [![linting - Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/charliermarsh/ruff) [![types - Mypy](https://img.shields.io/badge/Types-Mypy-blue.svg)](https://github.com/python/mypy) [![License - MIT](https://img.shields.io/badge/License-MIT-9400d3.svg)](https://spdx.org/licenses/) [![GitHub Sponsors](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=ff69b4)](https://github.com/sponsors/pioneershub) |
 
 **Trivia**: The name *Pytanis* is a reference to [Prytanis] using the typical *py* prefix of [Python] tools. [Prytanis]
 was the name given  to the leading members of the government of a city (polis) in ancient Greece. Offices that used this
@@ -133,7 +133,7 @@ is highly appreciated.
 [Pytanis] is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
 To start this project off a lot of inspiration and code was taken from [Alexander Hendorf] and [Matthias Hofmann].
 
-[Pytanis]: https://florianwilhelm.info/pytanis/
+[Pytanis]: https://pioneershub.github.io/pytanis/
 [Python]: https://www.python.org/
 [Pretalx]: https://pretalx.com/
 [hatch]: https://hatch.pypa.io/
@@ -143,7 +143,7 @@ To start this project off a lot of inspiration and code was taken from [Alexande
 [Python Quickstart for the Google API]: https://developers.google.com/sheets/api/quickstart/python
 [GSpread using Service Account]: https://docs.gspread.org/en/v5.12.4/oauth2.html#for-bots-using-service-account
 [Pretalx user settings]: https://pretalx.com/orga/me
-[documentation]: https://florianwilhelm.info/pytanis/
+[documentation]: https://pioneershub.github.io/pytanis/
 [Alexander Hendorf]: https://github.com/alanderex
 [Matthias Hofmann]: https://github.com/mj-hofmann
 [Google Forms]: https://www.google.com/forms/about/
