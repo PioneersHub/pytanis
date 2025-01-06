@@ -54,7 +54,7 @@ def read_assignment_as_df(file_path: Path) -> pd.DataFrame:
     return df
 
 
-def save_assignments_as_json(df: pd.DataFrame, file_path: Path | str):
+def save_assignments_as_json(df: pd.DataFrame, file_path: Path | str) -> None:
     """Save the dataframe as proposal assignment JSON file.
 
     We expect `df` to have the columns `Col.email` and `Col.curr_assignments`.
