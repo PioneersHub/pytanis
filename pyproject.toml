@@ -297,8 +297,9 @@ build-check = [
 type = "pip-compile"
 pip-compile-constraint = "default"
 dependencies = [
-    "mypy~=1.11.2",
-    "ruff~=0.6.9",
+    "mypy~=1.15.0",
+    "ruff~=0.9.7",
+    "nbstripout==0.8.1",
 ]
 [tool.hatch.envs.lint.scripts]
 typing = [
@@ -311,11 +312,17 @@ style = [
     "ruff format --check {args:.}",
 ]
 fix = [
+    "nbstripout notebooks/**/*.ipynb",
     "ruff format {args:.}",
     "ruff check --fix {args:.}",
     "style",  # feedback on what is not fixable
 ]
+notebooks = [
+    "echo \"Checking that there are no outputs in Jupyter notebooks...\"",
+    "nbstripout --dry-run notebooks/**/*.ipynb",
+]
 all = [
     "style",
     "typing",
+    "notebooks",
 ]

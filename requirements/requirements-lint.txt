@@ -3,8 +3,9 @@
 #
 # [constraints] requirements.txt (SHA256: 5863c4e74e3c55d6333d788796a7ddaf710abc8e077d964830cf036c13456ef1)
 #
-# - mypy~=1.11.2
-# - ruff~=0.6.9
+# - mypy~=1.15.0
+# - ruff~=0.9.7
+# - nbstripout==0.8.1
 # - gspread-dataframe
 # - gspread-formatting
 # - gspread<6.0
@@ -39,6 +40,11 @@ asttokens==3.0.0
     # via
     #   -c requirements.txt
     #   stack-data
+attrs==24.3.0
+    # via
+    #   -c requirements.txt
+    #   jsonschema
+    #   referencing
 cachetools==5.5.0
     # via
     #   -c requirements.txt
@@ -95,6 +101,10 @@ executing==2.1.0
     # via
     #   -c requirements.txt
     #   stack-data
+fastjsonschema==2.21.1
+    # via
+    #   -c requirements.txt
+    #   nbformat
 flexcache==0.3
     # via
     #   -c requirements.txt
@@ -179,6 +189,14 @@ joblib==1.4.2
     # via
     #   -c requirements.txt
     #   scikit-learn
+jsonschema==4.23.0
+    # via
+    #   -c requirements.txt
+    #   nbformat
+jsonschema-specifications==2024.10.1
+    # via
+    #   -c requirements.txt
+    #   jsonschema
 jupyter-client==8.6.3
     # via
     #   -c requirements.txt
@@ -189,6 +207,7 @@ jupyter-core==5.7.2
     #   -c requirements.txt
     #   ipykernel
     #   jupyter-client
+    #   nbformat
     #   qtconsole
 jupyterlab-widgets==3.0.13
     # via
@@ -216,10 +235,16 @@ mpmath==1.3.0
     # via
     #   -c requirements.txt
     #   sympy
-mypy==1.11.2
+mypy==1.15.0
     # via hatch.envs.lint
 mypy-extensions==1.0.0
     # via mypy
+nbformat==5.10.4
+    # via
+    #   -c requirements.txt
+    #   nbstripout
+nbstripout==0.8.1
+    # via hatch.envs.lint
 nest-asyncio==1.6.0
     # via
     #   -c requirements.txt
@@ -378,6 +403,11 @@ qtpy==2.4.2
     # via
     #   -c requirements.txt
     #   qtconsole
+referencing==0.35.1
+    # via
+    #   -c requirements.txt
+    #   jsonschema
+    #   jsonschema-specifications
 requests==2.32.3
     # via
     #   -c requirements.txt
@@ -386,11 +416,16 @@ requests-oauthlib==2.0.0
     # via
     #   -c requirements.txt
     #   google-auth-oauthlib
+rpds-py==0.22.3
+    # via
+    #   -c requirements.txt
+    #   jsonschema
+    #   referencing
 rsa==4.9
     # via
     #   -c requirements.txt
     #   google-auth
-ruff==0.6.9
+ruff==0.9.7
     # via hatch.envs.lint
 scikit-learn==1.6.0
     # via
@@ -462,6 +497,7 @@ traitlets==5.14.3
     #   jupyter-client
     #   jupyter-core
     #   matplotlib-inline
+    #   nbformat
     #   qtconsole
 typing-extensions==4.12.2
     # via
