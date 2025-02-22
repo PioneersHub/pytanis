@@ -1,0 +1,11 @@
+reviewer_spread_id = "1lvvmuV2XbwCXtEvKzBOb37KW9Bk13L7ksPEqK2StF0c"
+reviewer_work_name = "Form responses 1"
+event_name = "pyconde-pydata-2025"
+team_id="3f68251e-17e9-436f-90c3-c03b06a72472"  # Program
+agent_id="e2fec09b-b068-4422-8e69-89a18f962191"  # Program
+selection_spread_id = "1OOBfiZ7UD4M3DJnicyhzt1d3Aw3F18wlS4zPIIHiw4Q"
+selection_work_name = "all_proposals"
+confirmation_work_name = "confirmed_talks"
+schedule_spread_id = "1__MUA3ZmiUL8VrnDdTDAwD-VPW0uoLsdtrfOybN9Jeg"
+schedule_work_name = "optimized_schedule"
+agenda_work_name = "Agenda" 
