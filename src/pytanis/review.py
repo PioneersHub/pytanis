@@ -59,6 +59,10 @@ def save_assignments_as_json(df: pd.DataFrame, file_path: Path | str) -> None:
 
     We expect `df` to have the columns `Col.email` and `Col.curr_assignments`.
     """
+    if df[Col.email].duplicated().any():
+        non_unique_mails = df[Col.email][df[Col.email].duplicated(keep=False)].unique().tolist()
+        msg = f'Non-unique emails found in the dataframe: {", ".join(non_unique_mails)}'
+        raise ValueError(msg)
     file_path = Path(file_path)
     df = df.loc[:, [Col.email, Col.curr_assignments]]
     json_dct = json.loads(df.set_index(Col.email).to_json())[Col.curr_assignments]

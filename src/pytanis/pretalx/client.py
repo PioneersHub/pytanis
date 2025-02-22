@@ -204,4 +204,4 @@ class PretalxClient:
 def _log_resp(json_resp: list[Any] | dict[Any, Any]):
     """Log everything except of the actual 'results'"""
     if isinstance(json_resp, dict):
-        _logger.debug(f"response: {rm_keys('results', json_resp)}")
+        _logger.debug(f'response: {rm_keys("results", json_resp)}')
