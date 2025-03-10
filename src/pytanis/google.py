@@ -243,6 +243,7 @@ def mark_rows(worksheet, mask: pd.Series, color: ColorType):
     """
     rows = gsheet_rows_for_fmt(mask, worksheet.col_count)
     color_rgb = name_to_rgb(color) if isinstance(color, str) else color[:3]
+    color_rgb = [x / 255 for x in color_rgb]  # convert RGB to 0-1 range
     fmt = cellFormat(backgroundColor=Color(*color_rgb))
     if rows:
         format_cell_ranges(worksheet, [(rng, fmt) for rng in rows])
