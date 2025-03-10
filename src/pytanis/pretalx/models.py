@@ -90,10 +90,10 @@ class Speaker(SubmissionSpeaker):
 
 
 class Slot(BaseModel):
-    start: datetime | None
-    end: datetime | None
-    room: MultiLingualStr | None
-    room_id: int | None
+    start: datetime | None = None
+    end: datetime | None = None
+    room: MultiLingualStr | None = None
+    room_id: int | None = None
 
 
 class Resource(BaseModel):
