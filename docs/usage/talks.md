@@ -49,6 +49,7 @@ The JSON output contains a list of `SimpleTalk` objects with the following struc
 ```json
 [
   {
+    "code": "ABC123",
     "title": "Talk Title",
     "speaker": "Speaker Name 1, Speaker Name 2",
     "organisation": "Company Name",
@@ -66,6 +67,7 @@ The JSON output contains a list of `SimpleTalk` objects with the following struc
 
 The fields are:
 
+- `code`: The unique code of the talk
 - `title`: The title of the talk
 - `speaker`: A comma-separated list of speaker names
 - `organisation`: The company or institute of the speakers (if available)
@@ -85,6 +87,7 @@ You can also create `SimpleTalk` objects directly if needed:
 from pytanis import SimpleTalk
 
 talk = SimpleTalk(
+    code="ABC123",
     title="My Talk",
     speaker="John Doe",
     organisation="Acme Inc.",
