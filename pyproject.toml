@@ -31,6 +31,7 @@ classifiers = [
     "Topic :: Utilities",
 ]
 dependencies = [
+    # Core dependencies only
     "pandas>=2",
     "tomli",
     "pydantic>=2.5",
@@ -38,20 +39,49 @@ dependencies = [
     "httpx-auth",
     "structlog",
     "tqdm",
-    "gspread<6.0",  # newer version breaks worksheet.spreadsheet
-    "gspread-dataframe",
-    "gspread-formatting",
-    "webcolors",
+    "openpyxl>=3.1.5", # For local Excel file support
+    "pandas-stubs==2.2.3.250527",
 ]
 dynamic = ["version"]
 
 [project.optional-dependencies]
-all = [
+# Google Sheets support
+google = [
+    "gspread<6.0", # newer version breaks worksheet.spreadsheet
+    "gspread-dataframe",
+    "gspread-formatting",
+    "webcolors",
+]
+
+# HelpDesk support (no additional deps needed beyond core)
+helpdesk = []
+
+# Mailgun support (uses requests which might already be installed)
+mailgun = [
+    "requests",
+]
+
+# Jupyter and visualization support
+jupyter = [
+    "jupter>=0.1.0",
+    "lab>=8.4",
+    "jupyter>=1.1.1",
     "ipywidgets", # for nicer progress bar in Jupyter lab/notebook
+    "seaborn>=0.13.2",
+]
+
+# Schedule optimization
+optimization = [
+    "pyomo>=6.9.1",
     "pyomo[optional]", # for optimizing the schedule
     "highspy", # for MIP/LP/QP solver in pyomo
+]
+
+# Everything
+all = [
+    # Include all optional groups
+    "pytanis[google,helpdesk,mailgun,jupyter,optimization]",
     "pillow", # for the creation of social cards
-    "seaborn", # for decent plotting
 ]
 
 [project.urls]
@@ -102,6 +132,9 @@ minversion = "6.0"
 addopts = "-ra -q --doctest-glob='*.md'"
 testpaths = [
     "tests",
+]
+markers = [
+    "integration: marks tests as integration tests that require live API access (deselect with '-m \"not integration\"')",
 ]
 
 [tool.coverage.run]
