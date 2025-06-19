@@ -204,3 +204,22 @@ class Tag(BaseModel):
     tag: str
     description: MultiLingualStr
     color: str
+
+
+class SimpleTalk(BaseModel):
+    """Simplified Talk model for generating JSON output
+
+    This model contains only the essential information needed for display purposes.
+    """
+
+    code: str = ''  # talk code
+    title: str
+    speaker: str = ''  # speaker name, multiple speakers separated by comma
+    organisation: str = ''  # company/institute, if multiple but similar use only one
+    track: str = ''  # track
+    domain_level: str = ''  # Expected audience expertise: Domain
+    python_level: str = ''  # Expected audience expertise: Python
+    duration: str = ''  # duration
+    abstract: str = ''  # abstract of the talk
+    description: str = ''  # detailed description
+    prerequisites: str = ''  # prerequisites from question

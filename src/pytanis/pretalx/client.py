@@ -101,8 +101,16 @@ class PretalxClient:
         """Queries an endpoint returning a list of resources"""
         endpoint = f'/api/events/{event_slug}/{resource}/'
         count, results = self._get_many(endpoint, params)
-        t_results = iter(_logger.debug('result', resp=r) or type.model_validate(r) for r in results)
-        return count, t_results
+        results_ = []
+        for result in results:
+            try:
+                validated = type.model_validate(result)
+                results_.append(validated)
+            except Exception as e:
+                # introduced to deal with API changes
+                _logger.error('result', resp=e)
+        # the generator does not have a benefit, the result is loaded already anyway, kept for consistency
+        return count, iter(results_)
 
     def _endpoint_id(
         self,
