@@ -106,7 +106,7 @@ def reviews_as_df(reviews: Iterable[Review]) -> pd.DataFrame:
     return df
 
 
-def _create_simple_talk_from_talk(talk: Talk) -> SimpleTalk:
+def create_simple_talk_from_talk(talk: Talk) -> SimpleTalk:
     """Create a SimpleTalk object with basic information from a Talk object."""
     return SimpleTalk(
         code=talk.code,
@@ -119,7 +119,7 @@ def _create_simple_talk_from_talk(talk: Talk) -> SimpleTalk:
     )
 
 
-def _find_answer_by_pattern(
+def find_answer_by_pattern(
     answers: list[Answer], pattern: str, *, case_sensitive: bool = True, keywords: list[str] | None = None
 ) -> str:
     """Find an answer by matching a pattern or keywords in the question text.
@@ -153,20 +153,20 @@ def _find_answer_by_pattern(
     return ''
 
 
-def _extract_expertise_and_prerequisites(talk: Talk, simple_talk: SimpleTalk) -> None:
+def extract_expertise_and_prerequisites(talk: Talk, simple_talk: SimpleTalk) -> None:
     """Extract expertise levels and prerequisites from talk answers."""
     if not talk.answers:
         return
 
     # Extract domain expertise level
-    domain_expertise = _find_answer_by_pattern(talk.answers, 'Expected audience expertise: Domain')
+    domain_expertise = find_answer_by_pattern(talk.answers, 'Expected audience expertise: Domain')
 
     # Extract Python expertise level
-    python_expertise = _find_answer_by_pattern(talk.answers, 'Expected audience expertise: Python')
+    python_expertise = find_answer_by_pattern(talk.answers, 'Expected audience expertise: Python')
 
     # Extract prerequisites using keywords
-    prerequisites = _find_answer_by_pattern(
-        talk.answers, '', False, ['prerequisite', 'requirement', 'needed', 'necessary']
+    prerequisites = find_answer_by_pattern(
+        talk.answers, '', case_sensitive=False, keywords=['prerequisite', 'requirement', 'needed', 'necessary']
     )
 
     # Set the extracted values
@@ -175,7 +175,7 @@ def _extract_expertise_and_prerequisites(talk: Talk, simple_talk: SimpleTalk) ->
     simple_talk.prerequisites = prerequisites
 
 
-def _extract_organisation(
+def extract_organisation(
     talk: Talk, simple_talk: SimpleTalk, pretalx_client, event_slug: str, speaker_data: dict[str, Speaker]
 ) -> None:
     """Extract organisation information from speaker data."""
@@ -206,7 +206,7 @@ def _extract_organisation(
             speaker_answers = [answer for answer in full_speaker.answers if answer.person is not None]
 
             # Find the organisation using our helper function
-            organisation = _find_answer_by_pattern(speaker_answers, 'Company / Institute')
+            organisation = find_answer_by_pattern(speaker_answers, 'Company / Institute')
             if organisation.strip():
                 organisations.append(organisation.strip())
 
@@ -276,14 +276,14 @@ def talks_to_json(talks: Iterable[Talk], pretalx_client=None, event_slug: str | 
 
     for talk in talks:
         # Create a SimpleTalk object with basic information
-        simple_talk = _create_simple_talk_from_talk(talk)
+        simple_talk = create_simple_talk_from_talk(talk)
 
         # Extract expertise levels and prerequisites
-        _extract_expertise_and_prerequisites(talk, simple_talk)
+        extract_expertise_and_prerequisites(talk, simple_talk)
 
         # Extract organisation information
         if event_slug:
-            _extract_organisation(talk, simple_talk, pretalx_client, event_slug, speaker_data)
+            extract_organisation(talk, simple_talk, pretalx_client, event_slug, speaker_data)
 
         simple_talks.append(simple_talk)
 

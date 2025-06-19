@@ -14,10 +14,10 @@ from pytanis.pretalx.models import (
     Talk,
 )
 from pytanis.pretalx.utils import (
-    _create_simple_talk_from_talk,  # noqa: PLC2701
-    _extract_expertise_and_prerequisites,  # noqa: PLC2701
-    _extract_organisation,  # noqa: PLC2701
-    _find_answer_by_pattern,  # noqa: PLC2701
+    create_simple_talk_from_talk,
+    extract_expertise_and_prerequisites,
+    extract_organisation,
+    find_answer_by_pattern,
     get_talks_as_json,
     save_talks_to_json,
     talks_to_json,
@@ -49,27 +49,27 @@ def test_find_answer_by_pattern():
     ]
 
     # Test exact pattern matching (case sensitive)
-    result = _find_answer_by_pattern(answers, 'Expected audience expertise: Domain')
+    result = find_answer_by_pattern(answers, 'Expected audience expertise: Domain')
     assert result == 'Intermediate'
 
     # Test exact pattern matching (case insensitive)
-    result = _find_answer_by_pattern(answers, 'expected audience expertise: python', case_sensitive=False)
+    result = find_answer_by_pattern(answers, 'expected audience expertise: python', case_sensitive=False)
     assert result == 'Advanced'
 
     # Test keyword matching
-    result = _find_answer_by_pattern(answers, '', False, ['prerequisite'])
+    result = find_answer_by_pattern(answers, '', case_sensitive=False, keywords=['prerequisite'])
     assert result == 'Python 3.6+'
 
     # Test multiple keywords
-    result = _find_answer_by_pattern(answers, '', False, ['requirement', 'prerequisite'])
+    result = find_answer_by_pattern(answers, '', case_sensitive=False, keywords=['requirement', 'prerequisite'])
     assert result == 'Python 3.6+'
 
     # Test no match
-    result = _find_answer_by_pattern(answers, 'Not Found')
+    result = find_answer_by_pattern(answers, 'Not Found')
     assert result == ''
 
     # Test empty answers list
-    result = _find_answer_by_pattern([], 'Any Pattern')
+    result = find_answer_by_pattern([], 'Any Pattern')
     assert result == ''
 
 
@@ -97,7 +97,7 @@ def test_create_simple_talk_from_talk():
         answers=[],
     )
 
-    simple_talk = _create_simple_talk_from_talk(talk)
+    simple_talk = create_simple_talk_from_talk(talk)
 
     assert simple_talk.code == 'ABC123'
     assert simple_talk.title == 'Test Talk'
@@ -149,7 +149,7 @@ def test_extract_expertise_and_prerequisites():
     )
 
     simple_talk = SimpleTalk(title=talk.title)
-    _extract_expertise_and_prerequisites(talk, simple_talk)
+    extract_expertise_and_prerequisites(talk, simple_talk)
 
     assert simple_talk.domain_level == 'Intermediate'
     assert simple_talk.python_level == 'Advanced'
@@ -221,7 +221,7 @@ def test_extract_organisation():
     simple_talk = SimpleTalk(title=talk.title)
     speaker_data = {}
 
-    _extract_organisation(talk, simple_talk, mock_client, 'test-event', speaker_data)
+    extract_organisation(talk, simple_talk, mock_client, 'test-event', speaker_data)
 
     assert simple_talk.organisation == 'Acme Inc.'
     assert len(speaker_data) == 2
@@ -229,7 +229,7 @@ def test_extract_organisation():
     assert speaker_data['S2'] == speaker2
 
 
-@patch('pytanis.pretalx.utils_new.talks_to_json')
+@patch('pytanis.pretalx.utils.talks_to_json')
 def test_get_talks_as_json(mock_talks_to_json):
     """Test get_talks_as_json function"""
     # Set up mock
@@ -249,7 +249,7 @@ def test_get_talks_as_json(mock_talks_to_json):
 
 
 @patch('builtins.open', new_callable=MagicMock)
-@patch('pytanis.pretalx.utils_new.get_talks_as_json')
+@patch('pytanis.pretalx.utils.get_talks_as_json')
 def test_save_talks_to_json(mock_get_talks_as_json, mock_open):
     """Test save_talks_to_json function"""
     # Set up mock
