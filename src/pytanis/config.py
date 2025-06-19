@@ -12,6 +12,18 @@ PYTANIS_ENV: str = 'PYTANIS_CONFIG'
 PYTANIS_CFG_PATH: str = '.pytanis/config.toml'
 """Path within $HOME to the configuration file of Pytanis"""
 
+__all__ = [
+    'CommunicationCfg',
+    'Config',
+    'GoogleCfg',
+    'HelpDeskCfg',
+    'MailgunCfg',
+    'PretalxCfg',
+    'StorageCfg',
+    'get_cfg',
+    'get_cfg_file',
+]
+
 
 class GoogleCfg(BaseModel):
     """Configuration related to the Google API"""
@@ -44,19 +56,43 @@ class PretalxCfg(BaseModel):
     api_version: str = 'v1'
 
 
+class StorageCfg(BaseModel):
+    """Configuration for storage providers"""
+
+    provider: str = 'local'  # 'local', 'google', etc.
+    local_path: Path | None = None  # For local storage
+
+
+class CommunicationCfg(BaseModel):
+    """Configuration for communication providers"""
+
+    email_provider: str | None = None  # 'mailgun', 'smtp', 'helpdesk', etc.
+    ticket_provider: str | None = None  # 'helpdesk', etc.
+
+
 class Config(BaseModel):
     """Main configuration object"""
 
     cfg_path: FilePath
 
+    # Required sections
     Pretalx: PretalxCfg
-    Google: GoogleCfg
-    HelpDesk: HelpDeskCfg
-    Mailgun: MailgunCfg
+
+    # Optional sections
+    Google: GoogleCfg | None = None
+    HelpDesk: HelpDeskCfg | None = None
+    Mailgun: MailgunCfg | None = None
+
+    # New provider-based sections
+    Storage: StorageCfg | None = None
+    Communication: CommunicationCfg | None = None
 
     @field_validator('Google')
     @classmethod
-    def convert_json_path(cls, v: GoogleCfg, info: ValidationInfo) -> GoogleCfg:
+    def convert_json_path(cls, v: GoogleCfg | None, info: ValidationInfo) -> GoogleCfg | None:
+        if v is None:
+            return v
+
         def make_rel_path_abs(entry):
             if entry is not None and not entry.is_absolute():
                 entry = info.data['cfg_path'].parent / entry
@@ -64,6 +100,19 @@ class Config(BaseModel):
 
         v.client_secret_json = make_rel_path_abs(v.client_secret_json)
         v.token_json = make_rel_path_abs(v.token_json)
+
+        return v
+
+    @field_validator('Storage')
+    @classmethod
+    def validate_storage(cls, v: StorageCfg | None, info: ValidationInfo) -> StorageCfg | None:
+        if v is None:
+            # Default to local storage
+            v = StorageCfg(provider='local')
+
+        # Make local_path absolute if provided
+        if v.local_path is not None and not v.local_path.is_absolute():
+            v.local_path = info.data['cfg_path'].parent / v.local_path
 
         return v
 
@@ -80,6 +129,13 @@ def get_cfg() -> Config:
     cfg_path = get_cfg_file()
     with open(cfg_path, 'rb') as fh:
         cfg_dict = tomli.load(fh)
+
     # add config path to later resolve relative paths of config values
     cfg_dict['cfg_path'] = cfg_path
+
+    # Ensure Pretalx section exists (it's required)
+    if 'Pretalx' not in cfg_dict:
+        cfg_dict['Pretalx'] = {}
+
+    # Optional sections will default to None if not present
     return Config.model_validate(cfg_dict)
