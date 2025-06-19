@@ -41,6 +41,7 @@ class PretalxCfg(BaseModel):
     """Configuration related to the Pretalx API"""
 
     api_token: str | None = None
+    api_version: str = 'v1'
 
 
 class Config(BaseModel):

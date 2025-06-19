@@ -59,7 +59,8 @@ class PretalxClient:
         url = URL('https://pretalx.com/').join(endpoint).copy_merge_params(params)
         _logger.info(f'GET: {url}')
         # we set the timeout to 60 seconds as the Pretalx API is quite slow
-        return httpx.get(url, auth=auth, timeout=60.0)
+        headers = {'Pretalx-Version': self._config.Pretalx.api_version}
+        return httpx.get(url, auth=auth, timeout=60.0, headers=headers)
 
     def _get_one(self, endpoint: str, params: QueryParams | None = None) -> JSON:
         """Retrieve a single resource result"""

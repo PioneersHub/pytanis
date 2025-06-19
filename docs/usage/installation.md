@@ -14,6 +14,7 @@ Use your favourite editor to open `config.toml` within the `.pytanis` directory 
 ```toml
 [Pretalx]
 api_token = "932ndsf9uk32nf9sdkn3454532nj32jn"
+api_version = "v1"  # Optional, defaults to "v1" if not specified
 
 [Google]
 client_secret_json = "client_secret.json"

@@ -6,6 +6,7 @@
 - Added new notebook for calculating submission statistics, thanks to Nils Mohr
 - Added devcontainer for easier development, thanks to Nils Mohr
 - Updated all dependencies, added support for Python 3.13
+- Added configurable Pretalx API version support via `api_version` config parameter (defaults to "v1")
 
 ## Version 0.7.2 (2024-06-18)
 
