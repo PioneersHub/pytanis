@@ -27,7 +27,7 @@ The easiest way to run integration tests is using the interactive CLI:
 
 ```bash
 # From the project root
-python run_pretalx_integration_tests.py
+python scripts/run_pretalx_integration_tests.py
 ```
 
 This will:
@@ -50,8 +50,8 @@ You will need:
 
 Press Ctrl+C at any time to cancel.
 
-Enter Pretalx API token (required): ******* 
-Enter event slug [default: pyconde-pydata-2025]: 
+Enter Pretalx API token (required): *******
+Enter event slug [default: pyconde-pydata-2025]:
 Enter Pretalx API version [default: v1]: v2
 
 Configuration:
@@ -70,24 +70,24 @@ For automated testing or CI/CD pipelines, you can provide all parameters via com
 
 ```bash
 # Basic usage with token and event
-python run_pretalx_integration_tests.py \
+python scripts/run_pretalx_integration_tests.py \
     --token YOUR_TOKEN \
     --event pyconde-pydata-2025
 
 # With specific API version
-python run_pretalx_integration_tests.py \
+python scripts/run_pretalx_integration_tests.py \
     --token YOUR_TOKEN \
     --event pyconde-pydata-2025 \
     --api-version v2
 
 # Run specific test only
-python run_pretalx_integration_tests.py \
+python scripts/run_pretalx_integration_tests.py \
     --token YOUR_TOKEN \
     --event EVENT \
     --test test_all_endpoints
 
 # Quiet mode (less verbose)
-python run_pretalx_integration_tests.py \
+python scripts/run_pretalx_integration_tests.py \
     --token YOUR_TOKEN \
     --event EVENT \
     --quiet
@@ -181,7 +181,7 @@ Success rate: 92.0%
 ### Interpreting Results
 
 - **Success Rate**: A success rate of 70% or higher is considered passing. Some endpoints may require special permissions.
-- **Expected Failures**: 
+- **Expected Failures**:
   - 401/403 errors for protected endpoints without proper permissions
   - 404 errors for endpoints that don't exist in your Pretalx instance
 - **Backward Compatibility**: Tests verify that ID references are properly expanded to full objects
@@ -195,7 +195,7 @@ export PRETALX_API_TOKEN="your-token"
 export PRETALX_TEST_EVENT="pyconde-pydata-2025"
 export PRETALX_API_VERSION="v2"
 
-python run_pretalx_integration_tests.py
+python scripts/run_pretalx_integration_tests.py
 ```
 
 ### Using Hatch for Development
@@ -222,7 +222,7 @@ hatch run test-endpoints -k test_all_endpoints
 
 # Enter hatch shell for multiple commands
 hatch shell
-python run_pretalx_integration_tests.py
+python scripts/run_pretalx_integration_tests.py
 ```
 
 ### Direct pytest Usage

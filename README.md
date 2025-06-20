@@ -135,7 +135,7 @@ To run integration tests interactively:
 hatch run integration
 
 # Or directly
-python run_pretalx_integration_tests.py
+python scripts/run_pretalx_integration_tests.py
 ```
 
 This will prompt you for:
@@ -158,7 +158,7 @@ hatch run integration-quick
 hatch run test-endpoints
 
 # Without Hatch
-python run_pretalx_integration_tests.py --token YOUR_TOKEN --event pyconde-pydata-2025 --api-version v2
+python scripts/run_pretalx_integration_tests.py --token YOUR_TOKEN --event pyconde-pydata-2025 --api-version v2
 ```
 
 See [tests/pretalx/README_INTEGRATION.md](tests/pretalx/README_INTEGRATION.md) for more details.

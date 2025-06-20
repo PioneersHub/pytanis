@@ -6,9 +6,11 @@ This directory contains integration tests that validate all Pydantic models agai
 
 The integration tests ensure that:
 1. All Pydantic models correctly parse real API responses
-2. Model relationships are consistent (e.g., speaker references in submissions)
-3. Optional fields are handled properly
-4. Edge cases like empty collections are handled gracefully
+2. The Pretalx API v1 compatibility layer works correctly
+3. Model relationships are consistent (e.g., speaker references in submissions)
+4. Optional fields are handled properly
+5. Edge cases like empty collections are handled gracefully
+6. API expansion parameters work as expected
 
 ## Running the Tests
 
@@ -38,7 +40,7 @@ The easiest way to run integration tests is using the interactive CLI:
 
 ```bash
 # From project root
-python run_pretalx_integration_tests.py
+python scripts/run_pretalx_integration_tests.py
 
 # Or from tests directory
 python tests/pretalx/run_integration_tests.py
@@ -54,32 +56,34 @@ This will:
 
 ```bash
 # Run with token and event
-python run_pretalx_integration_tests.py --token YOUR_TOKEN --event pyconde-pydata-2025
+python scripts/run_pretalx_integration_tests.py --token YOUR_TOKEN --event pyconde-pydata-2025
 
 # Run with specific API version
-python run_pretalx_integration_tests.py --token YOUR_TOKEN --event pyconde-pydata-2025 --api-version v2
+python scripts/run_pretalx_integration_tests.py --token YOUR_TOKEN --event pyconde-pydata-2025 --api-version v2
 
 # Run specific test
-python run_pretalx_integration_tests.py --token YOUR_TOKEN --event EVENT --test test_all_endpoints
+python scripts/run_pretalx_integration_tests.py --token YOUR_TOKEN --event EVENT --test test_all_endpoints
 
 # Show help
-python run_pretalx_integration_tests.py --help
+python scripts/run_pretalx_integration_tests.py --help
 ```
 
 ### Direct pytest Usage
 
-### Run all integration tests
 ```bash
+# Run all integration tests
+pytest tests/pretalx/test_*integration*.py -v
+
+# Run specific integration test files
+pytest tests/pretalx/test_all_endpoints_integration.py -v -s
+pytest tests/pretalx/test_submission_integration.py -v -s
 pytest tests/pretalx/test_integration.py -v
-```
+pytest tests/pretalx/test_integration_with_token.py -v
 
-### Run integration tests with existing tests
-```bash
+# Run integration tests using marker
 pytest -m integration
-```
 
-### Skip integration tests
-```bash
+# Skip integration tests
 pytest -m "not integration"
 ```
 
@@ -100,18 +104,49 @@ PRETALX_API_URL=https://your-instance.com/api pytest -m integration
 
 ## Test Coverage
 
-The integration tests validate the following models:
-- `Me` - User profile (requires authentication)
+The integration tests are split across multiple files:
+
+### test_all_endpoints_integration.py
+Comprehensive endpoint testing with structured logging that validates:
+- All API endpoints systematically
+- Proper redirect handling
+- Authentication validation
+- Response parsing with Pydantic models
+
+### test_submission_integration.py
+Focused testing of the Submission model including:
+- Full expansion of nested objects
+- Edge cases (no speakers, no track, etc.)
+- Performance optimization (no individual API calls)
+- Model serialization/deserialization
+
+### test_integration.py
+General model validation tests for:
 - `Event` - Event details and MultiLingualStr
 - `Submission` - Talk submissions with speakers and answers
+- `Speaker` - Speaker profiles
+- Edge cases like non-existent events
+
+### test_integration_with_token.py
+Tests requiring authentication:
+- `Me` - User profile
+- `Review` - Submission reviews
+- All models with authenticated access
+
+### Models Validated:
+- `Me` - User profile (requires authentication)
+- `Event` - Event details with optional urls field
+- `Submission` - Talk submissions with API v1 compatibility
 - `Talk` - Scheduled talks with slots and resources
-- `Speaker` - Speaker profiles with availabilities
-- `Room` - Conference rooms with availabilities
+- `Speaker` - Speaker profiles with answers
+- `Room` - Conference rooms
 - `Question` - Form questions with options
-- `Answer` - Responses to questions
+- `Answer` - Responses with proper expansion
 - `Tag` - Event tags
 - `Review` - Submission reviews (requires authentication)
 - `SimpleTalk` - Simplified talk representation
+- `SubmissionType` - Submission types (new in v0.9)
+- `Track` - Event tracks (new in v0.9)
 - Supporting models: `Slot`, `Resource`, `URLs`, `Option`, etc.
 
 ## Authentication
