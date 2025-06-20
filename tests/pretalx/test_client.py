@@ -4,7 +4,7 @@ import os
 
 import pytest
 
-from tests.pretalx.test_config import (
+from .test_config import (
     EVENT_DATE_FROM,
     EVENT_SLUG,
     VALID_ROOM_ID,
