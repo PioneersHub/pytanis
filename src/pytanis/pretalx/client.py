@@ -158,6 +158,19 @@ class PretalxClient:
     ) -> tuple[int, Iterator[T]]:
         """Queries an endpoint returning a list of resources"""
         endpoint = f'/api/events/{event_slug}/{resource}/'
+
+        # For submissions, always use full expansion by default unless explicitly overridden
+        if resource == 'submissions':
+            if params is None:
+                params = {'expand': 'answers,speakers,speakers.answers,submission_type,track'}
+            else:
+                # Convert to dict if needed to check and modify
+                params_dict = dict(params) if isinstance(params, QueryParams) else params
+                # Always use full expansion by default unless explicitly overridden
+                if 'expand' not in params_dict:
+                    params_dict['expand'] = 'answers,speakers,speakers.answers,submission_type,track'
+                params = params_dict
+
         count, results = self._get_many(endpoint, params)
 
         # Apply expansion for backward compatibility
@@ -188,6 +201,19 @@ class PretalxClient:
     ) -> T:
         """Query an endpoint returning a single resource"""
         endpoint = f'/api/events/{event_slug}/{resource}/{id}/'
+
+        # For submissions, always use full expansion by default unless explicitly overridden
+        if resource == 'submissions':
+            if params is None:
+                params = {'expand': 'answers,speakers,speakers.answers,submission_type,track'}
+            else:
+                # Convert to dict if needed to check and modify
+                params_dict = dict(params) if isinstance(params, QueryParams) else params
+                # Always use full expansion by default unless explicitly overridden
+                if 'expand' not in params_dict:
+                    params_dict['expand'] = 'answers,speakers,speakers.answers,submission_type,track'
+                params = params_dict
+
         result = self._get_one(endpoint, params)
         _logger.debug('result', resp=result)
 
@@ -332,37 +358,61 @@ class PretalxClient:
                 populate_answers = bool('answers' in submission and submission.get('answers'))
                 self._populate_caches(event_slug, populate_answers=populate_answers)
 
-            # Expand speakers from IDs to SubmissionSpeaker objects
-            if 'speakers' in submission and submission['speakers'] and isinstance(submission['speakers'][0], str):
-                expanded_speakers = []
-                for speaker_code in submission['speakers']:
-                    speaker = self._get_speaker_details(event_slug, speaker_code)
-                    # Convert to SubmissionSpeaker format expected by the model
-                    expanded_speakers.append({'code': speaker['code'], 'name': speaker['name']})
-                submission['speakers'] = expanded_speakers
+            # Expand speakers from IDs to SubmissionSpeaker objects (only if not already expanded)
+            if submission.get('speakers'):
+                first_speaker = submission['speakers'][0]
+                # Check if speakers are IDs (strings) that need expansion
+                if isinstance(first_speaker, str):
+                    expanded_speakers = []
+                    for speaker_code in submission['speakers']:
+                        speaker = self._get_speaker_details(event_slug, speaker_code)
+                        # Convert to SubmissionSpeaker format expected by the model
+                        expanded_speakers.append({'code': speaker['code'], 'name': speaker['name']})
+                    submission['speakers'] = expanded_speakers
+                # If speakers are already objects from API expansion, ensure correct format
+                elif isinstance(first_speaker, dict) and 'code' in first_speaker:
+                    # Already in correct format, just ensure we have the fields we need
+                    submission['speakers'] = [
+                        {'code': s.get('code', ''), 'name': s.get('name', '')}
+                        for s in submission['speakers']
+                    ]
 
-            # Expand submission_type from ID to MultiLingualStr
-            if 'submission_type' in submission and isinstance(submission['submission_type'], int):
-                type_id = submission['submission_type']
-                submission_type = self._get_submission_type(event_slug, type_id)
-                submission['submission_type'] = submission_type.get('name', {})
-                # Add back the submission_type_id field that was removed in new API
-                submission['submission_type_id'] = type_id
+            # Expand submission_type from ID to MultiLingualStr (only if not already expanded)
+            if 'submission_type' in submission:
+                if isinstance(submission['submission_type'], int):
+                    type_id = submission['submission_type']
+                    submission_type = self._get_submission_type(event_slug, type_id)
+                    submission['submission_type'] = submission_type.get('name', {})
+                    # Add back the submission_type_id field that was removed in new API
+                    submission['submission_type_id'] = type_id
+                elif isinstance(submission['submission_type'], dict) and 'name' in submission['submission_type']:
+                    # Already expanded from API, store the full object for now to extract ID
+                    expanded_type = submission['submission_type']
+                    # Extract the name field (MultiLingualStr)
+                    submission['submission_type'] = expanded_type['name']
+                    # Try to extract ID if available
+                    if 'id' in expanded_type:
+                        submission['submission_type_id'] = expanded_type['id']
 
-            # Expand track from ID to MultiLingualStr
-            if 'track' in submission and isinstance(submission['track'], int):
-                track_id = submission['track']
-                track = self._get_track(event_slug, track_id)
-                submission['track'] = track.get('name', {})
+            # Expand track from ID to MultiLingualStr (only if not already expanded)
+            if 'track' in submission:
+                if isinstance(submission['track'], int):
+                    track_id = submission['track']
+                    track = self._get_track(event_slug, track_id)
+                    submission['track'] = track.get('name', {})
+                elif isinstance(submission['track'], dict) and 'name' in submission['track']:
+                    # Already expanded from API, extract the name field (MultiLingualStr)
+                    submission['track'] = submission['track']['name']
 
-            # Expand answers from IDs to Answer objects (only if questions=all was requested)
-            if 'answers' in submission and submission['answers'] and isinstance(submission['answers'][0], int):
-                expanded_answers = []
-                for answer_id in submission['answers']:
-                    answer = self._get_answer_details(event_slug, answer_id)
-                    if answer is not None:  # Skip unauthorized answers
-                        expanded_answers.append(answer)
-                submission['answers'] = expanded_answers if expanded_answers else None
+            # Handle answers - they should already be expanded from the API when expand=answers is used
+            if submission.get('answers') and isinstance(submission['answers'][0], int):
+                # Log warning as this shouldn't happen with our default expand parameter
+                _logger.warning(
+                    'Got answer IDs instead of expanded answers. This suggests expand=answers was not used.'
+                )
+                # Clear answers since we can't reliably fetch them individually
+                submission['answers'] = None
+            # Otherwise answers are already objects from API expansion, keep them as-is
 
             # Add default values for fields that the model expects but API doesn't provide
             if 'is_featured' not in submission:
@@ -392,14 +442,15 @@ class PretalxClient:
     def _expand_speakers(self, event_slug: str, speakers: Iterator[dict]) -> Iterator[dict]:
         """Expand speaker references to full objects for backward compatibility"""
         for speaker in speakers:
-            # Expand answers from IDs to Answer objects
-            if 'answers' in speaker and speaker['answers'] and isinstance(speaker['answers'][0], int):
-                expanded_answers = []
-                for answer_id in speaker['answers']:
-                    answer = self._get_answer_details(event_slug, answer_id)
-                    if answer is not None:  # Skip unauthorized answers
-                        expanded_answers.append(answer)
-                speaker['answers'] = expanded_answers if expanded_answers else None
+            # Handle answers - they should already be expanded when speakers.answers is used
+            if speaker.get('answers') and isinstance(speaker['answers'][0], int):
+                _logger.warning(
+                    'Got speaker answer IDs instead of expanded answers. '
+                    'This suggests expand=speakers.answers was not used.'
+                )
+                # Clear answers since we can't reliably fetch them individually
+                speaker['answers'] = None
+            # Otherwise answers are already objects from API expansion, keep them as-is
 
             # Remove new fields that don't exist in the old model
             for field in ['email', 'timezone', 'locale', 'has_arrived', 'avatar_url']:
@@ -515,7 +566,7 @@ class PretalxClient:
                 _logger.warning(f'Failed to populate track cache: {e}')
 
         # Optionally populate answers cache (requires auth and may be large)
-        if populate_answers and not self._answer_cache:
+        if populate_answers and not self._answer_cache and self._config.Pretalx.api_token:
             _logger.debug('Fetching all answers...')
             try:
                 _, answers = self.answers(event_slug)

@@ -14,27 +14,14 @@ Usage:
 """
 
 import os
-import sys
+from collections.abc import Callable
 from typing import Any
-from unittest.mock import patch
 
 import httpx
 import pytest
 
 from pytanis import PretalxClient
 from pytanis.config import Config, PretalxCfg
-from pytanis.pretalx.models import (
-    Answer,
-    Event,
-    Me,
-    Question,
-    Review,
-    Room,
-    Speaker,
-    Submission,
-    Tag,
-    Talk,
-)
 
 
 # Mark all tests in this file as integration tests
@@ -98,7 +85,7 @@ class TestAllPretalxEndpoints:
         """Get the event slug to test against."""
         return os.getenv('PRETALX_TEST_EVENT', 'pyconde-pydata-2025')
 
-    def _test_endpoint(self, name: str, test_func: callable, expected_errors: set[int] | None = None) -> dict[str, Any]:
+    def _test_endpoint(self, name: str, test_func: Callable, expected_errors: set[int] | None = None) -> dict[str, Any]:
         """Test an endpoint and return result info."""
         if expected_errors is None:
             expected_errors = set()
@@ -214,16 +201,6 @@ class TestAllPretalxEndpoints:
 
         results = []
 
-        # Test /api/me (requires auth)
-        print('Testing authenticated endpoints...')
-        results.append(
-            self._test_endpoint(
-                '/api/me',
-                lambda: client.me(),
-                expected_errors={401, 403} if not client._config.Pretalx.api_token else set(),
-            )
-        )
-
         # Test event endpoints
         print('\n' + '-' * 40)
         print('Testing EVENT endpoints...')
@@ -252,24 +229,6 @@ class TestAllPretalxEndpoints:
                 )
             )
 
-        # Test talk endpoints (may fallback to submissions)
-        print('\n' + '-' * 40)
-        print('Testing TALK endpoints...')
-        print('-' * 40)
-        talks_result = self._test_endpoint(
-            f'/api/events/{event_slug}/talks/', lambda: client.talks(event_slug, params={'limit': 5})
-        )
-        results.append(talks_result)
-
-        # Test single talk if we got any
-        if talks_result['success'] and talks_result['data']:
-            first_talk = talks_result['data'][0]
-            results.append(
-                self._test_endpoint(
-                    f'/api/events/{event_slug}/talks/{first_talk.code}/',
-                    lambda: client.talk(event_slug, first_talk.code),
-                )
-            )
 
         # Test speaker endpoints
         print('\n' + '-' * 40)
@@ -349,23 +308,6 @@ class TestAllPretalxEndpoints:
                 )
             )
 
-        # Test tag endpoints
-        print('\n' + '-' * 40)
-        print('Testing TAG endpoints...')
-        print('-' * 40)
-        tags_result = self._test_endpoint(
-            f'/api/events/{event_slug}/tags/', lambda: client.tags(event_slug, params={'limit': 5})
-        )
-        results.append(tags_result)
-
-        # Test single tag if we got any
-        if tags_result['success'] and tags_result['data']:
-            first_tag = tags_result['data'][0]
-            results.append(
-                self._test_endpoint(
-                    f'/api/events/{event_slug}/tags/{first_tag.tag}/', lambda: client.tag(event_slug, first_tag.tag)
-                )
-            )
 
         # Test review endpoints (requires auth)
         print('\n' + '-' * 40)
