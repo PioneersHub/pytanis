@@ -253,7 +253,7 @@ class TestAllPretalxEndpoints:
             results.append(
                 self._test_endpoint(
                     f'/api/events/{event_slug}/submissions/{first_submission.code}/',
-                    lambda: client.submission(event_slug, first_submission.code, params={'questions': 'all'}),
+                    lambda: client.submission(event_slug, first_submission.code),
                 )
             )
 

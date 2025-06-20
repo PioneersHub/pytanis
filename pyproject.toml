@@ -246,6 +246,19 @@ ban-relative-imports = "all"
 "examples/*" = ["T201"]
 # Tests can use magic values, assertions, and relative imports
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
+# Integration tests often have methods that could be static
+"tests/pretalx/test_integration*.py" = ["PLR6301"]
+# Communication adapters need lazy imports
+"src/pytanis/communication/*.py" = ["PLC0415", "EM101", "EM102"]
+# Storage adapters need lazy imports
+"src/pytanis/storage/*.py" = ["PLC0415", "EM101", "EM102"]
+# Factory module needs lazy imports
+"src/pytanis/factory.py" = ["PLC0415", "EM101", "EM102"]
+# Test scripts can use print
+"tests/pretalx/run_integration_tests.py" = ["T201", "S603", "FBT002", "W293"]
+# Integration tests have special requirements
+"tests/pretalx/test_integration.py" = ["B017", "PLC0415"]
+"tests/pretalx/test_integration_with_token.py" = ["PLC0415"]
 
 #####################
 # Environment Setup #

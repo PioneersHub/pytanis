@@ -1,17 +1,17 @@
 """These tests will only run if you have set up an Pretalx Account"""
 
 import os
-from datetime import date
 
 import pytest
 
-EVENT_SLUG = 'pyconde-pydata-2025'
-
-
-@pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
-def test_me_endpoint(pretalx_client):
-    me = pretalx_client.me()
-    assert me.name == 'Florian Wilhelm'
+from tests.pretalx.test_config import (
+    EVENT_DATE_FROM,
+    EVENT_SLUG,
+    VALID_ROOM_ID,
+    VALID_ROOM_NAME,
+    VALID_SUBMISSION_CODE,
+    VALID_SUBMISSION_TYPE,
+)
 
 
 @pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
@@ -23,7 +23,7 @@ def test_events_endpoint(pretalx_client):
 @pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
 def test_event_endpoint(pretalx_client):
     event = pretalx_client.event(EVENT_SLUG)
-    assert event.date_from == date.fromisoformat('2023-04-17')
+    assert event.date_from == EVENT_DATE_FROM
 
 
 @pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
@@ -34,8 +34,8 @@ def test_submissions_endpoint(pretalx_client):
 
 @pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
 def test_submission_endpoint(pretalx_client):
-    sub = pretalx_client.submission(EVENT_SLUG, 'MD9SLQ')
-    assert sub.submission_type.en == 'Talk'
+    sub = pretalx_client.submission(EVENT_SLUG, VALID_SUBMISSION_CODE)
+    assert sub.submission_type.en == VALID_SUBMISSION_TYPE
 
 
 @pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
@@ -73,8 +73,8 @@ def test_rooms_endpoint(pretalx_client):
 
 @pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
 def test_room_endpoint(pretalx_client):
-    room = pretalx_client.room(EVENT_SLUG, 1882)
-    assert room.name.en == 'B09'
+    room = pretalx_client.room(EVENT_SLUG, VALID_ROOM_ID)
+    assert room.name.en == VALID_ROOM_NAME
 
 
 @pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')

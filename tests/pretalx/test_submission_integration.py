@@ -113,7 +113,7 @@ class TestSubmissionModel:
     @pytest.mark.integration
     def test_submission_field_validation(self, test_client, test_event):  # noqa: PLR6301
         """Test all submission fields are properly validated."""
-        _count, submissions = test_client.submissions(test_event, params={'limit': 5, 'questions': 'all'})
+        _count, submissions = test_client.submissions(test_event, params={'limit': 5})
         submissions_list = list(submissions)
 
         assert len(submissions_list) > 0, 'Need at least one submission for testing'

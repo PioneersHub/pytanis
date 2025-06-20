@@ -10,14 +10,14 @@ __all__ = ['BaseMailClient', 'BaseTicketClient', 'EmailMessage', 'Ticket', 'Tick
 
 # Optional imports for adapters
 try:
-    from pytanis.communication.mailgun_adapter import MailgunAdapter
+    from pytanis.communication.mailgun_adapter import MailgunAdapter  # noqa: F401
 
     __all__.append('MailgunAdapter')
 except ImportError:
     pass  # MailgunAdapter not available
 
 try:
-    from pytanis.communication.helpdesk_adapter import HelpDeskMailAdapter, HelpDeskTicketAdapter
+    from pytanis.communication.helpdesk_adapter import HelpDeskMailAdapter, HelpDeskTicketAdapter  # noqa: F401
 
     __all__.extend(['HelpDeskMailAdapter', 'HelpDeskTicketAdapter'])
 except ImportError:

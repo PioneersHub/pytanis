@@ -57,10 +57,10 @@ class TestPretalxModels:
     """Test all Pretalx Pydantic models with live API data."""
 
     @pytest.mark.integration
-    def test_submission_model(self, integration_client, test_event_slug):  # noqa: PLR6301
+    def test_submission_model(self, integration_client, test_event_slug):
         """Test the Submission model with live data."""
         try:
-            count, submissions = integration_client.submissions(
+            _count, submissions = integration_client.submissions(
                 test_event_slug, params={'state': 'confirmed', 'limit': 5}
             )
             submissions_list = list(submissions)
@@ -105,7 +105,7 @@ class TestPretalxModels:
     def test_speaker_model(self, integration_client, test_event_slug):
         """Test the Speaker model with live data."""
         try:
-            count, speakers = integration_client.speakers(test_event_slug, params={'limit': 5, 'questions': 'all'})
+            _count, speakers = integration_client.speakers(test_event_slug, params={'limit': 5})
             speakers_list = list(speakers)
 
             if not speakers_list:
@@ -157,7 +157,7 @@ class TestPretalxEdgeCases:
         """Test handling of empty collections."""
         try:
             # Try to get submissions with a filter that likely returns nothing
-            count, submissions = integration_client.submissions(
+            _count, submissions = integration_client.submissions(
                 test_event_slug, params={'state': 'deleted', 'limit': 1}
             )
 

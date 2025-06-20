@@ -211,6 +211,15 @@ class QuestionRequirement(Enum):
 
 
 class Question(BaseModel):
+    """
+    Pretalx introduced breaking API changes in 06/2025 with API "v1":
+    The attributes are not actively used, we fall back to defaults for now
+    - required is missing now: is extrapolated from question_required
+    - contains_personal_data: is missing although documented, defaults to False now
+    - is_public: is missing although documented, defaults to False now
+    - is_visible_to_reviewers: is missing although documented, defaults to False now
+    """
+
     id: int
     variant: str
     target: str
@@ -218,16 +227,25 @@ class Question(BaseModel):
     help_text: MultiLingualStr
     question_required: QuestionRequirement
     deadline: datetime | None = None
-    required: bool
+    required: bool = False  # default value since API v1
     read_only: bool | None = None
     freeze_after: datetime | None = None
     options: list[Option]
     default_answer: str | None = None
-    contains_personal_data: bool
+    contains_personal_data: bool = False  # default value since API v1
     min_length: int | None = None
     max_length: int | None = None
-    is_public: bool
-    is_visible_to_reviewers: bool
+    is_public: bool = False  # default value since API v1
+    is_visible_to_reviewers: bool = False  # default value since API v1
+
+    @model_validator(mode='after')
+    @classmethod
+    def is_required(cls, model):
+        if model.question_required and model.question_required != QuestionRequirement.optional:
+            model.required = False
+        else:
+            model.required = True
+        return model
 
 
 class Tag(BaseModel):

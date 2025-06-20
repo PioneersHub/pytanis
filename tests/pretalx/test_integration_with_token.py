@@ -82,9 +82,7 @@ class TestAllPretalxModels:
     @pytest.mark.integration
     def test_submission_models(self, client, event_slug):
         """Test Submission and related models."""
-        count, submissions = client.submissions(
-            event_slug, params={'state': 'confirmed', 'limit': 2, 'questions': 'all'}
-        )
+        _count, submissions = client.submissions(event_slug, params={'state': 'confirmed', 'limit': 2})
 
         for submission in submissions:
             assert isinstance(submission, Submission)
@@ -104,7 +102,7 @@ class TestAllPretalxModels:
     @pytest.mark.integration
     def test_talk_models(self, client, event_slug):
         """Test Talk and related models."""
-        count, talks = client.talks(event_slug, params={'limit': 2})
+        _count, talks = client.talks(event_slug, params={'limit': 2})
 
         for talk in talks:
             assert isinstance(talk, Talk)
@@ -123,7 +121,7 @@ class TestAllPretalxModels:
     @pytest.mark.integration
     def test_speaker_models(self, client, event_slug):
         """Test Speaker and SpeakerAvailability models."""
-        count, speakers = client.speakers(event_slug, params={'limit': 2, 'questions': 'all'})
+        _count, speakers = client.speakers(event_slug, params={'limit': 2})
 
         for speaker in speakers:
             assert isinstance(speaker, Speaker)
@@ -138,7 +136,7 @@ class TestAllPretalxModels:
     @pytest.mark.integration
     def test_room_models(self, client, event_slug):
         """Test Room and RoomAvailability models."""
-        count, rooms = client.rooms(event_slug)
+        _count, rooms = client.rooms(event_slug)
 
         for room in rooms:
             assert isinstance(room, Room)
@@ -154,7 +152,7 @@ class TestAllPretalxModels:
     @pytest.mark.integration
     def test_question_models(self, client, event_slug):
         """Test Question and Option models."""
-        count, questions = client.questions(event_slug)
+        _count, questions = client.questions(event_slug)
 
         for question in questions:
             assert isinstance(question, Question)
@@ -170,7 +168,7 @@ class TestAllPretalxModels:
     @pytest.mark.integration
     def test_tag_model(self, client, event_slug):
         """Test Tag model."""
-        count, tags = client.tags(event_slug)
+        _count, tags = client.tags(event_slug)
 
         for tag in tags:
             assert isinstance(tag, Tag)
@@ -180,7 +178,7 @@ class TestAllPretalxModels:
     def test_review_models(self, client, event_slug):
         """Test Review and User models."""
         try:
-            count, reviews = client.reviews(event_slug, params={'limit': 2})
+            _count, reviews = client.reviews(event_slug, params={'limit': 2})
 
             for review in reviews:
                 assert isinstance(review, Review)
@@ -198,7 +196,7 @@ class TestAllPretalxModels:
     @pytest.mark.integration
     def test_answer_model(self, client, event_slug):
         """Test Answer model in detail."""
-        count, answers = client.answers(event_slug, params={'limit': 2})
+        _count, answers = client.answers(event_slug, params={'limit': 2})
 
         for answer in answers:
             assert isinstance(answer, Answer)
@@ -212,7 +210,7 @@ class TestModelRelationships:
     @pytest.mark.integration
     def test_submission_speaker_consistency(self, client, event_slug):
         """Test that submission speakers match speaker endpoint data."""
-        count, submissions = client.submissions(event_slug, params={'state': 'confirmed', 'limit': 1})
+        _count, submissions = client.submissions(event_slug, params={'state': 'confirmed', 'limit': 1})
 
         submission = next(submissions, None)
         if submission and submission.speakers:
@@ -225,11 +223,11 @@ class TestModelRelationships:
     def test_slot_room_consistency(self, client, event_slug):
         """Test that talk slots reference valid rooms."""
         # Get rooms
-        count, rooms = client.rooms(event_slug)
+        _count, rooms = client.rooms(event_slug)
         room_ids = {room.id for room in rooms}
 
         # Get talks with slots
-        count, talks = client.talks(event_slug, params={'limit': 5})
+        _count, talks = client.talks(event_slug, params={'limit': 5})
 
         for talk in talks:
             if talk.slot and talk.slot.room:

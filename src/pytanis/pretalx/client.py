@@ -157,15 +157,21 @@ class PretalxClient:
         # For submissions, always use full expansion by default unless explicitly overridden
         params_ = dict(params) if isinstance(params, QueryParams | dict) else {}
 
-        if params is None or 'expand' not in params:
+        expanders = {
+            'submissions': (
+                'answers,answers.question,answers.options,resources,slots,slots.room,'
+                'speakers,speakers.answers,speakers.answers.options,submission_type,tags,track'
+            ),
+            'speakers': 'answers,answers.question,answers.question',
+            # speakers: for consistency to before API v1 we do not expand 'submissions' as well
+            'questions': 'options,submission_types,tracks',
+            'question-options': 'question,question.submission_types,question.tracks',
+            'answers': 'options,question,question.submission_types,question.tracks',
+            'teams': 'invites,limit_tracks,members',
+        }
+        if (params is None or 'expand' not in params) and resource in expanders:
             # Always use full expansion by default unless explicitly overridden by providing params
-            if resource == 'submissions':
-                params_['expand'] = (
-                    'answers,answers.question,answers.options,resources,slots,slots.room,speakers,speakers.answers,speakers.answers.options,submission_type,tags,track'
-                )
-            elif resource == 'speakers':
-                # for consistency to before API v1 we do not expand 'submissions' as well
-                params_['expand'] = 'answers,answers.question,answers.question'
+            params_['expand'] = expanders[resource]
         params = QueryParams(params_)
         return params
 
@@ -184,12 +190,9 @@ class PretalxClient:
 
         results_ = []
         for result in results:
-            try:
-                validated = type.model_validate(result)
-                results_.append(validated)
-            except Exception as e:
-                # introduced to deal with API changes
-                _logger.error('result', resp=e)
+            validate = self.__validate(type, result)
+            if validate:
+                results_.append(validate)
         # the generator does not have a benefit, the result is loaded already anyway, kept for consistency
         return count, iter(results_)
 
@@ -208,19 +211,19 @@ class PretalxClient:
         result = self._get_one(endpoint, params)
         _logger.debug('result', resp=result)
 
-        return type.model_validate(result)
+        return self.__validate(type, result)
 
     def me(self) -> Me:
         """Returns what Pretalx knows about myself"""
         result = self._get_one('/api/me/')
-        return Me.model_validate(result)
+        return self.__validate(Me, result)
 
     def event(self, event_slug: str, *, params: QueryParams | None = None) -> Event:
         """Returns detailed information about a specific event"""
         endpoint = f'/api/events/{event_slug}/'
         result = self._get_one(endpoint, params)
         _logger.debug('result', resp=result)
-        return Event.model_validate(result)
+        return self.__validate(Event, result)
 
     def events(self, *, params: QueryParams | None = None) -> tuple[int, Iterator[Event]]:
         """Lists all events and their details"""
@@ -323,6 +326,15 @@ class PretalxClient:
     def tracks(self, event_slug: str, *, params: QueryParams | None = None) -> tuple[int, Iterator[Track]]:
         """Lists all tracks and their details"""
         return self._endpoint_lst(Track, event_slug, 'tracks', params=params)
+
+    @classmethod
+    def __validate(cls, model_type, result):
+        try:
+            validated = model_type.model_validate(result)
+            return validated
+        except Exception as e:
+            # introduced to deal with API changes
+            _logger.error('result', resp=e)
 
 
 def _log_resp(json_resp: list[Any] | dict[Any, Any]):

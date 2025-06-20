@@ -24,8 +24,8 @@ class MailgunAdapter(BaseMailClient):
         """
         # Lazy import to avoid dependency issues
         try:
-            from pytanis.config import get_cfg  # noqa: PLC0415
-            from pytanis.mailgun.mail import MailClient  # noqa: PLC0415
+            from pytanis.config import get_cfg
+            from pytanis.mailgun.mail import MailClient
         except ImportError as e:
             msg = 'Mailgun dependencies not installed. Install with: pip install pytanis[mailgun]'
             raise ImportError(msg) from e
@@ -39,7 +39,7 @@ class MailgunAdapter(BaseMailClient):
         """Send an email message using Mailgun"""
         try:
             # Convert to Mailgun format
-            from pytanis.mailgun.mail import Mail, Recipient  # noqa: PLC0415
+            from pytanis.mailgun.mail import Mail, Recipient
 
             # Extract recipients
             if not message.to:

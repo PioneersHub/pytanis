@@ -28,7 +28,7 @@ class GoogleSheetsStorageClient(BaseSpreadsheetClient):
         """
         # Lazy import to avoid dependency issues
         try:
-            from pytanis.google import GSheetsClient  # noqa: PLC0415
+            from pytanis.google import GSheetsClient
         except ImportError as e:
             raise ImportError(
                 'Google Sheets dependencies not installed. Install with: pip install pytanis[google]'
