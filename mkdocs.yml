@@ -25,6 +25,11 @@ nav:
         - 'Proposal Review': tasks/review.md
         - 'Talk Selection': tasks/selection.md
         - 'Scheduling': tasks/schedule.md
+    - Releases:
+        - 'Overview': releases/index.md
+        - 'v0.9.0rc': releases/v0.9.0rc.md
+        - 'v0.9.0alpha': releases/v0.9.0alpha.md
+        - 'Migration Guide': releases/migration_summary.md
     - Changelog: changelog.md
     - License: license.md
     - Authors: authors.md
