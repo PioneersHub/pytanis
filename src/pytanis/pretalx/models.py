@@ -37,13 +37,19 @@ class URLs(BaseModel):
 
 
 class Event(BaseModel):
+    """Event model for Pretalx API.
+
+    Note: The 'urls' field was present in older API versions but is no longer
+    provided by the API as of v1/v2. It's kept as optional for backward compatibility.
+    """
+
     name: MultiLingualStr
     slug: str
     is_public: bool
     date_from: date
     date_to: date | None = None
     timezone: str
-    urls: URLs
+    urls: URLs | None = None  # Made optional - not provided in new API
 
 
 class SpeakerAvailability(BaseModel):
@@ -223,3 +229,20 @@ class SimpleTalk(BaseModel):
     abstract: str = ''  # abstract of the talk
     description: str = ''  # detailed description
     prerequisites: str = ''  # prerequisites from question
+
+
+class SubmissionType(BaseModel):
+    """Submission type model for internal use in caching"""
+
+    id: int
+    name: MultiLingualStr
+    default_duration: int | None = None
+
+
+class Track(BaseModel):
+    """Track model for internal use in caching"""
+
+    id: int
+    name: MultiLingualStr
+    description: MultiLingualStr | None = None
+    color: str | None = None

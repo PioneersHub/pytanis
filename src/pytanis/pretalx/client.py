@@ -17,7 +17,20 @@ from structlog import get_logger
 from tqdm.auto import tqdm
 
 from pytanis.config import Config, get_cfg
-from pytanis.pretalx.models import Answer, Event, Me, Question, Review, Room, Speaker, Submission, Tag, Talk
+from pytanis.pretalx.models import (
+    Answer,
+    Event,
+    Me,
+    Question,
+    Review,
+    Room,
+    Speaker,
+    Submission,
+    SubmissionType,
+    Tag,
+    Talk,
+    Track,
+)
 from pytanis.utils import rm_keys, throttle
 
 _logger = get_logger()
@@ -48,17 +61,46 @@ class PretalxClient:
         self.blocking = blocking
         self.set_throttling(calls=2, seconds=1)  # we are nice by default and Pretalx doesn't allow many calls at once.
 
-        # Caches for expanded objects
+        # Caches for expanded objects (session-only, not persisted)
         self._speaker_cache: dict[str, dict] = {}
         self._submission_type_cache: dict[int, dict] = {}
         self._track_cache: dict[int, dict] = {}
         self._answer_cache: dict[int, dict | None] = {}
         self._question_cache: dict[int, dict] = {}
+        self._caches_populated: dict[str, bool] = {}  # Track which event caches are populated
+        self._use_cache_prepopulation: bool = True  # Enable cache pre-population by default
 
     def set_throttling(self, calls: int, seconds: int):
         """Throttle the number of calls per seconds to the Pretalx API"""
         _logger.info('throttling', calls=calls, seconds=seconds)
         self._get_throttled = throttle(calls, seconds)(self._get)
+
+    def set_cache_prepopulation(self, enabled: bool) -> None:  # noqa: FBT001
+        """Enable or disable automatic cache pre-population for submissions.
+
+        When enabled (default), the client will fetch all speakers, submission types,
+        and tracks in bulk on the first submission to minimize API calls.
+        Disable this if you're only fetching a few submissions.
+
+        Args:
+            enabled: Whether to enable cache pre-population
+        """
+        self._use_cache_prepopulation = enabled
+        _logger.info(f'Cache pre-population {"enabled" if enabled else "disabled"}')
+
+    def clear_caches(self) -> None:
+        """Clear all session caches.
+
+        This is useful if you want to force fresh data to be fetched from the API.
+        Note that caches are session-only and are not persisted between client instances.
+        """
+        self._speaker_cache.clear()
+        self._submission_type_cache.clear()
+        self._track_cache.clear()
+        self._answer_cache.clear()
+        self._question_cache.clear()
+        self._caches_populated.clear()
+        _logger.info('All caches cleared')
 
     def _get(self, endpoint: str, params: QueryParams | None = None) -> Response:
         """Retrieve data via GET request"""
@@ -151,11 +193,11 @@ class PretalxClient:
 
         # Apply expansion for backward compatibility on single objects
         if resource == 'submissions' and isinstance(result, dict):
-            expanded = list(self._expand_submissions(event_slug, [result]))
+            expanded = list(self._expand_submissions(event_slug, iter([result])))
             if expanded:
                 result = expanded[0]
         elif resource == 'speakers' and isinstance(result, dict):
-            expanded = list(self._expand_speakers(event_slug, [result]))
+            expanded = list(self._expand_speakers(event_slug, iter([result])))
             if expanded:
                 result = expanded[0]
 
@@ -257,21 +299,46 @@ class PretalxClient:
         """Lists all tags and their details"""
         return self._endpoint_lst(Tag, event_slug, 'tags', params=params)
 
+    def submission_type(self, event_slug: str, id: int, *, params: QueryParams | None = None) -> SubmissionType:  # noqa: A002
+        """Returns a specific submission type"""
+        return self._endpoint_id(SubmissionType, event_slug, 'submission-types', id, params=params)
+
+    def submission_types(
+        self, event_slug: str, *, params: QueryParams | None = None
+    ) -> tuple[int, Iterator[SubmissionType]]:
+        """Lists all submission types and their details"""
+        return self._endpoint_lst(SubmissionType, event_slug, 'submission-types', params=params)
+
+    def track(self, event_slug: str, id: int, *, params: QueryParams | None = None) -> Track:  # noqa: A002
+        """Returns a specific track"""
+        return self._endpoint_id(Track, event_slug, 'tracks', id, params=params)
+
+    def tracks(self, event_slug: str, *, params: QueryParams | None = None) -> tuple[int, Iterator[Track]]:
+        """Lists all tracks and their details"""
+        return self._endpoint_lst(Track, event_slug, 'tracks', params=params)
+
     # Helper methods for backward compatibility expansion
 
     def _expand_submissions(self, event_slug: str, submissions: Iterator[dict]) -> Iterator[dict]:
         """Expand submission references to full objects for backward compatibility"""
+        # Track if we've checked for cache population
+        checked_cache = False
+
         for submission in submissions:
+            # Pre-populate caches on first submission if not already done
+            if self._use_cache_prepopulation and not checked_cache and event_slug not in self._caches_populated:
+                checked_cache = True
+                # Check if we need to populate answers (if questions=all was used)
+                populate_answers = bool('answers' in submission and submission.get('answers'))
+                self._populate_caches(event_slug, populate_answers=populate_answers)
+
             # Expand speakers from IDs to SubmissionSpeaker objects
             if 'speakers' in submission and submission['speakers'] and isinstance(submission['speakers'][0], str):
                 expanded_speakers = []
                 for speaker_code in submission['speakers']:
                     speaker = self._get_speaker_details(event_slug, speaker_code)
                     # Convert to SubmissionSpeaker format expected by the model
-                    expanded_speakers.append({
-                        'code': speaker['code'],
-                        'name': speaker['name']
-                    })
+                    expanded_speakers.append({'code': speaker['code'], 'name': speaker['name']})
                 submission['speakers'] = expanded_speakers
 
             # Expand submission_type from ID to MultiLingualStr
@@ -307,9 +374,17 @@ class PretalxClient:
                 submission['resources'] = []
 
             # Remove new fields that don't exist in the old model
-            for field in ['reviews', 'assigned_reviewers', 'median_score', 'mean_score',
-                         'is_anonymised', 'anonymised_data', 'invitation_token',
-                         'access_code', 'review_code']:
+            for field in [
+                'reviews',
+                'assigned_reviewers',
+                'median_score',
+                'mean_score',
+                'is_anonymised',
+                'anonymised_data',
+                'invitation_token',
+                'access_code',
+                'review_code',
+            ]:
                 submission.pop(field, None)
 
             yield submission
@@ -371,7 +446,7 @@ class PretalxClient:
                 answer = cast(dict, self._get_one(endpoint))
 
                 # Also expand the question reference if needed
-                if 'question' in answer and isinstance(answer['question'], int):
+                if answer and 'question' in answer and isinstance(answer['question'], int):
                     question_id = answer['question']
                     if question_id not in self._question_cache:
                         q_endpoint = f'/api/events/{event_slug}/questions/{question_id}/'
@@ -379,10 +454,7 @@ class PretalxClient:
 
                     question = self._question_cache[question_id]
                     # Format as AnswerQuestionRef expects
-                    answer['question'] = {
-                        'id': question_id,
-                        'question': question.get('question', {})
-                    }
+                    answer['question'] = {'id': question_id, 'question': question.get('question', {})}
 
                 self._answer_cache[answer_id] = answer
             except httpx.HTTPStatusError as e:
@@ -392,6 +464,75 @@ class PretalxClient:
                 else:
                     raise
         return self._answer_cache[answer_id]
+
+    def _populate_caches(self, event_slug: str, populate_answers: bool = False) -> None:  # noqa: FBT001, FBT002
+        """Pre-populate all caches for the given event to minimize API calls.
+
+        This method fetches all speakers, submission types, and tracks in bulk
+        and stores them in the session caches. This dramatically reduces the
+        number of API calls when expanding multiple submissions.
+
+        Args:
+            event_slug: The event to populate caches for
+            populate_answers: Whether to also populate answer cache (requires auth)
+        """
+        _logger.info(f'Pre-populating caches for event {event_slug}')
+
+        # Populate speakers cache
+        if not self._speaker_cache:
+            _logger.debug('Fetching all speakers...')
+            try:
+                _, speakers = self.speakers(event_slug)
+                for speaker in speakers:
+                    speaker_dict = speaker.model_dump()
+                    self._speaker_cache[speaker_dict['code']] = speaker_dict
+                _logger.info(f'Cached {len(self._speaker_cache)} speakers')
+            except Exception as e:
+                _logger.warning(f'Failed to populate speaker cache: {e}')
+
+        # Populate submission types cache
+        if not self._submission_type_cache:
+            _logger.debug('Fetching all submission types...')
+            try:
+                _, submission_types = self.submission_types(event_slug)
+                for sub_type in submission_types:
+                    type_dict = sub_type.model_dump()
+                    self._submission_type_cache[type_dict['id']] = type_dict
+                _logger.info(f'Cached {len(self._submission_type_cache)} submission types')
+            except Exception as e:
+                _logger.warning(f'Failed to populate submission type cache: {e}')
+
+        # Populate tracks cache
+        if not self._track_cache:
+            _logger.debug('Fetching all tracks...')
+            try:
+                _, tracks = self.tracks(event_slug)
+                for track in tracks:
+                    track_dict = track.model_dump()
+                    self._track_cache[track_dict['id']] = track_dict
+                _logger.info(f'Cached {len(self._track_cache)} tracks')
+            except Exception as e:
+                _logger.warning(f'Failed to populate track cache: {e}')
+
+        # Optionally populate answers cache (requires auth and may be large)
+        if populate_answers and not self._answer_cache:
+            _logger.debug('Fetching all answers...')
+            try:
+                _, answers = self.answers(event_slug)
+                for answer in answers:
+                    answer_dict = answer.model_dump()
+                    self._answer_cache[answer_dict['id']] = answer_dict
+                _logger.info(f'Cached {len(self._answer_cache)} answers')
+            except httpx.HTTPStatusError as e:
+                if e.response.status_code in {HTTP_UNAUTHORIZED, HTTP_FORBIDDEN}:
+                    _logger.debug('Cannot populate answer cache - unauthorized')
+                else:
+                    _logger.warning(f'Failed to populate answer cache: {e}')
+            except Exception as e:
+                _logger.warning(f'Failed to populate answer cache: {e}')
+
+        # Mark this event as having populated caches
+        self._caches_populated[event_slug] = True
 
 
 def _log_resp(json_resp: list[Any] | dict[Any, Any]):
