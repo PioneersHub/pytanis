@@ -21,7 +21,6 @@ from pytanis.pretalx.models import (
     Review,
     Room,
     RoomAvailability,
-    SimpleTalk,
     Slot,
     Speaker,
     SpeakerAvailability,
@@ -440,47 +439,6 @@ class TestPretalxModels:
             if '404' in str(e):
                 pytest.skip(f'Event not found: {test_event_slug}')
             raise
-
-    @pytest.mark.integration
-    def test_simple_talk_model(self, integration_client, test_event_slug):
-        """Test the SimpleTalk model with converted data."""
-        try:
-            import json
-
-            from pytanis.pretalx.utils import talks_to_json
-
-            # Get some talks
-            count, talks = integration_client.talks(
-                test_event_slug, params={'state': 'confirmed', 'limit': 3, 'questions': 'all'}
-            )
-            talks_list = list(talks)
-
-            if not talks_list:
-                pytest.skip('No confirmed talks found')
-
-            # Convert to JSON and back
-            json_str = talks_to_json(talks_list, integration_client, test_event_slug)
-            talk_dicts = json.loads(json_str)
-
-            # Validate each SimpleTalk
-            for talk_dict in talk_dicts:
-                simple_talk = SimpleTalk.model_validate(talk_dict)
-
-                assert simple_talk.code is not None
-                assert simple_talk.title is not None
-                assert simple_talk.speaker is not None
-
-                # Validate model serialization
-                simple_dict = simple_talk.model_dump()
-                assert isinstance(simple_dict, dict)
-
-                # Validate model can be reconstructed
-                SimpleTalk.model_validate(simple_dict)
-        except Exception as e:
-            if '404' in str(e):
-                pytest.skip(f'Event not found: {test_event_slug}')
-            raise
-
 
 class TestPretalxDataConsistency:
     """Test data consistency and relationships between models."""

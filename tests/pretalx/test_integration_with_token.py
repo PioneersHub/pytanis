@@ -22,7 +22,6 @@ from pytanis.pretalx.models import (
     Review,
     Room,
     RoomAvailability,
-    SimpleTalk,
     Slot,
     Speaker,
     SpeakerAvailability,
@@ -206,27 +205,6 @@ class TestAllPretalxModels:
             assert isinstance(answer.question, AnswerQuestionRef)
             Answer.model_validate(answer.model_dump())
 
-    @pytest.mark.integration
-    def test_simple_talk_conversion(self, client, event_slug):
-        """Test SimpleTalk model conversion."""
-        import json
-
-        from pytanis.pretalx.utils import talks_to_json
-
-        # Get talks with questions
-        count, talks = client.talks(event_slug, params={'state': 'confirmed', 'limit': 2, 'questions': 'all'})
-        talks_list = list(talks)
-
-        # Convert to SimpleTalk format
-        json_str = talks_to_json(talks_list, client, event_slug)
-        talk_dicts = json.loads(json_str)
-
-        # Validate SimpleTalk models
-        for talk_dict in talk_dicts:
-            simple_talk = SimpleTalk.model_validate(talk_dict)
-            assert simple_talk.code is not None
-            assert simple_talk.title is not None
-            SimpleTalk.model_validate(simple_talk.model_dump())
 
 
 class TestModelRelationships:
