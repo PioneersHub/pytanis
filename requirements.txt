@@ -13,6 +13,7 @@
 # - httpx
 # - httpx-auth
 # - openpyxl>=3.1.5
+# - pandas-stubs==2.2.3.250527
 # - pandas>=2
 # - pydantic>=2.5
 # - structlog
@@ -298,6 +299,7 @@ numpy==2.2.1
     #   matplotlib
     #   numdifftools
     #   pandas
+    #   pandas-stubs
     #   pyomo
     #   python-louvain
     #   scikit-learn
@@ -330,6 +332,8 @@ pandas==2.2.3
     #   gspread-dataframe
     #   pyomo
     #   seaborn
+pandas-stubs==2.2.3.250527
+    # via hatch.envs.default
 pandocfilters==1.5.1
     # via nbconvert
 parso==0.8.4
@@ -538,6 +542,8 @@ txt2tags==3.9
     # via lab
 types-python-dateutil==2.9.0.20241206
     # via arrow
+types-pytz==2025.2.0.20250516
+    # via pandas-stubs
 typing-extensions==4.12.2
     # via
     #   flexcache
