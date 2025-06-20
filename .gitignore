@@ -63,3 +63,10 @@ MANIFEST
 # Devcontainer
 devcontainer.env
 config.toml
+
+# Code Assistants
+CLAUDE.local.md
+CLAUDE.md
+.claude
+.augementcode
+.roo
