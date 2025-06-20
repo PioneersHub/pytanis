@@ -254,13 +254,14 @@ def test_save_talks_to_json(mock_get_talks_as_json, mock_open):
     """Test save_talks_to_json function"""
     # Set up mock
     mock_get_talks_as_json.return_value = '[]'
+    mock_client = MagicMock()
 
     # Call function
-    save_talks_to_json(MagicMock(), 'test-event', 'test.json', 'accepted')
+    save_talks_to_json(mock_client, 'test-event', 'test.json', 'accepted')
 
     # Check results
-    mock_get_talks_as_json.assert_called_once_with(MagicMock(), 'test-event', 'accepted', None)
-    mock_open.assert_called_once_with('test.json', 'w')
+    mock_get_talks_as_json.assert_called_once_with(mock_client, 'test-event', 'accepted', None)
+    mock_open.assert_called_once_with('test.json', 'w', encoding='utf-8')
     mock_open.return_value.__enter__.return_value.write.assert_called_once_with('[]')
 
 

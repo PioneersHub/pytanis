@@ -137,11 +137,7 @@ def test_talks_fallback(mock_get_one, mock_get_many, mock_responses):
     # First call to talks endpoint returns 404
     mock_response_404 = MagicMock()
     mock_response_404.status_code = 404
-    mock_get_many.side_effect = httpx.HTTPStatusError(
-        'Not found',
-        request=MagicMock(),
-        response=mock_response_404
-    )
+    mock_get_many.side_effect = httpx.HTTPStatusError('Not found', request=MagicMock(), response=mock_response_404)
 
     # Mock speaker/type/track lookups
     def get_one_side_effect(endpoint, params=None):

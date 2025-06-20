@@ -1,7 +1,7 @@
 """Tests for the SimpleTalk functionality"""
 
 import json
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 from pytanis.pretalx.models import (
     Answer,
@@ -13,7 +13,7 @@ from pytanis.pretalx.models import (
     SubmissionSpeaker,
     Talk,
 )
-from pytanis.pretalx.utils import get_confirmed_talks_as_json
+from pytanis.pretalx.utils import talks_to_json
 
 
 def test_simple_talk_model():
@@ -43,9 +43,8 @@ def test_simple_talk_model():
     assert talk.prerequisites == 'Python basics'
 
 
-@patch('pytanis.pretalx.utils.PretalxClient')
-def test_get_confirmed_talks_as_json(mock_pretalx_client):
-    """Test that get_confirmed_talks_as_json works as expected"""
+def test_talks_to_json():
+    """Test that talks_to_json works as expected"""
     # Create mock Talk objects
     talk1 = Talk(
         code='ABC123',
@@ -182,8 +181,8 @@ def test_get_confirmed_talks_as_json(mock_pretalx_client):
         'S3': speaker3,
     }[code]
 
-    # Get JSON with the mock client
-    json_str = get_confirmed_talks_as_json([talk1, talk2, talk3], mock_client, 'test-event')
+    # Get JSON with the mock client - only pass confirmed talks
+    json_str = talks_to_json([talk1, talk2], mock_client, 'test-event')
 
     # Parse JSON
     talks = json.loads(json_str)
