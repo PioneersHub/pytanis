@@ -12,6 +12,62 @@ The integration tests ensure that:
 
 ## Running the Tests
 
+### Using Hatch (Recommended for Development)
+
+If you're developing Pytanis, use Hatch commands for a properly configured environment:
+
+```bash
+# Interactive mode
+hatch run integration
+
+# With arguments
+hatch run integration --token YOUR_TOKEN --event pyconde-pydata-2025
+
+# Quick mode with environment variables
+export PRETALX_API_TOKEN="your-token"
+export PRETALX_TEST_EVENT="pyconde-pydata-2025"
+hatch run integration-quick
+
+# Direct pytest access
+hatch run test-endpoints
+```
+
+### Interactive CLI (Recommended)
+
+The easiest way to run integration tests is using the interactive CLI:
+
+```bash
+# From project root
+python run_pretalx_integration_tests.py
+
+# Or from tests directory
+python tests/pretalx/run_integration_tests.py
+```
+
+This will:
+- Prompt you for API token (optional but recommended)
+- Prompt you for event slug
+- Confirm settings before running
+- Run the comprehensive integration tests
+
+### CLI with Arguments
+
+```bash
+# Run with token and event
+python run_pretalx_integration_tests.py --token YOUR_TOKEN --event pyconde-pydata-2025
+
+# Run with specific API version
+python run_pretalx_integration_tests.py --token YOUR_TOKEN --event pyconde-pydata-2025 --api-version v2
+
+# Run specific test
+python run_pretalx_integration_tests.py --token YOUR_TOKEN --event EVENT --test test_all_endpoints
+
+# Show help
+python run_pretalx_integration_tests.py --help
+```
+
+### Direct pytest Usage
+
 ### Run all integration tests
 ```bash
 pytest tests/pretalx/test_integration.py -v
