@@ -1,8 +1,8 @@
-# Release Instructions for v0.9.0
+# Release Instructions for v0.9.0alpha
 
 ## Summary of Changes Since v0.8.1
 
-This is a minor release that includes significant improvements to the Pretalx API client:
+This is an alpha release that includes significant improvements to the Pretalx API client:
 
 1. **Backward Compatibility Layer**: Transparent handling of Pretalx API changes
 2. **Cache Optimization**: 50-75x performance improvement for bulk operations  
@@ -27,7 +27,7 @@ b50dff8 test(pretalx): add comprehensive integration testing framework
 - [ ] All tests passing: `hatch run cov`
 - [ ] Integration tests validated: `hatch run integration`
 - [ ] Documentation updated
-- [ ] CHANGELOG.md updated with v0.9.0 changes
+- [ ] CHANGELOG.md updated with v0.9.0alpha changes
 - [ ] No sensitive information in commits
 
 ## Release Commands
@@ -42,20 +42,21 @@ git merge pretalx_api_update_ah
 hatch run cov
 hatch run lint:all
 
-# 3. Update CHANGELOG.md with the v0.9.0 section
+# 3. Update CHANGELOG.md with the v0.9.0alpha section
 
 # 4. Commit the changelog
 git add CHANGELOG.md
-git commit -m "docs: update CHANGELOG for v0.9.0 release"
+git commit -m "docs: update CHANGELOG for v0.9.0alpha release"
 
 # 5. Create and push the tag
-git tag -a v0.9.0 -m "Release v0.9.0: Pretalx API compatibility and performance improvements"
+git tag -a v0.9.0alpha -m "Release v0.9.0alpha: Pretalx API compatibility and performance improvements"
 git push origin main
-git push origin v0.9.0
+git push origin v0.9.0alpha
 
 # 6. Create GitHub release
 # - Go to https://github.com/PyCon-DE/pytanis/releases/new
-# - Select the v0.9.0 tag
+# - Select the v0.9.0alpha tag
+# - Check "Set as a pre-release"
 # - Use the CHANGELOG content for the release notes
 # - Publish the release
 

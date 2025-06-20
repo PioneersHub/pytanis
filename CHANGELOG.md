@@ -1,5 +1,25 @@
 # Changelog
 
+## Version 0.9.0alpha (TBD)
+
+### Major Features
+- **Storage abstraction layer**: Support for multiple storage backends (local CSV/Excel files, Google Sheets)
+- **Communication abstraction layer**: Unified interface for email (Mailgun) and ticket (HelpDesk) providers
+- **Factory functions**: Simplified client creation with `get_storage_client()` and `get_mail_client()`
+- **Optional dependencies**: Install only what you need with `pytanis[google]`, `pytanis[helpdesk]`, `pytanis[mailgun]`
+
+### Pretalx API Improvements
+- **Backward compatibility**: Transparent handling of API changes where IDs replaced nested objects
+- **Performance optimization**: Cache pre-population reduces API calls by 50-75x for bulk operations
+- **New API methods**: `submission_types()`, `tracks()` for accessing submission metadata
+- **SimpleTalk model**: Export talks in simplified JSON format for easier processing
+- **API compatibility**: Event.urls field now optional to support latest API versions
+
+### Testing & Quality
+- Comprehensive integration test framework with interactive CLI
+- Support for multiple Pretalx API versions
+- Improved test coverage and documentation
+
 ## Version 0.8 (2024-12-30)
 
 - Added support for Mailgun, thanks to Nils Mohr
