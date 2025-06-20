@@ -287,7 +287,7 @@ upgrade-pkg = "PIP_COMPILE_UPGRADE_PACKAGE='{args}' hatch env run --env {env_nam
 integration = "python run_pretalx_integration_tests.py {args}"
 integration-interactive = "python run_pretalx_integration_tests.py"
 integration-quick = "python run_pretalx_integration_tests.py --token {env:PRETALX_API_TOKEN} --event {env:PRETALX_TEST_EVENT:pyconde-pydata-2025}"
-test-endpoints = "pytest tests/pretalx/test_all_endpoints_integration.py -v -s {args}"
+test-endpoints = "pytest tests/pretalx/test_all_endpoints_integration.py tests/pretalx/test_submission_integration.py -v -s {args}"
 
 # Docs environment
 [tool.hatch.envs.docs]
