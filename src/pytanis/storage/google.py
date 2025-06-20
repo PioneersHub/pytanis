@@ -8,7 +8,7 @@ from structlog import get_logger
 from pytanis.storage.base import BaseSpreadsheetClient
 
 if TYPE_CHECKING:
-    from pytanis.google import GSheetsClient
+    pass
 
 _logger = get_logger()
 
