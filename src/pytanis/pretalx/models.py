@@ -242,9 +242,9 @@ class Question(BaseModel):
     @classmethod
     def is_required(cls, model):
         if model.question_required and model.question_required != QuestionRequirement.optional:
-            model.required = False
-        else:
             model.required = True
+        else:
+            model.required = False
         return model
 
 
