@@ -5,7 +5,7 @@ from datetime import date
 
 import pytest
 
-EVENT_SLUG = 'pyconde-pydata-berlin-2023'
+EVENT_SLUG = 'pyconde-pydata-2025'
 
 
 @pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')

@@ -11,7 +11,7 @@ ToDo:
 from datetime import date, datetime
 from enum import Enum
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class Me(BaseModel):
@@ -78,7 +78,7 @@ class Answer(BaseModel):
     submission: str | None = None
     review: int | None = None
     person: str | None = None
-    options: list[Option]
+    options: list[Option] | None = None
 
 
 class SubmissionSpeaker(BaseModel):
@@ -117,13 +117,29 @@ class State(Enum):
     deleted = 'deleted'
 
 
+class TransSubmissionType(BaseModel):
+    """Model to handle compatibility"""
+
+    model_config = ConfigDict(extra='allow')
+    id: int
+    name: MultiLingualStr
+
+
 class Submission(BaseModel):
+    """
+    Pretalx introduced breaking API changes in 06/2025 with API "v1":
+    - submission_type changed: TempSubmissionType can handle this now,
+      a validator will mangel the data back to the old format MultiLingualStr
+    - submission_type_id: no longer exists, will be set via submission_type now
+    - is_featured is documented but does not show, defaults to False now
+    """
+
     code: str
     speakers: list[SubmissionSpeaker]
     created: datetime | None = None  # needs organizer permissions
     title: str
-    submission_type: MultiLingualStr
-    submission_type_id: int
+    submission_type: TransSubmissionType | MultiLingualStr
+    submission_type_id: int | None = None  # moved in API v1, will be set automatically for compatibility
     track: MultiLingualStr | None = None
     track_id: int | None = None
     state: State
@@ -132,8 +148,7 @@ class Submission(BaseModel):
     description: str
     duration: int | None = None
     do_not_record: bool
-    is_featured: bool
-    content_locale: str  # e.g. "de", "en"
+    is_featured: bool = False  # is not in response if no longer available 06/2025
     slot: Slot | None = None  # only available after schedule_web release
     slot_count: int
     image: str | None = None
@@ -143,6 +158,15 @@ class Submission(BaseModel):
     resources: list[Resource]
     tags: list[str] | None = None  # needs organizer permissions
     tag_ids: list[int] | None = None  # needs organizer permissions
+
+    @model_validator(mode='after')
+    @classmethod
+    def mangle_submission_type(cls, model):
+        # handle changes introduced via API v1
+        if model.submission_type:
+            model.submission_type_id = getattr(model.submission_type, 'id', None)
+            model.submission_type = getattr(model.submission_type, 'name', None)
+        return model
 
 
 class Talk(Submission):

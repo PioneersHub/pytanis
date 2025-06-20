@@ -206,7 +206,6 @@ class TestAllPretalxModels:
             Answer.model_validate(answer.model_dump())
 
 
-
 class TestModelRelationships:
     """Test relationships between models."""
 
