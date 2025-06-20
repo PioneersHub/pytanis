@@ -131,6 +131,13 @@ This often provides additional considerations and avoids unnecessary work.
 5. Please check that your changes don't break any unit tests with `hatch run cov` or
    `hatch run no-cov` to run the unitest with or without coverage reports, respectively.
 6. For code hygiene, execute `hatch run lint:all` in order to run [flake8], [isort], [black], [mypy], etc.
+7. If your changes affect the Pretalx integration, run the integration tests to ensure compatibility:
+   ```
+   hatch run integration
+   # or with your credentials:
+   hatch run integration --token YOUR_TOKEN --event pyconde-pydata-2025
+   ```
+   See the [Testing documentation](docs/usage/testing.md) for more details.
 
 ### Submit your contribution
 

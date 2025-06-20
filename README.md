@@ -122,6 +122,47 @@ in order to run [ruff] and [mypy] or `hatch run lint:fix` to automatically fix f
 Check out the `[tool.hatch.envs]` sections  in [pyproject.toml](pyproject.toml) to learn about other commands.
 If you really must enter a virtual environment, use `hatch shell` to enter the default environment.
 
+## Testing
+
+### Integration Tests
+
+Pytanis includes comprehensive integration tests to validate compatibility with the Pretalx API. These tests ensure all data models work correctly with live API responses.
+
+To run integration tests interactively:
+
+```shell
+# Using Hatch (recommended for development)
+hatch run integration
+
+# Or directly
+python run_pretalx_integration_tests.py
+```
+
+This will prompt you for:
+- Pretalx API token (required)
+- Event slug to test against
+- API version to use
+
+For automated testing:
+
+```shell
+# Using Hatch with arguments
+hatch run integration --token YOUR_TOKEN --event pyconde-pydata-2025
+
+# Using environment variables for quick testing
+export PRETALX_API_TOKEN="your-token"
+export PRETALX_TEST_EVENT="pyconde-pydata-2025"
+hatch run integration-quick
+
+# Direct pytest for more control
+hatch run test-endpoints
+
+# Without Hatch
+python run_pretalx_integration_tests.py --token YOUR_TOKEN --event pyconde-pydata-2025 --api-version v2
+```
+
+See [tests/pretalx/README_INTEGRATION.md](tests/pretalx/README_INTEGRATION.md) for more details.
+
 ## Documentation
 
 The [documentation] is made with [Material for MkDocs] and is hosted by [GitHub Pages]. Your help to extend the

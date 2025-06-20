@@ -19,6 +19,7 @@ nav:
         - 'Pretalx Client': usage/pretalx.md
         - 'Google Sheets': usage/gsheet.md
         - 'Sending Mails': usage/mail.md
+        - 'Testing': usage/testing.md
     - Tasks:
         - 'Call for Participation': tasks/cfp.md
         - 'Proposal Review': tasks/review.md
