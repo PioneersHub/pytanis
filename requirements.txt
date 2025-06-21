@@ -22,9 +22,7 @@
 # - gspread<6.0
 # - highspy
 # - ipywidgets
-# - jupter>=0.1.0
 # - jupyter>=1.1.1
-# - lab>=8.4
 # - pillow
 # - pyomo>=6.9.1
 # - pyomo[optional]
@@ -189,8 +187,6 @@ jsonschema==4.24.0
     #   nbformat
 jsonschema-specifications==2025.4.1
     # via jsonschema
-jupter==0.1.0
-    # via hatch.envs.default
 jupyter==1.1.1
     # via hatch.envs.default
 jupyter-client==8.6.3
@@ -240,8 +236,6 @@ jupyterlab-widgets==3.0.15
     # via ipywidgets
 kiwisolver==1.4.8
     # via matplotlib
-lab==8.4
-    # via hatch.envs.default
 linear-tree==0.3.5
     # via pyomo
 markupsafe==3.0.2
@@ -250,7 +244,6 @@ markupsafe==3.0.2
     #   nbconvert
 matplotlib==3.10.3
     # via
-    #   lab
     #   pyomo
     #   seaborn
 matplotlib-inline==0.1.7
@@ -481,8 +474,6 @@ seaborn==0.13.2
     #   pyomo
 send2trash==1.8.3
     # via jupyter-server
-simplejson==3.20.1
-    # via lab
 six==1.17.0
     # via
     #   gspread-dataframe
@@ -541,8 +532,6 @@ traitlets==5.14.3
     #   nbconvert
     #   nbformat
     #   qtconsole
-txt2tags==3.9
-    # via lab
 types-python-dateutil==2.9.0.20250516
     # via arrow
 types-pytz==2025.2.0.20250516
