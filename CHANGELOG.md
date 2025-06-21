@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 0.9.0rc (2025-06-20)
+## Version 0.9.0 (2025-06-21)
 
 ### 🎉 First Release Compatible with Pretalx Versioned API v1
 
