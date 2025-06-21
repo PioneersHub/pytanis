@@ -285,7 +285,8 @@ class TestAllPretalxEndpoints:
         # Test question endpoints
         logger.info('test_section', section='QUESTION endpoints', separator='-' * 40)
         questions_result = self._test_endpoint(
-            f'/api/events/{event_slug}/questions/', lambda: client.questions(event_slug, params=QueryParams({'limit': 5}))
+            f'/api/events/{event_slug}/questions/',
+            lambda: client.questions(event_slug, params=QueryParams({'limit': 5})),
         )
         results.append(questions_result)
 

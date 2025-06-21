@@ -56,7 +56,9 @@ def subs_as_df(
             Col.speaker_code: [speaker.code for speaker in sub.speakers],
             Col.speaker_name: [speaker.name for speaker in sub.speakers],
             Col.duration: sub.duration,
-            Col.submission_type: sub.submission_type.en if hasattr(sub.submission_type, 'en') else str(sub.submission_type),
+            Col.submission_type: (
+                sub.submission_type.en if hasattr(sub.submission_type, 'en') else str(sub.submission_type)
+            ),
             Col.submission_type_id: sub.submission_type_id,
             Col.state: sub.state.value,
             Col.pending_state: None if sub.pending_state is None else sub.pending_state.value,
