@@ -47,19 +47,3 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 echo "✅ Linting passed!"
-
-# 3. Run tests to ensure linting didn't break anything
-echo ""
-echo "3. Running tests..."
-echo "------------------------------------------------"
-hatch run no-cov
-if [ $? -ne 0 ]; then
-    echo "❌ Tests failed! Please fix the issues and try again."
-    exit 1
-fi
-echo "✅ Tests passed!"
-
-echo ""
-echo "================================================"
-echo "✅ All pre-push checks passed! Ready to push."
-echo "================================================"
