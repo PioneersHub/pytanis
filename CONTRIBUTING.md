@@ -144,22 +144,30 @@ This often provides additional considerations and avoids unnecessary work.
 Before pushing your changes, our pre-push hooks will automatically run to ensure code quality:
 
 1. **Automatic checks**: When you run `git push`, the following checks will run automatically:
-   - Pre-commit hooks (formatting, linting)
+   - Pre-commit hooks (formatting, linting, security)
    - Full linting suite (`hatch run lint:all`)
    - Test suite (`hatch run no-cov`)
 
-2. **Manual verification**: You can run these checks manually before pushing:
+2. **Security checks**: The following security tools are integrated:
+   - **Bandit**: Scans for common security issues in Python code
+   - **detect-private-key**: Prevents committing private keys
+   - Additional security-focused pre-commit hooks
+
+3. **Manual verification**: You can run these checks manually before pushing:
    ```bash
    # Run all pre-push checks
    ./scripts/pre-push-check.sh
 
    # Or run individual steps:
-   pre-commit run --all-files  # Run pre-commit hooks
+   pre-commit run --all-files  # Run pre-commit hooks (includes security)
    hatch run lint:all          # Run full linting
    hatch run no-cov           # Run tests
+
+   # Run only security checks:
+   pre-commit run bandit --all-files
    ```
 
-3. **Bypassing checks**: While you can use `git push --no-verify` to skip these checks,
+4. **Bypassing checks**: While you can use `git push --no-verify` to skip these checks,
    this is **strongly discouraged** as it may cause CI failures.
 
 ### Submit your contribution

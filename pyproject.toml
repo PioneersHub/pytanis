@@ -127,6 +127,18 @@ show_column_numbers = true
 warn_no_return = false
 warn_unused_ignores = true
 
+[tool.bandit]
+targets = ["src/pytanis"]
+exclude_dirs = ["tests", "notebooks"]
+skips = [
+    "B101",  # assert_used - common in tests
+    "B113",  # request_without_timeout - TODO: add timeouts to httpx calls
+    "B601",  # paramiko_calls - not using paramiko
+    "B603",  # subprocess_without_shell_equals_true - already handled by S603 in ruff
+]
+# Severity levels: LOW, MEDIUM, HIGH
+severity = "MEDIUM"
+
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "-ra -q --doctest-glob='*.md'"

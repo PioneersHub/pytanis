@@ -14,9 +14,9 @@ if ! git diff --quiet || ! git diff --staged --quiet; then
     echo ""
 fi
 
-# 1. Run pre-commit on all files
+# 1. Run pre-commit on all files (includes security checks)
 echo ""
-echo "1. Running pre-commit hooks..."
+echo "1. Running pre-commit hooks (including security checks)..."
 echo "------------------------------------------------"
 pre-commit run --all-files
 PRE_COMMIT_EXIT=$?
