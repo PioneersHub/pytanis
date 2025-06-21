@@ -20,6 +20,7 @@ from typing import Any
 import httpx
 import pytest
 import structlog
+from httpx import QueryParams
 
 from pytanis import PretalxClient
 from pytanis.config import Config, PretalxCfg
@@ -235,7 +236,7 @@ class TestAllPretalxEndpoints:
 
         # Test event endpoints
         logger.info('test_section', section='EVENT endpoints', separator='-' * 40)
-        results.append(self._test_endpoint('/api/events/', lambda: client.events(params={'limit': 5})))
+        results.append(self._test_endpoint('/api/events/', lambda: client.events(params=QueryParams({'limit': 5}))))
 
         results.append(self._test_endpoint(f'/api/events/{event_slug}/', lambda: client.event(event_slug)))
 
@@ -243,7 +244,7 @@ class TestAllPretalxEndpoints:
         logger.info('test_section', section='SUBMISSION endpoints', separator='-' * 40)
         submissions_result = self._test_endpoint(
             f'/api/events/{event_slug}/submissions/',
-            lambda: client.submissions(event_slug, params={'limit': 5, 'questions': 'all'}),
+            lambda: client.submissions(event_slug, params=QueryParams({'limit': 5, 'questions': 'all'})),
         )
         results.append(submissions_result)
 
@@ -260,7 +261,7 @@ class TestAllPretalxEndpoints:
         # Test speaker endpoints
         logger.info('test_section', section='SPEAKER endpoints', separator='-' * 40)
         speakers_result = self._test_endpoint(
-            f'/api/events/{event_slug}/speakers/', lambda: client.speakers(event_slug, params={'limit': 5})
+            f'/api/events/{event_slug}/speakers/', lambda: client.speakers(event_slug, params=QueryParams({'limit': 5}))
         )
         results.append(speakers_result)
 
@@ -277,14 +278,14 @@ class TestAllPretalxEndpoints:
         # Test room endpoints
         logger.info('test_section', section='ROOM endpoints', separator='-' * 40)
         rooms_result = self._test_endpoint(
-            f'/api/events/{event_slug}/rooms/', lambda: client.rooms(event_slug, params={'limit': 5})
+            f'/api/events/{event_slug}/rooms/', lambda: client.rooms(event_slug, params=QueryParams({'limit': 5}))
         )
         results.append(rooms_result)
 
         # Test question endpoints
         logger.info('test_section', section='QUESTION endpoints', separator='-' * 40)
         questions_result = self._test_endpoint(
-            f'/api/events/{event_slug}/questions/', lambda: client.questions(event_slug, params={'limit': 5})
+            f'/api/events/{event_slug}/questions/', lambda: client.questions(event_slug, params=QueryParams({'limit': 5}))
         )
         results.append(questions_result)
 
@@ -302,7 +303,7 @@ class TestAllPretalxEndpoints:
         logger.info('test_section', section='ANSWER endpoints', separator='-' * 40)
         answers_result = self._test_endpoint(
             f'/api/events/{event_slug}/answers/',
-            lambda: client.answers(event_slug, params={'limit': 5}),
+            lambda: client.answers(event_slug, params=QueryParams({'limit': 5})),
             expected_errors={401, 403} if not client._config.Pretalx.api_token else set(),
         )
         results.append(answers_result)
@@ -322,7 +323,7 @@ class TestAllPretalxEndpoints:
         logger.info('test_section', section='REVIEW endpoints', separator='-' * 40)
         reviews_result = self._test_endpoint(
             f'/api/events/{event_slug}/reviews/',
-            lambda: client.reviews(event_slug, params={'limit': 5}),
+            lambda: client.reviews(event_slug, params=QueryParams({'limit': 5})),
             expected_errors={401, 403} if not client._config.Pretalx.api_token else set(),
         )
         results.append(reviews_result)

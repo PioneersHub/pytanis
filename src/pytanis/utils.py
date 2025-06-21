@@ -99,5 +99,5 @@ def implode(df: pd.DataFrame, cols: str | list[str]) -> pd.DataFrame:
     grp_cols = [col for col in df.columns if col not in cols]
     df = df.groupby(grp_cols, group_keys=True, dropna=False).aggregate({col: lambda x: x.tolist() for col in cols})
     df.reset_index(inplace=True)
-    df = df.loc[:, orig_cols]
+    df = df.loc[:, list(orig_cols)]
     return df

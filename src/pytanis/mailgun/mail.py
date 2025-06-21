@@ -79,6 +79,10 @@ class MailClient:
         responses = []
 
         # TODO: improve Mailgun batch mailing by setting custom transactional variables
+        if self._config.Mailgun is None:
+            msg = 'Mailgun configuration is missing'
+            raise RuntimeError(msg)
+            
         for idx, recipient in enumerate(tqdm(mail.recipients), start=1):
             try:
                 recipient_mail = mail.model_copy()

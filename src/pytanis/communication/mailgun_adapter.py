@@ -107,7 +107,7 @@ class MailgunAdapter(BaseMailClient):
             original_batch_size = self._client.batch_size
             original_wait_time = self._client.wait_time
             self._client.batch_size = 1  # Send one at a time
-            self._client.wait_time = 1.0 / rate_limit
+            self._client.wait_time = int(1.0 / rate_limit)
 
         try:
             for i, message in enumerate(messages):

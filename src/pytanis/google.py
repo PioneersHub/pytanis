@@ -59,6 +59,10 @@ def gspread_client(scopes: list[Scope], config: Config) -> gspread.client.Client
 
     Read [GSpread](https://docs.gspread.org/) for usage details
     """
+    if config.Google is None:
+        msg = 'Google configuration is missing in config.toml!'
+        raise RuntimeError(msg)
+        
     if (secret_path := config.Google.client_secret_json) is None:
         msg = 'You have to set Google.client_secret_json in your config.toml!'
         raise RuntimeError(msg)
