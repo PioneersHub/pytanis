@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 0.9.1 (2025-06-21)
+
+### Bug Fixes
+- **Authentication**: Fixed authentication issue where HeaderApiKey was not adding the required "Token " prefix for Pretalx API authorization headers
+- **Type hints**: Added support for dict type in params parameter alongside QueryParams for better flexibility
+
+### Improvements
+- **Test configuration**: Externalized test event slug to `tests/test_config.toml` configuration file
+- **Dependencies**: Removed unused httpx-auth dependency since we now handle authentication directly
+
 ## Version 0.9.0 (2025-06-21)
 
 ### 🎉 First Release Compatible with Pretalx Versioned API v1

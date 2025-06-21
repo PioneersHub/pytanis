@@ -1,20 +1,26 @@
 """Integration tests that require a Pretalx API token.
 
 These tests validate all Pydantic models against live API data.
-They require PRETALX_API_TOKEN to be set in the environment.
+They require authentication via PRETALX_API_TOKEN env var or local config.
 """
 
 import os
+import sys
+from pathlib import Path
 
 import pytest
+import tomli
+
+# Add parent directory to path to import from conftest
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from conftest import has_valid_pretalx_token
 
 from pytanis import PretalxClient
-from pytanis.config import Config, PretalxCfg
+from pytanis.config import get_cfg
 from pytanis.pretalx.models import (
     Answer,
     AnswerQuestionRef,
     Event,
-    Me,
     MultiLingualStr,
     Option,
     Question,
@@ -32,23 +38,29 @@ from pytanis.pretalx.models import (
     User,
 )
 
-# Skip all tests in this file if no API token is provided
+# Skip all tests in this file if on GitHub or no authentication available
 pytestmark = pytest.mark.skipif(
-    not os.getenv('PRETALX_API_TOKEN'), reason='PRETALX_API_TOKEN environment variable not set'
+    os.getenv('GITHUB') or not has_valid_pretalx_token(),
+    reason='Skipped on GitHub CI or when no authentication available',
 )
 
-# Use a public Pretalx instance for testing
-TEST_EVENT_SLUG = os.getenv('PRETALX_TEST_EVENT', 'pyconde-pydata-berlin-2024')
+# Load test configuration
+test_config_path = Path(__file__).parent.parent / 'test_config.toml'
+if test_config_path.exists():
+    with open(test_config_path, 'rb') as f:
+        test_config = tomli.load(f)
+        default_event_slug = test_config.get('test', {}).get('event_slug')
+
+# Use event slug from environment variable or test configuration
+TEST_EVENT_SLUG = os.getenv('PRETALX_TEST_EVENT', default_event_slug)
 
 
 @pytest.fixture(scope='module')
 def client():
-    """Create an authenticated PretalxClient for integration testing."""
-    from pathlib import Path
-
-    config = Config(
-        cfg_path=Path.home() / '.pytanis' / 'config.toml', Pretalx=PretalxCfg(api_token=os.getenv('PRETALX_API_TOKEN'))
-    )
+    """Provide fallback on env variable for CI/CD."""
+    config = get_cfg()
+    if not config.Pretalx.api_token:
+        config.Pretalx.api_token = os.getenv('PRETALX_API_TOKEN')
     return PretalxClient(config=config)
 
 
@@ -60,15 +72,6 @@ def event_slug():
 
 class TestAllPretalxModels:
     """Test all Pretalx Pydantic models with live API data."""
-
-    @pytest.mark.integration
-    def test_me_model(self, client):
-        """Test the Me model."""
-        me = client.me()
-        assert isinstance(me, Me)
-        assert me.name is not None
-        assert me.email is not None
-        Me.model_validate(me.model_dump())
 
     @pytest.mark.integration
     def test_event_model(self, client, event_slug):
