@@ -45,7 +45,7 @@ class LocalFileClient(BaseStorageClient, BaseSpreadsheetClient):
             raise KeyError(f'File not found: {key}')
 
         try:
-            with open(path) as f:
+            with open(path, encoding='utf-8') as f:
                 return json.load(f)
         except Exception as e:
             raise OSError(f'Error reading file {key}: {e}') from e
@@ -54,7 +54,7 @@ class LocalFileClient(BaseStorageClient, BaseSpreadsheetClient):
         """Write data to a JSON file"""
         path = self._get_path(key)
         try:
-            with open(path, 'w') as f:
+            with open(path, 'w', encoding='utf-8') as f:
                 json.dump(data, f, indent=2, default=str)
         except Exception as e:
             raise OSError(f'Error writing file {key}: {e}') from e
@@ -193,6 +193,6 @@ class LocalFileClient(BaseStorageClient, BaseSpreadsheetClient):
                     df.to_excel(writer, sheet_name=name, index=False)
 
         except Exception as e:
-            if isinstance(e, (KeyError, IOError)):
+            if isinstance(e, KeyError | OSError):
                 raise
             raise OSError(f'Error deleting sheet {sheet_name} from {spreadsheet_id}: {e}') from e

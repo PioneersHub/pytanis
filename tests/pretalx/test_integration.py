@@ -34,9 +34,9 @@ def integration_client():
     api_token = os.getenv('PRETALX_API_TOKEN')
 
     # Create a minimal config for testing
-    from pathlib import Path  # noqa: PLC0415
+    from pathlib import Path
 
-    from pytanis.config import Config, PretalxCfg  # noqa: PLC0415
+    from pytanis.config import Config, PretalxCfg
 
     # Use a dummy config path
     config = Config(

@@ -43,7 +43,7 @@ class GoogleSheetsStorageClient(BaseSpreadsheetClient):
             return self._client.worksheet_as_df(worksheet)
         except Exception as e:
             if 'not found' in str(e).lower():
-                raise KeyError(f'Spreadsheet or sheet not found: {spreadsheet_id}/{sheet_name}')
+                raise KeyError(f'Spreadsheet or sheet not found: {spreadsheet_id}/{sheet_name}') from e
             raise OSError(f'Error reading sheet: {e}') from e
 
     def write_sheet(
@@ -71,7 +71,7 @@ class GoogleSheetsStorageClient(BaseSpreadsheetClient):
             return [ws.title for ws in spreadsheet.worksheets()]
         except Exception as e:
             if 'not found' in str(e).lower():
-                raise KeyError(f'Spreadsheet not found: {spreadsheet_id}')
+                raise KeyError(f'Spreadsheet not found: {spreadsheet_id}') from e
             raise OSError(f'Error listing sheets: {e}') from e
 
     def delete_sheet(self, spreadsheet_id: str, sheet_name: str) -> None:
@@ -82,5 +82,5 @@ class GoogleSheetsStorageClient(BaseSpreadsheetClient):
             spreadsheet.del_worksheet(worksheet)
         except Exception as e:
             if 'not found' in str(e).lower():
-                raise KeyError(f'Sheet not found: {sheet_name}')
+                raise KeyError(f'Sheet not found: {sheet_name}') from e
             raise OSError(f'Error deleting sheet: {e}') from e

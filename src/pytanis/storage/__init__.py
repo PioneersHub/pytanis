@@ -11,7 +11,7 @@ __all__ = ['BaseSpreadsheetClient', 'BaseStorageClient', 'LocalFileClient']
 
 # Optional imports
 try:
-    from pytanis.storage.google import GoogleSheetsStorageClient
+    from pytanis.storage.google import GoogleSheetsStorageClient  # noqa: F401
 
     __all__.append('GoogleSheetsStorageClient')
 except ImportError:

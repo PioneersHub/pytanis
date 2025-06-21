@@ -18,7 +18,7 @@ Usage:
 import argparse
 import getpass
 import os
-import subprocess
+import subprocess  # noqa: S404
 import sys
 
 
@@ -89,7 +89,7 @@ def confirm_settings(token, event, api_version):
 
     try:
         response = input('Do you want to proceed with these settings? [Y/n]: ').strip().lower()
-        return response in ('', 'y', 'yes')
+        return response in {'', 'y', 'yes'}
     except KeyboardInterrupt:
         print('\nCancelled.')
         sys.exit(1)
