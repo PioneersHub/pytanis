@@ -63,8 +63,6 @@ mailgun = [
 
 # Jupyter and visualization support
 jupyter = [
-    "jupter>=0.1.0",
-    "lab>=8.4",
     "jupyter>=1.1.1",
     "ipywidgets", # for nicer progress bar in Jupyter lab/notebook
     "seaborn>=0.13.2",
@@ -299,15 +297,12 @@ dependencies = [
     "pytest-vcr",
     "pytest-sugar",
     "hypothesis",
-    "jupyterlab",
-    "ipython",
 ]
 [tool.hatch.envs.default.scripts]
 cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/pytanis --cov=tests {args}"
 no-cov = "cov --no-cov {args}"
 debug =  "cov --no-cov -s --pdb --pdbcls=IPython.core.debugger:Pdb {args}"
 ci = "cov --cov-report lcov {args}"
-notebooks = "jupyter lab --allow-root"
 upgrade-all = "PIP_COMPILE_UPGRADE=1 hatch env run --env {env_name} -- python --version"
 upgrade-pkg = "PIP_COMPILE_UPGRADE_PACKAGE='{args}' hatch env run --env {env_name} -- python --version"
 # Integration testing
@@ -318,8 +313,7 @@ test-endpoints = "pytest tests/pretalx/test_all_endpoints_integration.py tests/p
 
 # Docs environment
 [tool.hatch.envs.docs]
-type = "pip-compile"
-pip-compile-constraint = "default"
+type = "virtual"
 dependencies = [
     "mkdocs~=1.5",
     "mkdocs-material~=9.4",
@@ -391,3 +385,17 @@ all = [
     "typing",
     "notebooks",
 ]
+
+# Notebook environment
+[tool.hatch.envs.notebook]
+type = "pip-compile"
+pip-compile-constraint = "default"
+features = ["jupyter"]
+dependencies = [
+    "jupyterlab",
+    "ipython",
+]
+[tool.hatch.envs.notebook.scripts]
+lab = "jupyter lab --allow-root {args}"
+notebook = "jupyter notebook --allow-root {args}"
+console = "ipython {args}"
