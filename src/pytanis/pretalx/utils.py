@@ -110,11 +110,15 @@ def reviews_as_df(reviews: Iterable[Review]) -> pd.DataFrame:
 
 def create_simple_talk_from_talk(talk: Talk) -> SimpleTalk:
     """Create a SimpleTalk object with basic information from a Talk object."""
+    track_value = ''
+    if talk.track is not None and talk.track.en is not None:
+        track_value = talk.track.en
+
     return SimpleTalk(
         code=talk.code,
         title=talk.title,
         speaker=', '.join([speaker.name for speaker in talk.speakers]),
-        track=talk.track.en if talk.track is not None else '',
+        track=track_value,
         duration=str(talk.duration) if talk.duration else '',
         abstract=talk.abstract,
         description=talk.description,

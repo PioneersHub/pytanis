@@ -101,7 +101,9 @@ class LocalFileClient(BaseStorageClient, BaseSpreadsheetClient):
                     _logger.warning('Sheet name ignored for CSV files', sheet_name=sheet_name)
                 return pd.read_csv(path)
             else:  # Excel
-                return pd.read_excel(path, sheet_name=sheet_name)
+                # Always specify sheet_name to ensure we get a DataFrame, not a dict
+                sheet_to_read: str | int = sheet_name if sheet_name is not None else 0
+                return pd.read_excel(path, sheet_name=sheet_to_read)
         except Exception as e:
             raise OSError(f'Error reading spreadsheet {spreadsheet_id}: {e}') from e
 
@@ -158,7 +160,8 @@ class LocalFileClient(BaseStorageClient, BaseSpreadsheetClient):
         try:
             # For Excel files, read sheet names
             excel_file = pd.ExcelFile(path)
-            return excel_file.sheet_names
+            # Convert all sheet names to strings
+            return [str(name) for name in excel_file.sheet_names]
         except Exception as e:
             raise OSError(f'Error listing sheets in {spreadsheet_id}: {e}') from e
 
@@ -190,7 +193,7 @@ class LocalFileClient(BaseStorageClient, BaseSpreadsheetClient):
             # Write back remaining sheets
             with pd.ExcelWriter(path, mode='w') as writer:
                 for name, df in sheets_to_keep.items():
-                    df.to_excel(writer, sheet_name=name, index=False)
+                    df.to_excel(writer, sheet_name=str(name), index=False)
 
         except Exception as e:
             if isinstance(e, KeyError | OSError):
