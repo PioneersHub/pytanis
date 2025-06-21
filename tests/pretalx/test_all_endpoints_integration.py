@@ -41,7 +41,7 @@ structlog.configure(
 logger = structlog.get_logger()
 
 # Mark all tests in this file as integration tests
-pytestmark = pytest.mark.integration
+pytestmark = [pytest.mark.integration, pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')]
 
 
 class VerbosePretalxClient(PretalxClient):

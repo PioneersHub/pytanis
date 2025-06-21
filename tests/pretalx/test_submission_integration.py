@@ -56,6 +56,7 @@ def test_event():
     return os.getenv('PRETALX_TEST_EVENT', 'pyconde-pydata-2025')
 
 
+@pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
 class TestSubmissionModel:
     """Comprehensive tests for the Submission model with live API data."""
 

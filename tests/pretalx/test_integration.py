@@ -53,6 +53,7 @@ def test_event_slug():
     return os.getenv('PRETALX_TEST_EVENT', TEST_EVENT_SLUG)
 
 
+@pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
 class TestPretalxModels:
     """Test all Pretalx Pydantic models with live API data."""
 
@@ -143,6 +144,7 @@ class TestPretalxModels:
             raise
 
 
+@pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
 class TestPretalxEdgeCases:
     """Test edge cases and error handling."""
 
