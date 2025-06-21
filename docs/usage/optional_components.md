@@ -143,7 +143,7 @@ The original APIs (`GSheetsClient`, `HelpDeskClient`) are still available and wo
 from pytanis import GSheetsClient
 client = GSheetsClient()
 
-# This still works but requires pytanis[helpdesk]  
+# This still works but requires pytanis[helpdesk]
 from pytanis import HelpDeskClient
 client = HelpDeskClient()
 ```
@@ -156,7 +156,7 @@ client = HelpDeskClient()
    ```bash
    # If you use all features
    pip install pytanis[all]
-   
+
    # Or install only what you need
    pip install pytanis[google,mailgun]
    ```
@@ -166,7 +166,7 @@ client = HelpDeskClient()
    ```toml
    [Storage]
    provider = "google"  # Keep using Google Sheets
-   
+
    [Communication]
    email_provider = "mailgun"  # Keep using Mailgun
    ```
@@ -177,7 +177,7 @@ client = HelpDeskClient()
    # Old way (still works)
    from pytanis import GSheetsClient
    client = GSheetsClient()
-   
+
    # New way (recommended)
    from pytanis import get_storage_client
    storage = get_storage_client()

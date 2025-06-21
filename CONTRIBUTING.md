@@ -139,9 +139,32 @@ This often provides additional considerations and avoids unnecessary work.
    ```
    See the [Testing documentation](docs/usage/testing.md) for more details.
 
+### Pre-push verification
+
+Before pushing your changes, our pre-push hooks will automatically run to ensure code quality:
+
+1. **Automatic checks**: When you run `git push`, the following checks will run automatically:
+   - Pre-commit hooks (formatting, linting)
+   - Full linting suite (`hatch run lint:all`)
+   - Test suite (`hatch run no-cov`)
+
+2. **Manual verification**: You can run these checks manually before pushing:
+   ```bash
+   # Run all pre-push checks
+   ./scripts/pre-push-check.sh
+
+   # Or run individual steps:
+   pre-commit run --all-files  # Run pre-commit hooks
+   hatch run lint:all          # Run full linting
+   hatch run no-cov           # Run tests
+   ```
+
+3. **Bypassing checks**: While you can use `git push --no-verify` to skip these checks,
+   this is **strongly discouraged** as it may cause CI failures.
+
 ### Submit your contribution
 
-1. If everything works fine, push your local branch to the remote server with:
+1. If everything works fine and all checks pass, push your local branch to the remote server with:
 
    ```
    git push -u origin my-feature

@@ -144,10 +144,10 @@ def main():
 Examples:
   # Interactive mode (recommended for first-time use)
   %(prog)s
-  
+
   # Non-interactive mode with token and event
   %(prog)s --token YOUR_TOKEN --event pyconde-pydata-2025
-  
+
   # Run specific test
   %(prog)s --token YOUR_TOKEN --event EVENT --test test_all_endpoints
 """,

@@ -9,7 +9,7 @@ After reviewing the OpenAPI schema at `src/pytanis/pretalx/schema.yml` and compa
 ### ✅ Well-Tested Endpoints (18 endpoints)
 - **Core**: `/api/me/`, `/api/events/`, `/api/events/{event}/`
 - **Submissions**: List and detail endpoints
-- **Speakers**: List and detail endpoints  
+- **Speakers**: List and detail endpoints
 - **Talks**: List and detail endpoints (custom implementation with fallback)
 - **Reviews**: List and detail endpoints (auth-required)
 - **Rooms**: List and detail endpoints

@@ -252,6 +252,8 @@ ban-relative-imports = "all"
 "src/pytanis/communication/*.py" = ["PLC0415", "EM101", "EM102"]
 # Storage adapters need lazy imports
 "src/pytanis/storage/*.py" = ["PLC0415", "EM101", "EM102"]
+# HelpDesk client needs optional config checks
+"src/pytanis/helpdesk/client.py" = ["PLC0415", "EM101", "EM102"]
 # Factory module needs lazy imports
 "src/pytanis/factory.py" = ["PLC0415", "EM101", "EM102"]
 # Test scripts can use print
