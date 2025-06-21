@@ -39,8 +39,8 @@ class GoogleSheetsStorageClient(BaseSpreadsheetClient):
     def read_sheet(self, spreadsheet_id: str, sheet_name: str | None = None) -> pd.DataFrame:
         """Read a sheet as a pandas DataFrame"""
         try:
-            worksheet = self._client.get_worksheet(spreadsheet_id, sheet_name)
-            return self._client.worksheet_as_df(worksheet)
+            sheet_name = sheet_name or 'Sheet1'
+            return self._client.gsheet_as_df(spreadsheet_id, sheet_name)
         except Exception as e:
             if 'not found' in str(e).lower():
                 raise KeyError(f'Spreadsheet or sheet not found: {spreadsheet_id}/{sheet_name}') from e
@@ -51,15 +51,16 @@ class GoogleSheetsStorageClient(BaseSpreadsheetClient):
     ) -> None:
         """Write a pandas DataFrame to a sheet"""
         try:
-            worksheet = self._client.get_worksheet(spreadsheet_id, sheet_name)
-            self._client.df_to_worksheet(data, worksheet, overwrite=overwrite)
+            sheet_name = sheet_name or 'Sheet1'
+            self._client.save_df_as_gsheet(data, spreadsheet_id, sheet_name, create_ws=True)
         except Exception as e:
             raise OSError(f'Error writing sheet: {e}') from e
 
     def create_spreadsheet(self, name: str) -> str:
         """Create a new spreadsheet"""
         try:
-            spreadsheet = self._client.create_spreadsheet(name)
+            # Use the gspread client directly
+            spreadsheet = self._client.gc.create(name)
             return spreadsheet.id
         except Exception as e:
             raise OSError(f'Error creating spreadsheet: {e}') from e
@@ -67,7 +68,7 @@ class GoogleSheetsStorageClient(BaseSpreadsheetClient):
     def list_sheets(self, spreadsheet_id: str) -> list[str]:
         """List all sheets in a spreadsheet"""
         try:
-            spreadsheet = self._client.get_spreadsheet(spreadsheet_id)
+            spreadsheet = self._client.gc.open_by_key(spreadsheet_id)
             return [ws.title for ws in spreadsheet.worksheets()]
         except Exception as e:
             if 'not found' in str(e).lower():
@@ -77,7 +78,7 @@ class GoogleSheetsStorageClient(BaseSpreadsheetClient):
     def delete_sheet(self, spreadsheet_id: str, sheet_name: str) -> None:
         """Delete a sheet from a spreadsheet"""
         try:
-            spreadsheet = self._client.get_spreadsheet(spreadsheet_id)
+            spreadsheet = self._client.gc.open_by_key(spreadsheet_id)
             worksheet = spreadsheet.worksheet(sheet_name)
             spreadsheet.del_worksheet(worksheet)
         except Exception as e:

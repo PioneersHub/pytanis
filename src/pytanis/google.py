@@ -203,7 +203,7 @@ class GSheetsClient:
         except APIError as error:
             self._exception_feedback(error)
 
-    def gsheet_as_df(self, spreadsheet_id: str, worksheet_name: str, **kwargs: str | (bool | int)) -> pd.DataFrame:
+    def gsheet_as_df(self, spreadsheet_id: str, worksheet_name: str, **kwargs: str | bool | int) -> pd.DataFrame:
         """Returns a worksheet as dataframe"""
         worksheet = self.gsheet(spreadsheet_id, worksheet_name)
         df = get_as_dataframe(worksheet, **kwargs)

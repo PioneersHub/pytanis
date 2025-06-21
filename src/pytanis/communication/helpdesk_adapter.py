@@ -86,7 +86,9 @@ class HelpDeskMailAdapter(BaseMailClient):
 
             # Return the first ticket ID if successful
             if tickets and tickets[0][1]:
-                return str(tickets[0][1].ID)
+                # Access ID via dict since Ticket model uses extra='allow'
+                ticket_dict = tickets[0][1].model_dump()
+                return str(ticket_dict.get('ID', ''))
             return None
 
         except Exception as e:
@@ -147,12 +149,15 @@ class HelpDeskMailAdapter(BaseMailClient):
                     _logger.error('Failed to send to recipient', recipient=recipient.email, error=str(error))
 
             # Create result list matching input messages
-            results = []
+            results: list[str | None] = []
             ticket_map = {ticket[0].email: ticket[1] for ticket in tickets if ticket[1]}
 
             for message in messages:
                 if message.to and message.to[0] in ticket_map:
-                    results.append(str(ticket_map[message.to[0]].ID))
+                    # Access ID via dict since Ticket model uses extra='allow'
+                    ticket = ticket_map[message.to[0]]
+                    ticket_dict = ticket.model_dump()
+                    results.append(str(ticket_dict.get('ID', '')))
                 else:
                     results.append(None)
 

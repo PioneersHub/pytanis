@@ -6,20 +6,29 @@ This example demonstrates how to use the new storage abstraction
 layer that allows switching between local files and Google Sheets.
 """
 
+import tempfile
+from pathlib import Path
+
 import pandas as pd
 
-from pytanis import get_storage_client
+from pytanis import get_cfg, get_storage_client
 from pytanis.config import Config, StorageCfg
 
 
 def example_local_storage():
     """Example using local file storage"""
     # Create config with local storage
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.toml', delete=False, encoding='utf-8') as tmp:
+        temp_config_path = tmp.name
+
     config = Config(
-        cfg_path='/tmp/test_config.toml',  # Dummy path
+        cfg_path=temp_config_path,  # Use secure temp file
         Pretalx={'api_token': 'dummy'},  # Required but not used here
         Storage=StorageCfg(provider='local', local_path='./data'),
     )
+
+    # Clean up temp file
+    Path(temp_config_path).unlink(missing_ok=True)
 
     # Get storage client
     storage = get_storage_client(config)
@@ -44,12 +53,18 @@ def example_google_storage():
     """Example using Google Sheets storage (requires pytanis[google])"""
     try:
         # Create config with Google storage
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.toml', delete=False, encoding='utf-8') as tmp:
+            temp_config_path = tmp.name
+
         config = Config(
-            cfg_path='/tmp/test_config.toml',  # Dummy path
+            cfg_path=temp_config_path,  # Use secure temp file
             Pretalx={'api_token': 'dummy'},  # Required but not used here
             Storage=StorageCfg(provider='google'),
             Google={'client_secret_json': 'path/to/client_secret.json', 'token_json': 'path/to/token.json'},
         )
+
+        # Clean up temp file
+        Path(temp_config_path).unlink(missing_ok=True)
 
         # Get storage client
         storage = get_storage_client(config)
@@ -58,6 +73,9 @@ def example_google_storage():
         # Usage is the same as local storage!
         # storage.write_sheet('spreadsheet_id', df)
         # df = storage.read_sheet('spreadsheet_id', 'Sheet1')
+
+        # Example of what you can do with the storage client:
+        _ = storage  # Mark as intentionally unused in this demo
 
     except ImportError as e:
         print(f'Google Sheets not available: {e}')
@@ -71,13 +89,12 @@ def example_from_config_file():
     # provider = "local"
     # local_path = "./conference_data"
 
-    from pytanis import get_cfg
-
     config = get_cfg()
     storage = get_storage_client(config)
 
     print(f'Storage provider: {config.Storage.provider}')
     # Use storage client...
+    _ = storage  # Mark as intentionally unused in this demo
 
 
 if __name__ == '__main__':
