@@ -9,7 +9,7 @@ This section contains detailed release notes for each version of Pytanis.
 ## Previous Releases
 
 - [v0.9.0alpha](v0.9.0alpha.md) - Alpha release with storage abstraction
-- [v0.8.2](../changelog.md#version-08-2024-12-30) - Added Mailgun support
+- [v0.8.2](../changelog.md) - Added Mailgun support
 
 ## Migration Guides
 

@@ -46,3 +46,14 @@ repos:
     - id: bandit
       args: ['-c', 'pyproject.toml']
       additional_dependencies: ['bandit[toml]']
+
+# Documentation build check
+- repo: local
+  hooks:
+    - id: docs-build-check
+      name: Check documentation builds
+      entry: hatch run docs:build-check
+      language: system
+      pass_filenames: false
+      files: '\.(md|yml|yaml|py)$'
+      description: Check that documentation builds without errors
