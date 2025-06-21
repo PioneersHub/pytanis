@@ -7,6 +7,7 @@ from typing import Any
 
 import pandas as pd
 
+from pytanis.pretalx.client import PretalxClient
 from pytanis.pretalx.models import Answer, Review, SimpleTalk, Speaker, Submission, Talk
 
 _logger = logging.getLogger(__name__)
@@ -182,7 +183,11 @@ def extract_expertise_and_prerequisites(talk: Talk, simple_talk: SimpleTalk) -> 
 
 
 def extract_organisation(
-    talk: Talk, simple_talk: SimpleTalk, pretalx_client, event_slug: str, speaker_data: dict[str, Speaker]
+    talk: Talk,
+    simple_talk: SimpleTalk,
+    pretalx_client: PretalxClient,
+    event_slug: str,
+    speaker_data: dict[str, Speaker],
 ) -> None:
     """Extract organisation information from speaker data."""
     if not (pretalx_client and event_slug):
@@ -227,7 +232,7 @@ def extract_organisation(
 
 
 def get_talks_as_json(
-    pretalx_client, event_slug: str, state_value: str = 'confirmed', params: dict[str, Any] | None = None
+    pretalx_client: PretalxClient, event_slug: str, state_value: str = 'confirmed', params: dict[str, Any] | None = None
 ) -> str:
     """
     Get talks from pretalx and convert them to a JSON list of SimpleTalk objects.
@@ -260,7 +265,9 @@ def get_talks_as_json(
     return talks_to_json(talks, pretalx_client, event_slug)
 
 
-def talks_to_json(talks: Iterable[Talk], pretalx_client=None, event_slug: str | None = None) -> str:
+def talks_to_json(
+    talks: Iterable[Talk], pretalx_client: PretalxClient | None = None, event_slug: str | None = None
+) -> str:
     """
     Convert Talk objects to a JSON list of SimpleTalk objects.
 
@@ -288,7 +295,7 @@ def talks_to_json(talks: Iterable[Talk], pretalx_client=None, event_slug: str | 
         extract_expertise_and_prerequisites(talk, simple_talk)
 
         # Extract organisation information
-        if event_slug:
+        if event_slug and pretalx_client:
             extract_organisation(talk, simple_talk, pretalx_client, event_slug, speaker_data)
 
         simple_talks.append(simple_talk)
@@ -298,7 +305,7 @@ def talks_to_json(talks: Iterable[Talk], pretalx_client=None, event_slug: str | 
 
 
 def save_talks_to_json(
-    pretalx_client,
+    pretalx_client: PretalxClient,
     event_slug: str,
     file_path: str,
     state_value: str = 'confirmed',
@@ -321,7 +328,7 @@ def save_talks_to_json(
 
 
 def save_confirmed_talks_to_json(
-    talks: Iterable[Talk], file_path: str, pretalx_client=None, event_slug: str | None = None
+    talks: Iterable[Talk], file_path: str, pretalx_client: PretalxClient | None = None, event_slug: str | None = None
 ) -> None:
     """
     Save confirmed talks to a JSON file (legacy function for backward compatibility).
@@ -338,7 +345,9 @@ def save_confirmed_talks_to_json(
         f.write(json_data)
 
 
-def get_confirmed_talks_as_json(pretalx_client, event_slug: str, params: dict[str, Any] | None = None) -> str:
+def get_confirmed_talks_as_json(
+    pretalx_client: PretalxClient, event_slug: str, params: dict[str, Any] | None = None
+) -> str:
     """
     Get confirmed talks from pretalx and convert them to JSON (legacy function for backward compatibility).
 

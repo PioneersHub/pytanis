@@ -42,4 +42,4 @@ The `api_version` setting is optional. If not specified in your `~/.pytanis/conf
 
 Find out more about the client's capabilities, e.g. throttling, by looking at Pytanis' reference of the [pretalx client module].
 
-[pretalx client module]: ../../reference/pytanis/helpdesk/client/#pytanis.helpdesk.client
+[pretalx client module]: ../reference/pytanis/helpdesk/client.md#pytanis.helpdesk.client

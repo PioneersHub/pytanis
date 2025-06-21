@@ -19,6 +19,9 @@ nav:
         - 'Pretalx Client': usage/pretalx.md
         - 'Google Sheets': usage/gsheet.md
         - 'Sending Mails': usage/mail.md
+        - 'Talks': usage/talks.md
+        - 'Confirmed Talks': usage/confirmed_talks.md
+        - 'Optional Components': usage/optional_components.md
         - 'Testing': usage/testing.md
     - Tasks:
         - 'Call for Participation': tasks/cfp.md
