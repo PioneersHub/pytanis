@@ -353,8 +353,7 @@ build-check = [
 
 # Lint environment
 [tool.hatch.envs.lint]
-type = "pip-compile"
-pip-compile-constraint = "default"
+type = "virtual"
 dependencies = [
     "mypy~=1.15.0",
     "ruff~=0.9.7",
