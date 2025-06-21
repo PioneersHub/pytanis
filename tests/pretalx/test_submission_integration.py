@@ -402,6 +402,7 @@ class TestSubmissionModel:
             assert isinstance(answer.question, AnswerQuestionRef)
 
 
+@pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
 @pytest.mark.integration
 class TestSubmissionAPIPerformance:
     """Test performance aspects of submission retrieval."""
