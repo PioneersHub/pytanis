@@ -6,10 +6,33 @@ from shutil import copy
 
 import pytest
 
-from pytanis.config import PYTANIS_CFG_PATH, PYTANIS_ENV
+from pytanis.config import PYTANIS_CFG_PATH, PYTANIS_ENV, get_cfg
 from pytanis.pretalx.client import PretalxClient
 
 __location__ = Path(__file__).parent
+
+
+def has_valid_pretalx_token():
+    """Check if we have a valid Pretalx API token available.
+
+    Checks in order:
+    1. PRETALX_API_TOKEN environment variable
+    2. Local ~/.pytanis/config.toml file
+
+    Returns:
+        bool: True if a token is available, False otherwise
+    """
+    # Check environment variable first (highest priority)
+    if os.getenv('PRETALX_API_TOKEN'):
+        return True
+
+    # Check local config file
+    try:
+        cfg = get_cfg()
+        return bool(cfg.Pretalx.api_token)
+    except Exception:
+        # Config file doesn't exist or is invalid
+        return False
 
 
 @pytest.fixture
@@ -31,4 +54,15 @@ def tmp_config(tmp_path):
 
 @pytest.fixture
 def pretalx_client():
+    return PretalxClient()
+
+
+@pytest.fixture
+def authenticated_client(tmp_config):
+    """PretalxClient that uses test config with authentication.
+
+    This fixture ensures the client uses the test configuration
+    which includes a dummy API token. Use this for testing
+    endpoints that require authentication.
+    """
     return PretalxClient()

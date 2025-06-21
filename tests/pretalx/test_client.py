@@ -13,6 +13,12 @@ from .test_config import (
     VALID_SUBMISSION_TYPE,
 )
 
+# Mark for auth-required tests - these endpoints need special permissions
+# Only run when explicitly enabled via environment variable
+requires_auth = pytest.mark.skipif(
+    not os.getenv('PRETALX_API_TOKEN'), reason='Requires PRETALX_API_TOKEN environment variable with proper permissions'
+)
+
 
 @pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
 def test_events_endpoint(pretalx_client):
@@ -56,8 +62,10 @@ def test_speakers_endpoint(pretalx_client):
 # ToDo: Add check for single speaker too
 
 
+@requires_auth
 @pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
 def test_reviews_endpoint(pretalx_client):
+    """Test reviews endpoint (requires authentication)."""
     count, reviews = pretalx_client.reviews(EVENT_SLUG)
     assert count == len(list(reviews))
 
@@ -86,8 +94,10 @@ def test_questions_endpoint(pretalx_client):
 # ToDo: Add check for single question too
 
 
+@requires_auth
 @pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
 def test_answers_endpoint(pretalx_client):
+    """Test answers endpoint (requires authentication)."""
     count, answers = pretalx_client.answers(EVENT_SLUG)
     assert count == len(list(answers))
 
@@ -95,8 +105,10 @@ def test_answers_endpoint(pretalx_client):
 # ToDo: Add check for single answer too
 
 
+@requires_auth
 @pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
 def test_tags_endpoint(pretalx_client):
+    """Test tags endpoint (requires authentication)."""
     count, tags = pretalx_client.tags(EVENT_SLUG)
     assert count == len(list(tags))
 

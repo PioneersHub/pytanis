@@ -64,9 +64,33 @@ MANIFEST
 devcontainer.env
 config.toml
 
-# Code Assistants
-CLAUDE.local.md
+# Code Assistant Files
+
+# Claude-specific
 CLAUDE.md
-.claude
-.augementcode
-.roo
+CLAUDE.local.md
+.claude/
+
+# General hidden assistant metadata or tooling
+.augementcode/
+.roo/
+.gpt/
+.gptconfig/
+.gpt-logs/
+.codegpt/
+.codeassistant/
+.chatgpt/
+.chatgpt.md
+.chatgpt.local.md
+
+# VS Code assistant plugins (like CodeGPT, Continue, etc.)
+.vscode/continue/
+.vscode/Continue.json
+.vscode/codegpt.json
+.vscode/.continue/
+
+# Generic markdown/chat log patterns
+*.assistant.md
+*.chat.md
+*conversation*.md
+*chatlog*.md
