@@ -9,6 +9,8 @@ import os
 import sys
 from pathlib import Path
 
+import tomli
+
 from pytanis import PretalxClient, get_cfg
 from pytanis.config import Config, PretalxCfg
 from pytanis.pretalx.models import Event, Speaker, Submission, Talk
@@ -155,7 +157,13 @@ def main():
         client = PretalxClient(config)
 
     # Get event slug from environment or use default
-    event_slug = os.getenv('PRETALX_TEST_EVENT', 'pyconde-pydata-berlin-2024')
+    test_config_path = Path(__file__).parent.parent / 'test_config.toml'
+    if test_config_path.exists():
+        with open(test_config_path, 'rb') as f:
+            test_config = tomli.load(f)
+            default_event_slug = test_config.get('test', {}).get('event_slug')
+
+    event_slug = os.getenv('PRETALX_TEST_EVENT', default_event_slug)
 
     print(f'Validating Pretalx models for event: {event_slug}')
     print('=' * 60)

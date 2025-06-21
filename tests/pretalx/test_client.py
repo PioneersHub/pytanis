@@ -1,8 +1,14 @@
 """These tests will only run if you have set up an Pretalx Account"""
 
 import os
+import sys
+from pathlib import Path
 
 import pytest
+
+# Add parent directory to path to import from conftest
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from conftest import has_valid_pretalx_token
 
 from .test_config import (
     EVENT_DATE_FROM,
@@ -14,9 +20,8 @@ from .test_config import (
 )
 
 # Mark for auth-required tests - these endpoints need special permissions
-# Only run when explicitly enabled via environment variable
 requires_auth = pytest.mark.skipif(
-    not os.getenv('PRETALX_API_TOKEN'), reason='Requires PRETALX_API_TOKEN environment variable with proper permissions'
+    not has_valid_pretalx_token(), reason='Requires valid authentication (PRETALX_API_TOKEN env var or local config)'
 )
 
 
