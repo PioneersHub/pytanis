@@ -1,0 +1,38 @@
+<!--- Add here generic links that can be used in every md doc -->
+[MIT]: https://spdx.org/licenses/MIT.html
+[git]: https://git-scm.com/
+[pre-commit]: https://pre-commit.com/
+[PyPI]: https://pypi.org/
+[repository]: https://github.com/PioneersHub/pytanis
+[issue tracker]: https://github.com/PioneersHub/pytanis/issues
+[mkdocs]: https://www.mkdocs.org/
+[hatch]: https://hatch.pypa.io/
+[virtualenv]: https://virtualenv.pypa.io/en/stable/
+[Python]: https://www.python.org/
+[Pretalx]: https://pretalx.com/
+[hatch]: https://hatch.pypa.io/
+[Prytanis]: https://en.wikipedia.org/wiki/Prytaneis
+[Prytaneion]: https://en.wikipedia.org/wiki/Prytaneion
+[Python Quickstart for the Google API]: https://developers.google.com/sheets/api/quickstart/python
+[Pretalx user settings]: https://pretalx.com/orga/me
+[Pretalx API]: https://docs.pretalx.org/api/resources/index.html
+[documentation]: https://pioneershub.github.io/pytanis/
+[Google Form]: https://www.google.com/forms/about/
+[Google Forms]: https://www.google.com/forms/about/
+[Google Sheet]: https://www.google.com/sheets/about/
+[Google Sheets]: https://www.google.com/sheets/about/
+[pydantic]: https://docs.pydantic.dev/
+[HelpDesk]: https://www.helpdesk.com/
+[Material for MkDocs]: https://github.com/squidfunk/mkdocs-material
+[GitHub Pages]: https://docs.github.com/en/pages
+[PyConDE]: https://pycon.de/
+[EuroPython]: https://europython.eu/
+[Pandas]: https://pandas.pydata.org/
+[LiveChat Developer Console]: https://developers.livechat.com/console/apps
+[black]: https://black.readthedocs.io/
+[flake8]: https://flake8.pycqa.org/
+[mypy]: https://mypy-lang.org/
+[isort]: https://pycqa.github.io/isort/
+[pretalx-public-voting]: https://github.com/pretalx/pretalx-public-voting
+[Pytanis]: https://github.com/PioneersHub/pytanis
+[Mailgun]: https://www.mailgun.com/
