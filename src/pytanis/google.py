@@ -225,7 +225,7 @@ def gsheet_col(idx: int) -> str:
 
 def gsheet_rows_for_fmt(mask: pd.Series, n_cols: int) -> list[str]:
     """Get the Google Sheet row range specifications for formatting"""
-    rows = pd.Series(np.argwhere(mask.to_numpy()).reshape(-1) + 2)  # +2 since 1-index and header
+    rows: pd.Series = pd.Series(np.argwhere(mask.to_numpy()).reshape(-1) + 2)  # +2 since 1-index and header
     last_col = gsheet_col(n_cols - 1)  # last index
     rows = rows.map(lambda x: f'A{x}:{last_col}{x}')
     return rows.to_list()
