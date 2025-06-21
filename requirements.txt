@@ -125,7 +125,7 @@ gspread-dataframe==4.0.0
     # via hatch.envs.default
 gspread-formatting==1.2.0
     # via hatch.envs.default
-h11==0.14.0
+h11==0.16.0
     # via httpcore
 highspy==1.9.0
     # via hatch.envs.default

@@ -140,7 +140,7 @@ gspread-formatting==1.2.0
     # via
     #   -c requirements.txt
     #   hatch.envs.lint
-h11==0.14.0
+h11==0.16.0
     # via
     #   -c requirements.txt
     #   httpcore
