@@ -27,7 +27,7 @@ from gspread_formatting import (
     set_data_validation_for_cell_range,
 )
 from gspread_formatting.dataframe import format_with_dataframe
-from gspread_formatting.models import cellFormat
+from gspread_formatting.models import CellFormat
 from structlog import get_logger
 from webcolors import name_to_rgb
 
@@ -247,6 +247,6 @@ def mark_rows(worksheet, mask: pd.Series, color: ColorType):
     rows = gsheet_rows_for_fmt(mask, worksheet.col_count)
     color_rgb = name_to_rgb(color) if isinstance(color, str) else color[:3]
     color_rgb = [x / 255 for x in color_rgb]  # convert RGB to 0-1 range
-    fmt = cellFormat(backgroundColor=Color(*color_rgb))
+    fmt = CellFormat(backgroundColor=Color(*color_rgb))
     if rows:
         format_cell_ranges(worksheet, [(rng, fmt) for rng in rows])

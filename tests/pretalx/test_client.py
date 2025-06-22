@@ -1,14 +1,8 @@
 """These tests will only run if you have set up an Pretalx Account"""
 
 import os
-import sys
-from pathlib import Path
 
 import pytest
-
-# Add parent directory to path to import from conftest
-sys.path.insert(0, str(Path(__file__).parent.parent))
-from conftest import has_valid_pretalx_token
 
 from .test_config import (
     EVENT_DATE_FROM,
@@ -17,11 +11,6 @@ from .test_config import (
     VALID_ROOM_NAME,
     VALID_SUBMISSION_CODE,
     VALID_SUBMISSION_TYPE,
-)
-
-# Mark for auth-required tests - these endpoints need special permissions
-requires_auth = pytest.mark.skipif(
-    not has_valid_pretalx_token(), reason='Requires valid authentication (PRETALX_API_TOKEN env var or local config)'
 )
 
 
@@ -67,7 +56,6 @@ def test_speakers_endpoint(pretalx_client):
 # ToDo: Add check for single speaker too
 
 
-@requires_auth
 @pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
 def test_reviews_endpoint(pretalx_client):
     """Test reviews endpoint (requires authentication)."""
@@ -99,10 +87,8 @@ def test_questions_endpoint(pretalx_client):
 # ToDo: Add check for single question too
 
 
-@requires_auth
 @pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
 def test_answers_endpoint(pretalx_client):
-    """Test answers endpoint (requires authentication)."""
     count, answers = pretalx_client.answers(EVENT_SLUG)
     assert count == len(list(answers))
 
@@ -110,10 +96,8 @@ def test_answers_endpoint(pretalx_client):
 # ToDo: Add check for single answer too
 
 
-@requires_auth
 @pytest.mark.skipif(os.getenv('GITHUB'), reason='on Github')
 def test_tags_endpoint(pretalx_client):
-    """Test tags endpoint (requires authentication)."""
     count, tags = pretalx_client.tags(EVENT_SLUG)
     assert count == len(list(tags))
 

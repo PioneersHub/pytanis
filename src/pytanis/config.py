@@ -19,7 +19,6 @@ __all__ = [
     'HelpDeskCfg',
     'MailgunCfg',
     'PretalxCfg',
-    'StorageCfg',
     'get_cfg',
     'get_cfg_file',
 ]
@@ -56,13 +55,6 @@ class PretalxCfg(BaseModel):
     api_version: str = 'v1'
 
 
-class StorageCfg(BaseModel):
-    """Configuration for storage providers"""
-
-    provider: str = 'local'  # 'local', 'google', etc.
-    local_path: Path | None = None  # For local storage
-
-
 class CommunicationCfg(BaseModel):
     """Configuration for communication providers"""
 
@@ -84,7 +76,6 @@ class Config(BaseModel):
     Mailgun: MailgunCfg | None = None
 
     # New provider-based sections
-    Storage: StorageCfg | None = None
     Communication: CommunicationCfg | None = None
 
     @field_validator('Google')
@@ -100,19 +91,6 @@ class Config(BaseModel):
 
         v.client_secret_json = make_rel_path_abs(v.client_secret_json)
         v.token_json = make_rel_path_abs(v.token_json)
-
-        return v
-
-    @field_validator('Storage')
-    @classmethod
-    def validate_storage(cls, v: StorageCfg | None, info: ValidationInfo) -> StorageCfg | None:
-        if v is None:
-            # Default to local storage
-            v = StorageCfg(provider='local')
-
-        # Make local_path absolute if provided
-        if v.local_path is not None and not v.local_path.is_absolute():
-            v.local_path = info.data['cfg_path'].parent / v.local_path
 
         return v
 

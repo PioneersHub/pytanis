@@ -1,35 +1,20 @@
 # Changelog
 
-## Version 0.9.1 (2025-06-21)
 
-### Bug Fixes
-- **Authentication**: Fixed authentication issue where HeaderApiKey was not adding the required "Token " prefix for Pretalx API authorization headers
-- **Type hints**: Added support for dict type in params parameter alongside QueryParams for better flexibility
-
-### Improvements
-- **Test configuration**: Externalized test event slug to `tests/test_config.toml` configuration file
-- **Dependencies**: Removed unused httpx-auth dependency since we now handle authentication directly
-
-## Version 0.9.0 (2025-06-21)
+## Version 0.9.0rc2 (2025-06-21) - preliminary until final release
 
 ### 🎉 First Release Compatible with Pretalx Versioned API v1
 
 This is the first release fully compatible with the new Pretalx versioned API v1 introduced in June 2025.
 
 ### Major Features
-- **Storage abstraction layer**: Support for multiple storage backends (local CSV/Excel files, Google Sheets)
 - **Communication abstraction layer**: Unified interface for email (Mailgun) and ticket (HelpDesk) providers
-- **Factory functions**: Simplified client creation with `get_storage_client()` and `get_mail_client()`
+- **Factory functions**: Simplified client creation with `get_ticket_client()` and `get_mail_client()`
 - **Optional dependencies**: Install only what you need with `pytanis[google]`, `pytanis[helpdesk]`, `pytanis[mailgun]`
 
 ### Pretalx API Improvements
 - **API v1 Compatibility**: Full support for Pretalx versioned API v1 with proper `expand` parameter usage
-- **Backward compatibility**: Transparent handling of API changes where IDs replaced nested objects
-- **Performance optimization**: Cache pre-population reduces API calls by 50-75x for bulk operations
-- **Redirect handling**: Automatic handling of API redirects with trailing slashes
-- **New API methods**: `submission_types()`, `tracks()` for accessing submission metadata
-- **SimpleTalk model**: Export talks in simplified JSON format for easier processing
-- **API compatibility**: Event.urls field now optional to support latest API versions
+- **api_version**: Added configurable Pretalx API version support via `api_version` config parameter (defaults to "v1")
 
 ### Testing & Quality
 - Comprehensive integration test framework with interactive CLI
@@ -40,7 +25,8 @@ This is the first release fully compatible with the new Pretalx versioned API v1
 ### Bug Fixes
 - Fixed 401 Unauthorized errors when fetching individual resources by using proper API expansion
 - Fixed redirect issues with missing trailing slashes in API endpoints
-- Fixed circular import issues in Google storage adapter
+- Fixed authentication issue where HeaderApiKey was not adding the required "Token " prefix for Pretalx API authorization headers
+- Added support for dict type in params parameter alongside QueryParams for better flexibility
 
 ## Version 0.8 (2024-12-30)
 
@@ -48,7 +34,6 @@ This is the first release fully compatible with the new Pretalx versioned API v1
 - Added new notebook for calculating submission statistics, thanks to Nils Mohr
 - Added devcontainer for easier development, thanks to Nils Mohr
 - Updated all dependencies, added support for Python 3.13
-- Added configurable Pretalx API version support via `api_version` config parameter (defaults to "v1")
 
 ## Version 0.7.2 (2024-06-18)
 

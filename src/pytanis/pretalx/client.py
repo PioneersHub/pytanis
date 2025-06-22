@@ -7,6 +7,7 @@ ToDo:
 """
 
 from collections.abc import Iterator
+from http import HTTPStatus
 from typing import Any, TypeAlias, TypeVar, cast
 
 import httpx
@@ -33,11 +34,6 @@ from pytanis.pretalx.models import (
 from pytanis.utils import rm_keys, throttle
 
 _logger = get_logger()
-
-# HTTP Status codes
-HTTP_NOT_FOUND = 404
-HTTP_UNAUTHORIZED = 401
-HTTP_FORBIDDEN = 403
 
 T = TypeVar('T', bound=BaseModel)
 JSONObj: TypeAlias = dict[str, Any]
@@ -211,10 +207,12 @@ class PretalxClient:
 
         return self.__validate(type, result)
 
-    def me(self) -> Me:
+    @classmethod
+    def me(cls) -> Me:
         """Returns what Pretalx knows about myself"""
-        result = self._get_one('/api/me/')
-        return self.__validate(Me, result)
+        # removed in API update v1
+        msg = 'This endpoint is no longer provided since API v1.'
+        raise RuntimeError(msg)
 
     def event(self, event_slug: str, *, params: QueryParams | dict | None = None) -> Event:
         """Returns detailed information about a specific event"""
@@ -244,7 +242,7 @@ class PretalxClient:
         try:
             return self._endpoint_id(Talk, event_slug, 'talks', code, params=params)
         except httpx.HTTPStatusError as e:
-            if e.response.status_code == HTTP_NOT_FOUND:
+            if e.response.status_code == HTTPStatus.NOT_FOUND:
                 _logger.info('talk endpoint not available, using submission endpoint')
                 # Use submission endpoint but validate as Talk object
                 return self._endpoint_id(Talk, event_slug, 'submissions', code, params=params)
@@ -255,7 +253,7 @@ class PretalxClient:
         try:
             return self._endpoint_lst(Talk, event_slug, 'talks', params=params)
         except httpx.HTTPStatusError as e:
-            if e.response.status_code == HTTP_NOT_FOUND:
+            if e.response.status_code == HTTPStatus.NOT_FOUND:
                 _logger.info('talks endpoint not available, using submissions endpoint')
                 # Use submissions endpoint but validate as Talk objects
                 return self._endpoint_lst(Talk, event_slug, 'submissions', params=params)

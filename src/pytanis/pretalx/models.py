@@ -118,7 +118,7 @@ class State(Enum):
 
 
 class TransSubmissionType(BaseModel):
-    """Model to handle compatibility"""
+    """Model to keep previous and new models aligned due to changes in API v1"""
 
     model_config = ConfigDict(extra='allow')
     id: int
@@ -148,7 +148,7 @@ class Submission(BaseModel):
     description: str
     duration: int | None = None
     do_not_record: bool
-    is_featured: bool = False  # is not in response if no longer available 06/2025
+    is_featured: bool
     slot: Slot | None = None  # only available after schedule_web release
     slot_count: int
     image: str | None = None
@@ -160,13 +160,12 @@ class Submission(BaseModel):
     tag_ids: list[int] | None = None  # needs organizer permissions
 
     @model_validator(mode='after')
-    @classmethod
-    def mangle_submission_type(cls, model):
-        # handle changes introduced via API v1
-        if model.submission_type:
-            model.submission_type_id = getattr(model.submission_type, 'id', None)
-            model.submission_type = getattr(model.submission_type, 'name', None)
-        return model
+    def mangle_submission_type(self):
+        """This is required to handle changes introduced via API v1"""
+        if self.submission_type:
+            self.submission_type_id = getattr(self.submission_type, 'id', None)
+            self.submission_type = getattr(self.submission_type, 'name', None)
+        return self
 
 
 class Talk(Submission):
@@ -210,14 +209,9 @@ class QuestionRequirement(Enum):
     after_deadline = 'after deadline'
 
 
-class Question(BaseModel):
-    """
-    Pretalx introduced breaking API changes in 06/2025 with API "v1":
-    The attributes are not actively used, we fall back to defaults for now
-    - required is missing now: is extrapolated from question_required
-    - contains_personal_data: is missing although documented, defaults to False now
-    - is_public: is missing although documented, defaults to False now
-    - is_visible_to_reviewers: is missing although documented, defaults to False now
+class QuestionSimple(BaseModel):
+    """Subset of questions that are used for nested responses, e.g., in Submission.answers
+    Question is the full model that is used in the questions endpoint
     """
 
     id: int
@@ -232,20 +226,31 @@ class Question(BaseModel):
     freeze_after: datetime | None = None
     options: list[Option]
     default_answer: str | None = None
-    contains_personal_data: bool = False  # default value since API v1
+    contains_personal_data: bool
     min_length: int | None = None
     max_length: int | None = None
-    is_public: bool = False  # default value since API v1
-    is_visible_to_reviewers: bool = False  # default value since API v1
+    is_public: bool
+    is_visible_to_reviewers: bool
 
     @model_validator(mode='after')
-    @classmethod
-    def is_required(cls, model):
-        if model.question_required and model.question_required != QuestionRequirement.optional:
-            model.required = True
+    def is_required(self):
+        if self.question_required and self.question_required != QuestionRequirement.optional:
+            self.required = True
         else:
-            model.required = False
-        return model
+            self.required = False
+        return self
+
+
+class Question(QuestionSimple):
+    """
+    Pretalx introduced breaking API changes in 06/2025 with API "v1":
+    These are the extra attributes that are provide via the questions endpoint
+    but noct in the subdocuments in e.g., submissions
+    """
+
+    contains_personal_data: bool
+    is_public: bool
+    is_visible_to_reviewers: bool
 
 
 class Tag(BaseModel):

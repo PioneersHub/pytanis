@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 import structlog.stdlib
 
 from pytanis.config import get_cfg
-from pytanis.factory import get_mail_client, get_storage_client, get_ticket_client
+from pytanis.factory import get_mail_client, get_ticket_client
 from pytanis.pretalx import (
     PretalxClient,
     SimpleTalk,
@@ -36,7 +36,6 @@ __all__ = [
     'get_cfg',
     'get_confirmed_talks_as_json',  # For backward compatibility
     'get_mail_client',
-    'get_storage_client',
     'get_talks_as_json',
     'get_ticket_client',
     'save_confirmed_talks_to_json',  # For backward compatibility

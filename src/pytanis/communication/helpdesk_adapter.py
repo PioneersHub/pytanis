@@ -5,6 +5,10 @@ from typing import Any
 from structlog import get_logger
 
 from pytanis.communication.base import BaseMailClient, BaseTicketClient, EmailMessage, Ticket, TicketComment
+from pytanis.config import get_cfg
+from pytanis.helpdesk import HelpDeskClient, MailClient
+from pytanis.helpdesk.mail import Mail, Recipient
+from pytanis.helpdesk.models import Assignment, Id, Message, NewTicket, Requester
 
 _logger = get_logger()
 
@@ -22,13 +26,6 @@ class HelpDeskMailAdapter(BaseMailClient):
         Args:
             config: Configuration object (if None, will use get_cfg())
         """
-        # Lazy import to avoid dependency issues
-        try:
-            from pytanis.config import get_cfg
-            from pytanis.helpdesk import HelpDeskClient, MailClient
-        except ImportError as e:
-            raise ImportError('HelpDesk dependencies not installed. Install with: pip install pytanis[helpdesk]') from e
-
         if config is None:
             config = get_cfg()
 
@@ -41,10 +38,10 @@ class HelpDeskMailAdapter(BaseMailClient):
         """Send an email message using HelpDesk"""
         try:
             # Convert to HelpDesk format
-            from pytanis.helpdesk.mail import Mail, Recipient
 
             if not message.to:
-                raise ValueError('No recipients specified')
+                msg = 'No recipients specified'
+                raise ValueError(msg)
 
             # Create recipient objects for all recipients
             recipients = []
@@ -92,15 +89,14 @@ class HelpDeskMailAdapter(BaseMailClient):
             return None
 
         except Exception as e:
-            raise OSError(f'Error sending email via HelpDesk: {e}') from e
+            msg = f'Error sending email via HelpDesk: {e}'
+            raise OSError(msg) from e
 
     def send_bulk_emails(self, messages: list[EmailMessage], rate_limit: int | None = None) -> list[str | None]:
         """Send multiple email messages"""
         # The HelpDesk MailClient handles batching internally
         # We'll create a single Mail object with all recipients for efficiency
         try:
-            from pytanis.helpdesk.mail import Mail, Recipient
-
             if not messages:
                 return []
 
@@ -164,7 +160,8 @@ class HelpDeskMailAdapter(BaseMailClient):
             return results
 
         except Exception as e:
-            raise OSError(f'Error sending bulk emails via HelpDesk: {e}') from e
+            msg = f'Error sending bulk emails via HelpDesk: {e}'
+            raise OSError(msg) from e
 
 
 class HelpDeskTicketAdapter(BaseTicketClient):
@@ -180,12 +177,6 @@ class HelpDeskTicketAdapter(BaseTicketClient):
         Args:
             config: Configuration object (if None, will use get_cfg())
         """
-        # Lazy import to avoid dependency issues
-        try:
-            from pytanis.config import get_cfg
-            from pytanis.helpdesk import HelpDeskClient
-        except ImportError as e:
-            raise ImportError('HelpDesk dependencies not installed. Install with: pip install pytanis[helpdesk]') from e
 
         if config is None:
             config = get_cfg()
@@ -195,8 +186,6 @@ class HelpDeskTicketAdapter(BaseTicketClient):
     def create_ticket(self, ticket: Ticket) -> str:
         """Create a new support ticket"""
         try:
-            from pytanis.helpdesk.models import Assignment, Id, Message, NewTicket, Requester
-
             # Create requester object
             requester = Requester(
                 email=ticket.requester_email,
@@ -239,31 +228,37 @@ class HelpDeskTicketAdapter(BaseTicketClient):
             return str(result)
 
         except Exception as e:
-            raise OSError(f'Error creating ticket: {e}') from e
+            msg = f'Error creating ticket: {e}'
+            raise OSError(msg) from e
 
     def get_ticket(self, ticket_id: str) -> Ticket:
         """Get a ticket by ID"""
         # HelpDesk client doesn't have a get_ticket method in the current implementation
-        raise NotImplementedError('HelpDesk adapter does not support getting tickets yet')
+        msg = 'HelpDesk adapter does not support getting tickets yet'
+        raise NotImplementedError(msg)
 
     def update_ticket(self, ticket_id: str, updates: dict[str, Any]) -> None:
         """Update a ticket"""
         # HelpDesk client doesn't have an update_ticket method in the current implementation
-        raise NotImplementedError('HelpDesk adapter does not support updating tickets yet')
+        msg = 'HelpDesk adapter does not support updating tickets yet'
+        raise NotImplementedError(msg)
 
     def add_comment(self, comment: TicketComment) -> str:
         """Add a comment to a ticket"""
         # HelpDesk client doesn't have an add_comment method in the current implementation
-        raise NotImplementedError('HelpDesk adapter does not support adding comments yet')
+        msg = 'HelpDesk adapter does not support adding comments yet'
+        raise NotImplementedError(msg)
 
     def list_tickets(
         self, status: str | None = None, requester_email: str | None = None, limit: int = 100
     ) -> list[Ticket]:
         """List tickets with optional filtering"""
         # HelpDesk client doesn't have a list_tickets method in the current implementation
-        raise NotImplementedError('HelpDesk adapter does not support listing tickets yet')
+        msg = 'HelpDesk adapter does not support listing tickets yet'
+        raise NotImplementedError(msg)
 
     def close_ticket(self, ticket_id: str) -> None:
         """Close a ticket"""
         # HelpDesk client doesn't have a close_ticket method in the current implementation
-        raise NotImplementedError('HelpDesk adapter does not support closing tickets yet')
+        msg = 'HelpDesk adapter does not support closing tickets yet'
+        raise NotImplementedError(msg)

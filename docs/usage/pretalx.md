@@ -5,7 +5,7 @@ example:
 ```python
 from pytanis import PretalxClient
 
-event_name = "pyconde-pydata-berlin-2023"
+event_name = "pyconde-pydata-2025"
 
 pretalx_client = PretalxClient()
 subs_count, subs = pretalx_client.submissions(event_name)

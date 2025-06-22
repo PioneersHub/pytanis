@@ -2,57 +2,11 @@
 
 from structlog import get_logger
 
+from pytanis.communication import HelpDeskMailAdapter, HelpDeskTicketAdapter, MailgunAdapter
 from pytanis.communication.base import BaseMailClient, BaseTicketClient
 from pytanis.config import Config, get_cfg
-from pytanis.storage.base import BaseSpreadsheetClient
 
 _logger = get_logger()
-
-
-def get_storage_client(config: Config | None = None) -> BaseSpreadsheetClient:
-    """Get a storage client based on configuration
-
-    Args:
-        config: Configuration object (if None, will use get_cfg())
-
-    Returns:
-        A storage client instance
-
-    Raises:
-        ValueError: If the configured provider is not supported
-        ImportError: If the provider's dependencies are not installed
-    """
-    if config is None:
-        config = get_cfg()
-
-    # Get storage configuration
-    storage_cfg = config.Storage
-    if storage_cfg is None:
-        # Default to local storage
-        from pytanis.storage.local import LocalFileClient
-
-        _logger.info('No storage configuration found, defaulting to local storage')
-        return LocalFileClient()
-
-    provider = storage_cfg.provider.lower()
-
-    if provider == 'local':
-        from pytanis.storage.local import LocalFileClient
-
-        base_path = storage_cfg.local_path or '.'
-        return LocalFileClient(base_path=base_path)
-
-    elif provider == 'google':
-        try:
-            from pytanis.storage.google import GoogleSheetsStorageClient
-        except ImportError as e:
-            raise ImportError(
-                'Google Sheets dependencies not installed. Install with: pip install pytanis[google]'
-            ) from e
-        return GoogleSheetsStorageClient(config=config)
-
-    else:
-        raise ValueError(f'Unknown storage provider: {provider}')
 
 
 def get_mail_client(config: Config | None = None) -> BaseMailClient:
@@ -82,26 +36,19 @@ def get_mail_client(config: Config | None = None) -> BaseMailClient:
             _logger.info('Using HelpDesk from legacy configuration')
             provider = 'helpdesk'
         else:
-            raise ValueError('No email provider configured')
+            msg = 'No email provider configured'
+            raise ValueError(msg)
     else:
         provider = comm_cfg.email_provider.lower()
 
     if provider == 'mailgun':
-        try:
-            from pytanis.communication.mailgun_adapter import MailgunAdapter
-        except ImportError as e:
-            raise ImportError('Mailgun dependencies not installed. Install with: pip install pytanis[mailgun]') from e
         return MailgunAdapter(config=config)
 
     elif provider == 'helpdesk':
-        try:
-            from pytanis.communication.helpdesk_adapter import HelpDeskMailAdapter
-        except ImportError as e:
-            raise ImportError('HelpDesk dependencies not installed. Install with: pip install pytanis[helpdesk]') from e
         return HelpDeskMailAdapter(config=config)
-
     else:
-        raise ValueError(f'Unknown email provider: {provider}')
+        msg = f'Unknown email provider: {provider}'
+        raise ValueError(msg)
 
 
 def get_ticket_client(config: Config | None = None) -> BaseTicketClient:
@@ -128,16 +75,14 @@ def get_ticket_client(config: Config | None = None) -> BaseTicketClient:
             _logger.info('Using HelpDesk from legacy configuration')
             provider = 'helpdesk'
         else:
-            raise ValueError('No ticket provider configured')
+            msg = 'No ticket provider configured'
+            raise ValueError(msg)
     else:
         provider = comm_cfg.ticket_provider.lower()
 
-    if provider == 'helpdesk':
-        try:
-            from pytanis.communication.helpdesk_adapter import HelpDeskTicketAdapter
-        except ImportError as e:
-            raise ImportError('HelpDesk dependencies not installed. Install with: pip install pytanis[helpdesk]') from e
-        return HelpDeskTicketAdapter(config=config)
+    if provider != 'helpdesk':
+        msg = f'Unknown ticket provider: {provider}'
+        raise ValueError(msg)
 
     else:
-        raise ValueError(f'Unknown ticket provider: {provider}')
+        return HelpDeskTicketAdapter(config=config)

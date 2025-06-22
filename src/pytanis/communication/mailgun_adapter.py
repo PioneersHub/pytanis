@@ -5,6 +5,8 @@ from typing import Any
 from structlog import get_logger
 
 from pytanis.communication.base import BaseMailClient, EmailMessage
+from pytanis.config import get_cfg
+from pytanis.mailgun.mail import Mail, MailClient, Recipient
 
 _logger = get_logger()
 
@@ -22,13 +24,6 @@ class MailgunAdapter(BaseMailClient):
         Args:
             config: Configuration object (if None, will use get_cfg())
         """
-        # Lazy import to avoid dependency issues
-        try:
-            from pytanis.config import get_cfg
-            from pytanis.mailgun.mail import MailClient
-        except ImportError as e:
-            msg = 'Mailgun dependencies not installed. Install with: pip install pytanis[mailgun]'
-            raise ImportError(msg) from e
 
         if config is None:
             config = get_cfg()
@@ -39,7 +34,6 @@ class MailgunAdapter(BaseMailClient):
         """Send an email message using Mailgun"""
         try:
             # Convert to Mailgun format
-            from pytanis.mailgun.mail import Mail, Recipient
 
             # Extract recipients
             if not message.to:

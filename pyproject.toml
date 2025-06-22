@@ -254,23 +254,9 @@ ban-relative-imports = "all"
 [tool.ruff.lint.per-file-ignores]
 # Allow print/pprint
 "examples/*" = ["T201"]
-# Tests can use magic values, assertions, and relative imports
-"tests/**/*" = ["PLR2004", "S101", "TID252"]
-# Integration tests often have methods that could be static
-"tests/pretalx/test_integration*.py" = ["PLR6301"]
-# Communication adapters need lazy imports
-"src/pytanis/communication/*.py" = ["PLC0415", "EM101", "EM102"]
-# Storage adapters need lazy imports
-"src/pytanis/storage/*.py" = ["PLC0415", "EM101", "EM102"]
-# HelpDesk client needs optional config checks
-"src/pytanis/helpdesk/client.py" = ["PLC0415", "EM101", "EM102"]
-# Factory module needs lazy imports
-"src/pytanis/factory.py" = ["PLC0415", "EM101", "EM102"]
-# Test scripts can use print
-"tests/pretalx/run_integration_tests.py" = ["T201", "S603", "FBT002", "W293"]
-# Integration tests have special requirements
-"tests/pretalx/test_integration.py" = ["B017", "PLC0415"]
-"tests/pretalx/test_integration_with_token.py" = ["PLC0415"]
+# Tests can use magic values, assertions, methods that could be static and relative imports
+"tests/**/*" = ["PLR2004", "S101", "TID252", "PLR6301"]
+
 
 #####################
 # Environment Setup #
@@ -306,10 +292,23 @@ ci = "cov --cov-report lcov {args}"
 upgrade-all = "PIP_COMPILE_UPGRADE=1 hatch env run --env {env_name} -- python --version"
 upgrade-pkg = "PIP_COMPILE_UPGRADE_PACKAGE='{args}' hatch env run --env {env_name} -- python --version"
 # Integration testing
-integration = "python scripts/run_pretalx_integration_tests.py {args}"
-integration-interactive = "python scripts/run_pretalx_integration_tests.py"
-integration-quick = "python scripts/run_pretalx_integration_tests.py --token {env:PRETALX_API_TOKEN} --event {env:PRETALX_TEST_EVENT:pyconde-pydata-2025}"
-test-endpoints = "pytest tests/pretalx/test_all_endpoints_integration.py tests/pretalx/test_submission_integration.py -v -s {args}"
+integration = "pytest tests/pretalx/test_integration.py"  # if no local config, set envs: PRETALX_API_TOKEN, PRETALX_TEST_EVENT
+# one script to check all before a PR for lazy developers
+check-all = [
+  "echo '🔍 Running pre-commit hooks...'",
+  "pre-commit run --all-files",
+  "echo '✅ Pre-commit checks passed'",
+  "echo '🧪 Running tests with coverage...'",
+  "cov",
+  "echo '✅ All tests passed'",
+  "echo '📚 Building documentation...'",
+  "hatch run docs:build-check",
+  "echo '🔨 Testing package build...'",
+  "hatch build --clean",
+  "echo '✅ Package builds successfully'",
+  "echo '🎉 All checks passed! Ready to commit.'",
+]
+
 
 # Docs environment
 [tool.hatch.envs.docs]
@@ -386,6 +385,8 @@ all = [
 ]
 
 # Notebook environment
+# Notebooks should be related to conference work and are considered to be moved to an own project in the future.
+# Moved to an optional environment to reduce compatibilty conflicts (subdependencies have severe security warnings)
 [tool.hatch.envs.notebook]
 type = "pip-compile"
 pip-compile-constraint = "default"

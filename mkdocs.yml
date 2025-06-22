@@ -3,7 +3,7 @@ site_name: Pytanis
 site_description: Utilities for the program organization of conferences using Pretalx!
 site_author: Florian Wilhelm
 site_url: https://pioneershub.github.io/pytanis/
-copyright: 'Copyright &copy; Florian Wilhelm 2023-present'
+copyright: 'Copyright &copy; Florian Wilhelm & Pioneers Hub gGmbH 2023-present'
 
 # Repository
 repo_name: PioneersHub/pytanis
@@ -19,8 +19,6 @@ nav:
         - 'Pretalx Client': usage/pretalx.md
         - 'Google Sheets': usage/gsheet.md
         - 'Sending Mails': usage/mail.md
-        - 'Talks': usage/talks.md
-        - 'Confirmed Talks': usage/confirmed_talks.md
         - 'Optional Components': usage/optional_components.md
         - 'Testing': usage/testing.md
     - Tasks:
@@ -28,11 +26,6 @@ nav:
         - 'Proposal Review': tasks/review.md
         - 'Talk Selection': tasks/selection.md
         - 'Scheduling': tasks/schedule.md
-    - Releases:
-        - 'Overview': releases/index.md
-        - 'v0.9.0rc': releases/v0.9.0rc.md
-        - 'v0.9.0alpha': releases/v0.9.0alpha.md
-        - 'Migration Guide': releases/migration_summary.md
     - Changelog: changelog.md
     - License: license.md
     - Authors: authors.md
