@@ -388,6 +388,7 @@ all = [
 # Notebooks should be related to conference work and are considered to be moved to an own project in the future.
 # Moved to an optional environment to reduce compatibilty conflicts (subdependencies have severe security warnings)
 [tool.hatch.envs.notebook]
+python = ">=3.11"
 type = "pip-compile"
 pip-compile-constraint = "default"
 features = ["jupyter"]
