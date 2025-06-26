@@ -108,7 +108,7 @@ a list of tuples with the [Recipient] and the corresponding exception object whi
 
 ## Advanced Usage
 
-For more details, check out [Pytanis' mail references](../../reference/pytanis/helpdesk/mail/#pytanis.helpdesk.mail)
+For more details, check out [Pytanis' mail references](../reference/pytanis/helpdesk/mail.md#pytanis.helpdesk.mail)
 and also the notebook [20_mail_to_reviewers_v1].
 
 
@@ -117,6 +117,6 @@ and also the notebook [20_mail_to_reviewers_v1].
     there is no need to use this functionality here. Just make sure that you refer always to HelpDesk in your mails,
     so that you have a single point of managing mails and tickets.
 
-[Recipient]: ../../reference/pytanis/helpdesk/mail/#pytanis.helpdesk.mail.Recipient
-[Mail]: ../../reference/pytanis/helpdesk/mail/#pytanis.helpdesk.mail.Mail
+[Recipient]: ../reference/pytanis/helpdesk/mail.md#pytanis.helpdesk.mail.Recipient
+[Mail]: ../reference/pytanis/helpdesk/mail.md#pytanis.helpdesk.mail.Mail
 [20_mail_to_reviewers_v1]: https://github.com/FlorianWilhelm/pytanis/blob/main/notebooks/pyconde-pydata-berlin-2023/20_mail_to_reviewers_v1.ipynb

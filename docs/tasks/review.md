@@ -126,5 +126,5 @@ is always a good idea. Many of those analyses are really individual, and you can
 [contribute]: ../contributing.md
 [10_reviewer-assignment_v1]: https://github.com/FlorianWilhelm/pytanis/blob/main/notebooks/pyconde-pydata-berlin-2023/10_reviewer-assignment_v1.ipynb
 [20_mail_to_reviewers_v1]: https://github.com/FlorianWilhelm/pytanis/blob/main/notebooks/pyconde-pydata-berlin-2023/20_mail_to_reviewers_v1.ipynb
-[Pytanis' mail references]: ../../reference/pytanis/helpdesk/mail/#pytanis.helpdesk.mail
-[Pytanis' google module]: ../../reference/pytanis/google/#pytanis.google
+[Pytanis' mail references]: ../reference/pytanis/helpdesk/mail.md#pytanis.helpdesk.mail
+[Pytanis' google module]: ../reference/pytanis/google.md#pytanis.google

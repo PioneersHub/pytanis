@@ -14,6 +14,7 @@ Use your favourite editor to open `config.toml` within the `.pytanis` directory 
 ```toml
 [Pretalx]
 api_token = "932ndsf9uk32nf9sdkn3454532nj32jn"
+api_version = "v1"  # Optional, defaults to "v1" if not specified
 
 [Google]
 client_secret_json = "client_secret.json"
@@ -42,3 +43,7 @@ later. Note that `config.toml` references those two files relative to its own lo
   Hit <kbd>Create new token +</kbd>, enter a the name `Pytanis`, select all scopes and confirm. In the following screen
   copy the `Account ID`, `Entity ID` and `Token` and paste them into `config.toml`.
   In case there is any trouble with livechat, contact a helpdesk admin.
+
+## Verifying Your Installation
+
+After installation and configuration, you can verify that everything is working correctly by running the integration tests. See the [Testing Guide](testing.md) for detailed instructions on how to validate your setup and test API compatibility.

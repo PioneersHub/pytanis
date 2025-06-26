@@ -11,7 +11,7 @@ ToDo:
 from datetime import date, datetime
 from enum import Enum
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class Me(BaseModel):
@@ -37,13 +37,19 @@ class URLs(BaseModel):
 
 
 class Event(BaseModel):
+    """Event model for Pretalx API.
+
+    Note: The 'urls' field was present in older API versions but is no longer
+    provided by the API as of v1/v2. It's kept as optional for backward compatibility.
+    """
+
     name: MultiLingualStr
     slug: str
     is_public: bool
     date_from: date
     date_to: date | None = None
     timezone: str
-    urls: URLs
+    urls: URLs | None = None  # Made optional - not provided in new API
 
 
 class SpeakerAvailability(BaseModel):
@@ -72,7 +78,7 @@ class Answer(BaseModel):
     submission: str | None = None
     review: int | None = None
     person: str | None = None
-    options: list[Option]
+    options: list[Option] | None = None
 
 
 class SubmissionSpeaker(BaseModel):
@@ -111,13 +117,29 @@ class State(Enum):
     deleted = 'deleted'
 
 
+class TransSubmissionType(BaseModel):
+    """Model to keep previous and new models aligned due to changes in API v1"""
+
+    model_config = ConfigDict(extra='allow')
+    id: int
+    name: MultiLingualStr
+
+
 class Submission(BaseModel):
+    """
+    Pretalx introduced breaking API changes in 06/2025 with API "v1":
+    - submission_type changed: TempSubmissionType can handle this now,
+      a validator will mangel the data back to the old format MultiLingualStr
+    - submission_type_id: no longer exists, will be set via submission_type now
+    - is_featured is documented but does not show, defaults to False now
+    """
+
     code: str
     speakers: list[SubmissionSpeaker]
     created: datetime | None = None  # needs organizer permissions
     title: str
-    submission_type: MultiLingualStr
-    submission_type_id: int
+    submission_type: TransSubmissionType | MultiLingualStr
+    submission_type_id: int | None = None  # moved in API v1, will be set automatically for compatibility
     track: MultiLingualStr | None = None
     track_id: int | None = None
     state: State
@@ -127,7 +149,6 @@ class Submission(BaseModel):
     duration: int | None = None
     do_not_record: bool
     is_featured: bool
-    content_locale: str  # e.g. "de", "en"
     slot: Slot | None = None  # only available after schedule_web release
     slot_count: int
     image: str | None = None
@@ -137,6 +158,14 @@ class Submission(BaseModel):
     resources: list[Resource]
     tags: list[str] | None = None  # needs organizer permissions
     tag_ids: list[int] | None = None  # needs organizer permissions
+
+    @model_validator(mode='after')
+    def mangle_submission_type(self):
+        """This is required to handle changes introduced via API v1"""
+        if self.submission_type:
+            self.submission_type_id = getattr(self.submission_type, 'id', None)
+            self.submission_type = getattr(self.submission_type, 'name', None)
+        return self
 
 
 class Talk(Submission):
@@ -180,7 +209,11 @@ class QuestionRequirement(Enum):
     after_deadline = 'after deadline'
 
 
-class Question(BaseModel):
+class QuestionSimple(BaseModel):
+    """Subset of questions that are used for nested responses, e.g., in Submission.answers
+    Question is the full model that is used in the questions endpoint
+    """
+
     id: int
     variant: str
     target: str
@@ -188,7 +221,7 @@ class Question(BaseModel):
     help_text: MultiLingualStr
     question_required: QuestionRequirement
     deadline: datetime | None = None
-    required: bool
+    required: bool = False  # default value since API v1
     read_only: bool | None = None
     freeze_after: datetime | None = None
     options: list[Option]
@@ -199,8 +232,64 @@ class Question(BaseModel):
     is_public: bool
     is_visible_to_reviewers: bool
 
+    @model_validator(mode='after')
+    def is_required(self):
+        if self.question_required and self.question_required != QuestionRequirement.optional:
+            self.required = True
+        else:
+            self.required = False
+        return self
+
+
+class Question(QuestionSimple):
+    """
+    Pretalx introduced breaking API changes in 06/2025 with API "v1":
+    These are the extra attributes that are provide via the questions endpoint
+    but noct in the subdocuments in e.g., submissions
+    """
+
+    contains_personal_data: bool
+    is_public: bool
+    is_visible_to_reviewers: bool
+
 
 class Tag(BaseModel):
     tag: str
     description: MultiLingualStr
     color: str
+
+
+class SimpleTalk(BaseModel):
+    """Simplified Talk model for generating JSON output
+
+    This model contains only the essential information needed for display purposes.
+    """
+
+    code: str = ''  # talk code
+    title: str
+    speaker: str = ''  # speaker name, multiple speakers separated by comma
+    organisation: str = ''  # company/institute, if multiple but similar use only one
+    track: str = ''  # track
+    domain_level: str = ''  # Expected audience expertise: Domain
+    python_level: str = ''  # Expected audience expertise: Python
+    duration: str = ''  # duration
+    abstract: str = ''  # abstract of the talk
+    description: str = ''  # detailed description
+    prerequisites: str = ''  # prerequisites from question
+
+
+class SubmissionType(BaseModel):
+    """Submission type model for internal use in caching"""
+
+    id: int
+    name: MultiLingualStr
+    default_duration: int | None = None
+
+
+class Track(BaseModel):
+    """Track model for internal use in caching"""
+
+    id: int
+    name: MultiLingualStr
+    description: MultiLingualStr | None = None
+    color: str | None = None

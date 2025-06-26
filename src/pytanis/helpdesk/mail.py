@@ -9,7 +9,7 @@ ToDo:
 import time
 from collections.abc import Callable
 
-from pydantic import BaseModel, ConfigDict, validator
+from pydantic import BaseModel, ConfigDict, model_validator
 from structlog import get_logger
 from tqdm.auto import tqdm
 
@@ -36,14 +36,11 @@ class Recipient(BaseModel):
     address_as: str | None = None  # could be the first name
     data: MetaData | None = None
 
-    # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
-    @validator('address_as')
-    @classmethod
-    def fill_with_name(cls, v, values):
-        if v is None:
-            v = values['name']
-        return v
+    @model_validator(mode='after')
+    def fill_address_as(self):
+        if self.address_as is None:
+            self.address_as = self.name
+        return self
 
 
 class Mail(BaseModel):

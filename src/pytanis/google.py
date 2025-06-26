@@ -27,7 +27,7 @@ from gspread_formatting import (
     set_data_validation_for_cell_range,
 )
 from gspread_formatting.dataframe import format_with_dataframe
-from gspread_formatting.models import cellFormat
+from gspread_formatting.models import CellFormat
 from structlog import get_logger
 from webcolors import name_to_rgb
 
@@ -59,6 +59,9 @@ def gspread_client(scopes: list[Scope], config: Config) -> gspread.client.Client
 
     Read [GSpread](https://docs.gspread.org/) for usage details
     """
+    if config.Google is None:
+        msg = 'Google configuration is missing in config.toml!'
+        raise RuntimeError(msg)
     if (secret_path := config.Google.client_secret_json) is None:
         msg = 'You have to set Google.client_secret_json in your config.toml!'
         raise RuntimeError(msg)
@@ -200,7 +203,7 @@ class GSheetsClient:
         except APIError as error:
             self._exception_feedback(error)
 
-    def gsheet_as_df(self, spreadsheet_id: str, worksheet_name: str, **kwargs: str | (bool | int)) -> pd.DataFrame:
+    def gsheet_as_df(self, spreadsheet_id: str, worksheet_name: str, **kwargs: str | bool | int) -> pd.DataFrame:
         """Returns a worksheet as dataframe"""
         worksheet = self.gsheet(spreadsheet_id, worksheet_name)
         df = get_as_dataframe(worksheet, **kwargs)
@@ -222,7 +225,7 @@ def gsheet_col(idx: int) -> str:
 
 def gsheet_rows_for_fmt(mask: pd.Series, n_cols: int) -> list[str]:
     """Get the Google Sheet row range specifications for formatting"""
-    rows = pd.Series(np.argwhere(mask.to_numpy()).reshape(-1) + 2)  # +2 since 1-index and header
+    rows: pd.Series = pd.Series(np.argwhere(mask.to_numpy()).reshape(-1) + 2)  # +2 since 1-index and header
     last_col = gsheet_col(n_cols - 1)  # last index
     rows = rows.map(lambda x: f'A{x}:{last_col}{x}')
     return rows.to_list()
@@ -244,6 +247,6 @@ def mark_rows(worksheet, mask: pd.Series, color: ColorType):
     rows = gsheet_rows_for_fmt(mask, worksheet.col_count)
     color_rgb = name_to_rgb(color) if isinstance(color, str) else color[:3]
     color_rgb = [x / 255 for x in color_rgb]  # convert RGB to 0-1 range
-    fmt = cellFormat(backgroundColor=Color(*color_rgb))
+    fmt = CellFormat(backgroundColor=Color(*color_rgb))
     if rows:
         format_cell_ranges(worksheet, [(rng, fmt) for rng in rows])

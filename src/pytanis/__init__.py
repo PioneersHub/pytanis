@@ -1,11 +1,24 @@
 from importlib.metadata import PackageNotFoundError, version
+from typing import TYPE_CHECKING
 
 import structlog.stdlib
 
 from pytanis.config import get_cfg
-from pytanis.google import GSheetsClient
-from pytanis.helpdesk import HelpDeskClient
-from pytanis.pretalx import PretalxClient
+from pytanis.factory import get_mail_client, get_ticket_client
+from pytanis.pretalx import (
+    PretalxClient,
+    SimpleTalk,
+    get_confirmed_talks_as_json,  # For backward compatibility
+    get_talks_as_json,
+    save_confirmed_talks_to_json,  # For backward compatibility
+    save_talks_to_json,
+    talks_to_json,
+)
+
+# Lazy imports for optional components
+if TYPE_CHECKING:
+    from pytanis.google import GSheetsClient
+    from pytanis.helpdesk import HelpDeskClient
 
 try:
     __version__ = version('pytanis')
@@ -14,7 +27,45 @@ except PackageNotFoundError:  # pragma: no cover
 finally:
     del version, PackageNotFoundError
 
-__all__ = ['GSheetsClient', 'HelpDeskClient', 'PretalxClient', '__version__', 'get_cfg']
+__all__ = [
+    'GSheetsClient',
+    'HelpDeskClient',
+    'PretalxClient',
+    'SimpleTalk',
+    '__version__',
+    'get_cfg',
+    'get_confirmed_talks_as_json',  # For backward compatibility
+    'get_mail_client',
+    'get_talks_as_json',
+    'get_ticket_client',
+    'save_confirmed_talks_to_json',  # For backward compatibility
+    'save_talks_to_json',
+    'talks_to_json',
+]
+
+
+# Lazy loading implementation
+def __getattr__(name):
+    """Lazy load optional components"""
+    if name == 'GSheetsClient':
+        try:
+            from pytanis.google import GSheetsClient  # noqa: PLC0415
+
+            return GSheetsClient
+        except ImportError as e:
+            msg = 'Google Sheets dependencies not installed. Install with: pip install pytanis[google]'
+            raise ImportError(msg) from e
+    elif name == 'HelpDeskClient':
+        try:
+            from pytanis.helpdesk import HelpDeskClient  # noqa: PLC0415
+
+            return HelpDeskClient
+        except ImportError as e:
+            msg = 'HelpDesk dependencies not installed. Install with: pip install pytanis[helpdesk]'
+            raise ImportError(msg) from e
+    msg = f"module '{__name__}' has no attribute '{name}'"
+    raise AttributeError(msg)
+
 
 # transform structlog into a logging-friendly package
 # use `logging.basicConfig(level=logging.INFO, stream=sys.stdout)` as usual

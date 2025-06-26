@@ -51,6 +51,9 @@ class HelpDeskClient:
         """Retrieve data via raw GET request"""
         if params is None:
             params = cast(QueryParams, {})
+        if self._config.HelpDesk is None:
+            msg = 'HelpDesk configuration is not set'
+            raise RuntimeError(msg)
         if self._config.HelpDesk.token is None:
             msg = 'API token for Helpdesk is empty'
             raise RuntimeError(msg)
@@ -73,6 +76,9 @@ class HelpDeskClient:
         """Sent data via raw POST request"""
         if params is None:
             params = cast(QueryParams, {})
+        if self._config.HelpDesk is None:
+            msg = 'HelpDesk configuration is not set'
+            raise RuntimeError(msg)
         if self._config.HelpDesk.token is None:
             msg = 'API token for Helpdesk is empty'
             raise RuntimeError(msg)

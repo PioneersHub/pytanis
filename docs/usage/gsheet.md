@@ -45,4 +45,4 @@ out the [GSpread] ecosystem too as mentioned above.
 [GSpread-Formatting]: https://gspread-formatting.readthedocs.io/
 [Worksheet object]: https://docs.gspread.org/en/latest/api/models/worksheet.html#worksheet
 [Spreadsheet object]: https://docs.gspread.org/en/latest/api/models/spreadsheet.html#spreadsheet
-[Pytanis' google module]: ../../reference/pytanis/google/#pytanis.google
+[Pytanis' google module]: ../reference/pytanis/google.md#pytanis.google

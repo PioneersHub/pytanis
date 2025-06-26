@@ -14,14 +14,18 @@ repos:
   - id: end-of-file-fixer
   - id: mixed-line-ending
     args: ['--fix=auto']  # replace 'auto' with 'lf' to enforce Linux/Mac line endings or 'crlf' for Windows
+  # Security checks
+  - id: detect-private-key
+  - id: check-case-conflict
+  - id: check-symlinks
 
 # Ruff replaces black, flake8, autoflake and isort
 - repo: https://github.com/astral-sh/ruff-pre-commit
   rev: 'v0.9.7'  # make sure this is always consistent with hatch configs
   hooks:
     - id: ruff
+      args: [--fix]
     - id: ruff-format
-      args: [--check, --config, ./pyproject.toml]
 
 - repo: https://github.com/pre-commit/mirrors-mypy
   rev: 'v1.15.0'  # make sure this is always consistent with hatch configs
@@ -34,3 +38,22 @@ repos:
   rev: 0.8.1
   hooks:
     - id: nbstripout
+
+# Security scanning with bandit
+- repo: https://github.com/PyCQA/bandit
+  rev: '1.7.10'
+  hooks:
+    - id: bandit
+      args: ['-c', 'pyproject.toml']
+      additional_dependencies: ['bandit[toml]']
+
+# Documentation build check
+- repo: local
+  hooks:
+    - id: docs-build-check
+      name: Check documentation builds
+      entry: hatch run docs:build-check
+      language: system
+      pass_filenames: false
+      files: '\.(md|yml|yaml|py)$'
+      description: Check that documentation builds without errors

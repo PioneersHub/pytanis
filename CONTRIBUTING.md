@@ -131,10 +131,48 @@ This often provides additional considerations and avoids unnecessary work.
 5. Please check that your changes don't break any unit tests with `hatch run cov` or
    `hatch run no-cov` to run the unitest with or without coverage reports, respectively.
 6. For code hygiene, execute `hatch run lint:all` in order to run [flake8], [isort], [black], [mypy], etc.
+7. If your changes affect the Pretalx integration, run the integration tests to ensure compatibility:
+   ```
+   hatch run integration
+   # or with your credentials:
+   hatch run integration --token YOUR_TOKEN --event pyconde-pydata-2025
+   ```
+   See the [Testing documentation](docs/usage/testing.md) for more details.
+
+### Pre-push verification
+
+Before pushing your changes, our pre-push hooks will automatically run to ensure code quality:
+
+1. **Automatic checks**: When you run `git push`, the following checks will run automatically:
+   - Pre-commit hooks (formatting, linting, security)
+   - Full linting suite (`hatch run lint:all`)
+   - Test suite (`hatch run no-cov`)
+
+2. **Security checks**: The following security tools are integrated:
+   - **Bandit**: Scans for common security issues in Python code
+   - **detect-private-key**: Prevents committing private keys
+   - Additional security-focused pre-commit hooks
+
+3. **Manual verification**: You can run these checks manually before pushing:
+   ```bash
+   # Run all pre-push checks
+   ./scripts/pre-push-check.sh
+
+   # Or run individual steps:
+   pre-commit run --all-files  # Run pre-commit hooks (includes security)
+   hatch run lint:all          # Run full linting
+   hatch run no-cov           # Run tests
+
+   # Run only security checks:
+   pre-commit run bandit --all-files
+   ```
+
+4. **Bypassing checks**: While you can use `git push --no-verify` to skip these checks,
+   this is **strongly discouraged** as it may cause CI failures.
 
 ### Submit your contribution
 
-1. If everything works fine, push your local branch to the remote server with:
+1. If everything works fine and all checks pass, push your local branch to the remote server with:
 
    ```
    git push -u origin my-feature

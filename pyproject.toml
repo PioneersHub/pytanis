@@ -31,6 +31,7 @@ classifiers = [
     "Topic :: Utilities",
 ]
 dependencies = [
+    # Core dependencies only
     "pandas>=2",
     "tomli",
     "pydantic>=2.5",
@@ -38,20 +39,47 @@ dependencies = [
     "httpx-auth",
     "structlog",
     "tqdm",
-    "gspread<6.0",  # newer version breaks worksheet.spreadsheet
-    "gspread-dataframe",
-    "gspread-formatting",
-    "webcolors",
+    "openpyxl>=3.1.5", # For local Excel file support
+    "pandas-stubs==2.2.3.250527",
 ]
 dynamic = ["version"]
 
 [project.optional-dependencies]
-all = [
+# Google Sheets support
+google = [
+    "gspread<6.0", # newer version breaks worksheet.spreadsheet
+    "gspread-dataframe",
+    "gspread-formatting",
+    "webcolors",
+]
+
+# HelpDesk support (no additional deps needed beyond core)
+helpdesk = []
+
+# Mailgun support (uses requests which might already be installed)
+mailgun = [
+    "requests",
+]
+
+# Jupyter and visualization support
+jupyter = [
+    "jupyter>=1.1.1",
     "ipywidgets", # for nicer progress bar in Jupyter lab/notebook
+    "seaborn>=0.13.2",
+]
+
+# Schedule optimization
+optimization = [
+    "pyomo>=6.9.1",
     "pyomo[optional]", # for optimizing the schedule
     "highspy", # for MIP/LP/QP solver in pyomo
+]
+
+# Everything
+all = [
+    # Include all optional groups
+    "pytanis[google,helpdesk,mailgun,jupyter,optimization]",
     "pillow", # for the creation of social cards
-    "seaborn", # for decent plotting
 ]
 
 [project.urls]
@@ -97,11 +125,26 @@ show_column_numbers = true
 warn_no_return = false
 warn_unused_ignores = true
 
+[tool.bandit]
+targets = ["src/pytanis"]
+exclude_dirs = ["tests", "notebooks"]
+skips = [
+    "B101",  # assert_used - common in tests
+    "B113",  # request_without_timeout - TODO: add timeouts to httpx calls
+    "B601",  # paramiko_calls - not using paramiko
+    "B603",  # subprocess_without_shell_equals_true - already handled by S603 in ruff
+]
+# Severity levels: LOW, MEDIUM, HIGH
+severity = "MEDIUM"
+
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "-ra -q --doctest-glob='*.md'"
 testpaths = [
     "tests",
+]
+markers = [
+    "integration: marks tests as integration tests that require live API access (deselect with '-m \"not integration\"')",
 ]
 
 [tool.coverage.run]
@@ -211,8 +254,9 @@ ban-relative-imports = "all"
 [tool.ruff.lint.per-file-ignores]
 # Allow print/pprint
 "examples/*" = ["T201"]
-# Tests can use magic values, assertions, and relative imports
-"tests/**/*" = ["PLR2004", "S101", "TID252"]
+# Tests can use magic values, assertions, methods that could be static and relative imports
+"tests/**/*" = ["PLR2004", "S101", "TID252", "PLR6301"]
+
 
 #####################
 # Environment Setup #
@@ -239,22 +283,36 @@ dependencies = [
     "pytest-vcr",
     "pytest-sugar",
     "hypothesis",
-    "jupyterlab",
-    "ipython",
 ]
 [tool.hatch.envs.default.scripts]
 cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/pytanis --cov=tests {args}"
 no-cov = "cov --no-cov {args}"
 debug =  "cov --no-cov -s --pdb --pdbcls=IPython.core.debugger:Pdb {args}"
 ci = "cov --cov-report lcov {args}"
-notebooks = "jupyter lab --allow-root"
 upgrade-all = "PIP_COMPILE_UPGRADE=1 hatch env run --env {env_name} -- python --version"
 upgrade-pkg = "PIP_COMPILE_UPGRADE_PACKAGE='{args}' hatch env run --env {env_name} -- python --version"
+# Integration testing
+integration = "pytest tests/pretalx/test_integration.py"  # if no local config, set envs: PRETALX_API_TOKEN, PRETALX_TEST_EVENT
+# one script to check all before a PR for lazy developers
+check-all = [
+  "echo '🔍 Running pre-commit hooks...'",
+  "pre-commit run --all-files",
+  "echo '✅ Pre-commit checks passed'",
+  "echo '🧪 Running tests with coverage...'",
+  "cov",
+  "echo '✅ All tests passed'",
+  "echo '📚 Building documentation...'",
+  "hatch run docs:build-check",
+  "echo '🔨 Testing package build...'",
+  "hatch build --clean",
+  "echo '✅ Package builds successfully'",
+  "echo '🎉 All checks passed! Ready to commit.'",
+]
+
 
 # Docs environment
 [tool.hatch.envs.docs]
-type = "pip-compile"
-pip-compile-constraint = "default"
+type = "virtual"
 dependencies = [
     "mkdocs~=1.5",
     "mkdocs-material~=9.4",
@@ -294,8 +352,7 @@ build-check = [
 
 # Lint environment
 [tool.hatch.envs.lint]
-type = "pip-compile"
-pip-compile-constraint = "default"
+type = "virtual"
 dependencies = [
     "mypy~=1.15.0",
     "ruff~=0.9.7",
@@ -326,3 +383,20 @@ all = [
     "typing",
     "notebooks",
 ]
+
+# Notebook environment
+# Notebooks should be related to conference work and are considered to be moved to an own project in the future.
+# Moved to an optional environment to reduce compatibilty conflicts (subdependencies have severe security warnings)
+[tool.hatch.envs.notebook]
+python = ">=3.11"
+type = "pip-compile"
+pip-compile-constraint = "default"
+features = ["jupyter"]
+dependencies = [
+    "jupyterlab",
+    "ipython",
+]
+[tool.hatch.envs.notebook.scripts]
+lab = "jupyter lab --allow-root {args}"
+notebook = "jupyter notebook --allow-root {args}"
+console = "ipython {args}"

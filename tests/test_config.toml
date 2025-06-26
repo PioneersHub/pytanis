@@ -1,0 +1,9 @@
+# Test configuration for pytanis tests
+#
+# This file contains configuration values used in tests.
+# You can override these values by setting environment variables.
+
+[test]
+# Event slug for integration tests
+# Can be overridden with PRETALX_TEST_EVENT environment variable
+event_slug = "pyconde-pydata-2025"

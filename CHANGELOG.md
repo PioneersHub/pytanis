@@ -1,5 +1,33 @@
 # Changelog
 
+
+## Version 0.9.0rc2 (2025-06-21) - preliminary until final release
+
+### 🎉 First Release Compatible with Pretalx Versioned API v1
+
+This is the first release fully compatible with the new Pretalx versioned API v1 introduced in June 2025.
+
+### Major Features
+- **Communication abstraction layer**: Unified interface for email (Mailgun) and ticket (HelpDesk) providers
+- **Factory functions**: Simplified client creation with `get_ticket_client()` and `get_mail_client()`
+- **Optional dependencies**: Install only what you need with `pytanis[google]`, `pytanis[helpdesk]`, `pytanis[mailgun]`
+
+### Pretalx API Improvements
+- **API v1 Compatibility**: Full support for Pretalx versioned API v1 with proper `expand` parameter usage
+- **api_version**: Added configurable Pretalx API version support via `api_version` config parameter (defaults to "v1")
+
+### Testing & Quality
+- Comprehensive integration test framework with interactive CLI
+- Structured logging with `structlog` for better test output visibility
+- Support for multiple Pretalx API versions
+- Improved test coverage and documentation
+
+### Bug Fixes
+- Fixed 401 Unauthorized errors when fetching individual resources by using proper API expansion
+- Fixed redirect issues with missing trailing slashes in API endpoints
+- Fixed authentication issue where HeaderApiKey was not adding the required "Token " prefix for Pretalx API authorization headers
+- Added support for dict type in params parameter alongside QueryParams for better flexibility
+
 ## Version 0.8 (2024-12-30)
 
 - Added support for Mailgun, thanks to Nils Mohr
