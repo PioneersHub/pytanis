@@ -33,6 +33,10 @@
          <lastmod>2020-02-02</lastmod>
     </url>
     <url>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/factory/</loc>
+         <lastmod>2020-02-02</lastmod>
+    </url>
+    <url>
          <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/google/</loc>
          <lastmod>2020-02-02</lastmod>
     </url>
@@ -46,6 +50,22 @@
     </url>
     <url>
          <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/utils/</loc>
+         <lastmod>2020-02-02</lastmod>
+    </url>
+    <url>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/communication/</loc>
+         <lastmod>2020-02-02</lastmod>
+    </url>
+    <url>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/communication/base/</loc>
+         <lastmod>2020-02-02</lastmod>
+    </url>
+    <url>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/communication/helpdesk_adapter/</loc>
+         <lastmod>2020-02-02</lastmod>
+    </url>
+    <url>
+         <loc>https://pioneershub.github.io/pytanis/dev/reference/pytanis/communication/mailgun_adapter/</loc>
          <lastmod>2020-02-02</lastmod>
     </url>
     <url>
@@ -117,7 +137,15 @@
          <lastmod>2020-02-02</lastmod>
     </url>
     <url>
+         <loc>https://pioneershub.github.io/pytanis/dev/usage/optional_components/</loc>
+         <lastmod>2020-02-02</lastmod>
+    </url>
+    <url>
          <loc>https://pioneershub.github.io/pytanis/dev/usage/pretalx/</loc>
+         <lastmod>2020-02-02</lastmod>
+    </url>
+    <url>
+         <loc>https://pioneershub.github.io/pytanis/dev/usage/testing/</loc>
          <lastmod>2020-02-02</lastmod>
     </url>
 </urlset>
