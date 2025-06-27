@@ -9,7 +9,7 @@ on:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
     branches:
       - main
-    pull_request:
+  pull_request:
       branches:
         - main
 
@@ -49,12 +49,10 @@ jobs:
       - pure-python-wheel
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
+    environment: pypi
     permissions:
-      id-token: write  # required for trusted publishing
+      id-token: write  # REQUIRED for OIDC trusted publishing
       contents: read
-    defaults:
-      run:
-        shell: bash -l {0}
 
     steps:
       - uses: actions/download-artifact@v4
@@ -62,17 +60,32 @@ jobs:
           name: artifacts
           path: dist
 
-      - name: Debug OIDC Token
+      - name: List distribution files
         run: |
-          echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN length: ${#ACTIONS_ID_TOKEN_REQUEST_TOKEN}"
-          echo "ACTIONS_ID_TOKEN_REQUEST_URL: $ACTIONS_ID_TOKEN_REQUEST_URL"
-          if [ -z "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ]; then
-            echo "❌ OIDC token is NOT set – check permissions and org settings."
+          echo "Distribution files to be uploaded:"
+          ls -la dist/
+
+      - name: Debug OIDC Context
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "=== Publishing Context ==="
+          echo "Repository: ${{ github.repository }}"
+          echo "Workflow: ${{ github.workflow }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "Tag: ${{ github.ref_name }}"
+          echo "Environment: ${{ github.deployment_environment }}"
+          
+          # Check OIDC token availability
+          if [ -n "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ]; then
+            echo "✅ OIDC token is available"
           else
-            echo "✅ OIDC token is available."
+            echo "❌ OIDC token is NOT available"
+            exit 1
           fi
 
-      - name: Push artifacts to PyPI
-        uses: pypa/gh-action-pypi-publish@v1.12.4
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@v1
         with:
-          skip_existing: true
+          verbose: true
+          print-hash: true
