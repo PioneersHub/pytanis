@@ -1,11 +1,11 @@
 # Changelog
 
 
-## Version 0.9.0rc2 (2025-06-21) - preliminary until final release
+## Version 0.9.0 (2025-06-26)
 
-### 🎉 First Release Compatible with Pretalx Versioned API v1
+### Release Compatible with Pretalx Versioned API v1
 
-This is the first release fully compatible with the new Pretalx versioned API v1 introduced in June 2025.
+This is the first release fully compatible with the new Pretalx versioned API v1 introduced in May 2025.
 
 ### Major Features
 - **Communication abstraction layer**: Unified interface for email (Mailgun) and ticket (HelpDesk) providers
@@ -23,10 +23,7 @@ This is the first release fully compatible with the new Pretalx versioned API v1
 - Improved test coverage and documentation
 
 ### Bug Fixes
-- Fixed 401 Unauthorized errors when fetching individual resources by using proper API expansion
-- Fixed redirect issues with missing trailing slashes in API endpoints
-- Fixed authentication issue where HeaderApiKey was not adding the required "Token " prefix for Pretalx API authorization headers
-- Added support for dict type in params parameter alongside QueryParams for better flexibility
+none
 
 ## Version 0.8 (2024-12-30)
 
