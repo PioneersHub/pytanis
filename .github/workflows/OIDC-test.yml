@@ -1,0 +1,14 @@
+name: OIDC Test
+on:
+  workflow_dispatch:
+
+jobs:
+  check-oidc:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Print OIDC token env
+        run: |
+          echo "$ACTIONS_ID_TOKEN_REQUEST_TOKEN"
