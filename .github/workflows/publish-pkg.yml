@@ -46,7 +46,13 @@ jobs:
         run: hatch run python --version
 
       - name: Build distribution
-        run: hatch build
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            # For tagged releases, use the exact tag version
+            export SETUPTOOLS_SCM_PRETEND_VERSION=${GITHUB_REF_NAME#v}
+            echo "Building with version: $SETUPTOOLS_SCM_PRETEND_VERSION"
+          fi
+          hatch build
 
       - name: Validate version matches tag
         if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
