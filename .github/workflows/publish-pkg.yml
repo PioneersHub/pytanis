@@ -29,7 +29,7 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: 🔍 Debug Git Tags and Describe
+      - name: 🔍 Debug Git Tags and Hatch
         run: |
           echo "Git ref: $GITHUB_REF"
           echo "Git commit: $(git rev-parse HEAD)"
@@ -38,6 +38,12 @@ jobs:
 
           echo "Nearest tag for current commit:"
           git describe --tags --always || echo "⚠️ No tag found for current commit"
+
+          echo "HATCH_BUILD_VERSION: $HATCH_BUILD_VERSION"
+          VERSION_RAW=$(git describe --tags --always)
+          VERSION_SAFE=$(echo "$VERSION_RAW" | sed -E 's/^v//' | sed -E 's/-([0-9]+)-g/\.post0.dev\1+g/')
+          export HATCH_BUILD_VERSION="$VERSION_SAFE"
+          echo "HATCH_BUILD_VERSION: $HATCH_BUILD_VERSION"
 
       - name: Install Hatch & pre-commit
         run: pip install --upgrade --pre hatch pre-commit
