@@ -27,6 +27,17 @@ jobs:
         with:
           # Fetch all tags
           fetch-depth: 0
+          fetch-tags: true
+
+      - name: 🔍 Debug Git Tags and Describe
+        run: |
+          echo "Git ref: $GITHUB_REF"
+          echo "Git commit: $(git rev-parse HEAD)"
+          echo "Available Git tags:"
+          git tag --sort=-creatordate | head -n 5
+
+          echo "Nearest tag for current commit:"
+          git describe --tags --always || echo "⚠️ No tag found for current commit"
 
       - name: Install Hatch & pre-commit
         run: pip install --upgrade --pre hatch pre-commit
@@ -42,7 +53,7 @@ jobs:
           name: artifacts
           path: dist/*
           if-no-files-found: error
-  
+
   publish:
     name: Publish on PyPI
     needs:
@@ -75,7 +86,7 @@ jobs:
           echo "Ref: ${{ github.ref }}"
           echo "Tag: ${{ github.ref_name }}"
           echo "Environment: ${{ github.deployment_environment }}"
-          
+
           # Check OIDC token availability
           if [ -n "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ]; then
             echo "✅ OIDC token is available"

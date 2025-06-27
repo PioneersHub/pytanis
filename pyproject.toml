@@ -98,10 +98,11 @@ allow-direct-references = true
 
 [tool.hatch.version]
 source = "vcs"
-raw-options = { version_scheme = "no-guess-dev" }
+raw-options = { version_scheme = "no-guess-dev", local_scheme = "no-local-version" }
 
 [tool.hatch.build.hooks.vcs]
 version-file = "src/pytanis/_version.py"
+version-file-template = "__version__ = \"{version}\"\n"
 
 [tool.hatch.build]
 packages = ["src/pytanis"]
