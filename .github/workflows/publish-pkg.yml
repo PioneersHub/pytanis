@@ -51,6 +51,7 @@ jobs:
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
     permissions:
       id-token: write  # required for trusted publishing
+      contents: read
     defaults:
       run:
         shell: bash -l {0}
