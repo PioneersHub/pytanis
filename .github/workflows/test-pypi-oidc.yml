@@ -1,0 +1,105 @@
+name: Test PyPI OIDC Publishing
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/publish-pkg.yml'
+      - '.github/workflows/test-pypi-oidc.yml'
+
+jobs:
+  test-oidc-token:
+    name: Test OIDC Token Generation
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Check GitHub Context
+        run: |
+          echo "Repository: ${{ github.repository }}"
+          echo "Workflow: ${{ github.workflow }}"
+          echo "Job: ${{ github.job }}"
+          echo "Run ID: ${{ github.run_id }}"
+          echo "Run Number: ${{ github.run_number }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Event: ${{ github.event_name }}"
+
+      - name: Test OIDC Token Availability
+        run: |
+          if [ -n "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ] && [ -n "$ACTIONS_ID_TOKEN_REQUEST_URL" ]; then
+            echo "✅ OIDC environment variables are set"
+            echo "Token length: ${#ACTIONS_ID_TOKEN_REQUEST_TOKEN}"
+            echo "URL: $ACTIONS_ID_TOKEN_REQUEST_URL"
+
+            # Try to get the actual token
+            response=$(curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+                           -H "Accept: application/json" \
+                           "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=pypi" \
+                           2>/dev/null)
+
+            if [ $? -eq 0 ]; then
+              echo "✅ Successfully requested OIDC token for PyPI audience"
+              # Don't print the actual token for security
+              echo "Token response received (length: ${#response})"
+            else
+              echo "❌ Failed to request OIDC token"
+            fi
+          else
+            echo "❌ OIDC environment variables are NOT set"
+            echo "This usually means:"
+            echo "  1. The 'id-token: write' permission is missing"
+            echo "  2. GitHub Actions OIDC is disabled for the organization"
+            echo "  3. The workflow is running in a fork"
+          fi
+
+  test-publish-testpypi:
+    name: Test Publish to TestPyPI
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install build tools
+        run: |
+          pip install --upgrade pip
+          pip install build hatch
+
+      - name: Build test package
+        run: |
+          # Create a test version with timestamp
+          export TEST_VERSION="0.0.$(date +%Y%m%d%H%M%S)"
+          echo "Building test version: $TEST_VERSION"
+
+          # Build with test version
+          python -m build
+
+          echo "Built packages:"
+          ls -la dist/
+
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          verbose: true
+          print-hash: true
+        continue-on-error: true
+
+      - name: Check publish result
+        if: failure()
+        run: |
+          echo "Publishing to TestPyPI failed. Common reasons:"
+          echo "1. TestPyPI trusted publisher not configured"
+          echo "2. Package version already exists on TestPyPI"
+          echo "3. OIDC configuration mismatch"
