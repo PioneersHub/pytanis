@@ -49,6 +49,8 @@ jobs:
       - pure-python-wheel
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
+    permissions:
+      id-token: write  # required for trusted publishing
     defaults:
       run:
         shell: bash -l {0}
