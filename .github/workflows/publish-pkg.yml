@@ -42,7 +42,7 @@ jobs:
           name: artifacts
           path: dist/*
           if-no-files-found: error
-
+  
   publish:
     name: Publish on PyPI
     needs:
@@ -61,6 +61,16 @@ jobs:
         with:
           name: artifacts
           path: dist
+
+      - name: Debug OIDC Token
+        run: |
+          echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN length: ${#ACTIONS_ID_TOKEN_REQUEST_TOKEN}"
+          echo "ACTIONS_ID_TOKEN_REQUEST_URL: $ACTIONS_ID_TOKEN_REQUEST_URL"
+          if [ -z "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ]; then
+            echo "❌ OIDC token is NOT set – check permissions and org settings."
+          else
+            echo "✅ OIDC token is available."
+          fi
 
       - name: Push artifacts to PyPI
         uses: pypa/gh-action-pypi-publish@v1.12.4
