@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling", "hatch-vcs"]
+requires = ["hatchling", "hatch-vcs>=0.5.0"]
 build-backend = "hatchling.build"
 
 ####################
@@ -102,15 +102,12 @@ raw-options = { version_scheme = "no-guess-dev", local_scheme = "no-local-versio
 
 [tool.hatch.build.hooks.vcs]
 version-file = "src/pytanis/_version.py"
-version-file-template = "__version__ = \"{version}\"\n"
 
 [tool.hatch.build]
 packages = ["src/pytanis"]
 
 [tool.hatch.build.targets.sdist]
-exclude = [
-    "/.github",
-]
+exclude = ["/.github"]
 
 ##################
 # External Tools #
@@ -284,6 +281,7 @@ dependencies = [
     "pytest-vcr",
     "pytest-sugar",
     "hypothesis",
+    "hatch-vcs",
 ]
 [tool.hatch.envs.default.scripts]
 cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/pytanis --cov=tests {args}"

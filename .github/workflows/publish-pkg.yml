@@ -39,12 +39,6 @@ jobs:
           echo "Nearest tag for current commit:"
           git describe --tags --always || echo "⚠️ No tag found for current commit"
 
-          echo "HATCH_BUILD_VERSION: $HATCH_BUILD_VERSION"
-          VERSION_RAW=$(git describe --tags --always)
-          VERSION_SAFE=$(echo "$VERSION_RAW" | sed -E 's/^v//' | sed -E 's/-([0-9]+)-g/\.post0.dev\1+g/')
-          export HATCH_BUILD_VERSION="$VERSION_SAFE"
-          echo "HATCH_BUILD_VERSION: $HATCH_BUILD_VERSION"
-
       - name: Install Hatch & pre-commit
         run: pip install --upgrade --pre hatch pre-commit
 
@@ -53,6 +47,24 @@ jobs:
 
       - name: Build distribution
         run: hatch build
+
+      - name: Validate version matches tag
+        if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
+        run: |
+          # Extract version from built wheel
+          WHEEL_VERSION=$(ls dist/*.whl | sed -E 's/.*-([0-9]+\.[0-9]+\.[0-9]+.*)-py3.*/\1/')
+          # Get tag without 'v' prefix
+          TAG_VERSION=${GITHUB_REF_NAME#v}
+
+          echo "Wheel version: $WHEEL_VERSION"
+          echo "Tag version: $TAG_VERSION"
+
+          if [ "$WHEEL_VERSION" != "$TAG_VERSION" ]; then
+            echo "❌ Version mismatch! Wheel version ($WHEEL_VERSION) doesn't match tag ($TAG_VERSION)"
+            exit 1
+          else
+            echo "✅ Version matches tag"
+          fi
 
       - uses: actions/upload-artifact@v4
         with:
