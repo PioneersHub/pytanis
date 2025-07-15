@@ -53,6 +53,7 @@ class PretalxCfg(BaseModel):
 
     api_token: str | None = None
     api_version: str = 'v1'
+    api_base_url: str = 'https://pretalx.com/'
 
 
 class CommunicationCfg(BaseModel):

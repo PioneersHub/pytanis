@@ -38,6 +38,17 @@ api_version = "v2"  # Use a different API version
 
 The `api_version` setting is optional. If not specified in your `~/.pytanis/config.toml`, it will default to "v1". This version is sent in the `Pretalx-Version` header with each API request.
 
+## API Base URL Configuration
+Similar to the `api_version` above, you can change the pretalx base url if needed:
+
+```toml
+[Pretalx]
+api_token = "your-api-token"
+api_base_url = "https://pretalx.com/"  # pretalx.com is the default value but you can change it here
+```
+
+The `api_base_url` setting is optional.
+
 ## Advanced Usage
 
 Find out more about the client's capabilities, e.g. throttling, by looking at Pytanis' reference of the [pretalx client module].
