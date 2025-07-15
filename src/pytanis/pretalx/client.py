@@ -108,8 +108,8 @@ class PretalxClient:
         if (api_token := self._config.Pretalx.api_token) is not None:
             headers['Authorization'] = f'Token {api_token}'
 
-        # use url from config or default to pretalx.com
-        base_url = self._config.Pretalx.base_url or 'https://pretalx.com/'
+        # get the pretalx base URL (defaults to pretalx.com)
+        base_url = self._config.Pretalx.api_base_url
         if not base_url.endswith('/'):
             base_url += '/'
 
