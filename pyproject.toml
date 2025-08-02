@@ -40,7 +40,6 @@ dependencies = [
     "structlog",
     "tqdm",
     "openpyxl>=3.1.5", # For local Excel file support
-    "pandas-stubs==2.2.3.250527",
 ]
 dynamic = ["version"]
 
@@ -357,6 +356,7 @@ dependencies = [
     "mypy~=1.15.0",
     "ruff~=0.9.7",
     "nbstripout==0.8.1",
+    "pandas-stubs>=2,<3",
 ]
 [tool.hatch.envs.lint.scripts]
 typing = [
