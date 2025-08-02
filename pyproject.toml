@@ -32,7 +32,7 @@ classifiers = [
 ]
 dependencies = [
     # Core dependencies only
-    "pandas>=2",
+    "pandas>=2,<3",
     "tomli",
     "pydantic>=2.5",
     "httpx",
