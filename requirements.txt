@@ -8,7 +8,7 @@
 # - pytest-vcr
 # - pytest-sugar
 # - hypothesis
-# - hatch-vcs
+# - setuptools-scm
 # - httpx
 # - httpx-auth
 # - openpyxl>=3.1.5
@@ -122,10 +122,6 @@ gspread-formatting==1.2.1
     # via hatch.envs.default
 h11==0.14.0
     # via httpcore
-hatch-vcs==0.5.0
-    # via hatch.envs.default
-hatchling==1.27.0
-    # via hatch-vcs
 highspy==1.11.0
     # via hatch.envs.default
 httpcore==1.0.7
@@ -279,7 +275,6 @@ overrides==7.7.0
     # via jupyter-server
 packaging==25.0
     # via
-    #   hatchling
     #   ipykernel
     #   jupyter-events
     #   jupyter-server
@@ -301,8 +296,6 @@ pandocfilters==1.5.1
     # via nbconvert
 parso==0.8.4
     # via jedi
-pathspec==0.12.1
-    # via hatchling
 pexpect==4.9.0
     # via ipython
 pillow==11.2.1
@@ -313,7 +306,6 @@ platformdirs==4.3.8
     # via jupyter-core
 pluggy==1.6.0
     # via
-    #   hatchling
     #   pytest
     #   pytest-cov
 ply==3.11
@@ -422,7 +414,7 @@ seaborn==0.13.2
 send2trash==1.8.3
     # via jupyter-server
 setuptools-scm==8.3.1
-    # via hatch-vcs
+    # via hatch.envs.default
 six==1.17.0
     # via
     #   gspread-dataframe
@@ -452,7 +444,6 @@ tomli==2.2.1
     # via
     #   hatch.envs.default
     #   coverage
-    #   hatchling
     #   jupyterlab
     #   pytest
     #   setuptools-scm
@@ -482,8 +473,6 @@ traitlets==5.14.3
     #   nbclient
     #   nbconvert
     #   nbformat
-trove-classifiers==2025.5.9.12
-    # via hatchling
 types-python-dateutil==2.9.0.20250516
     # via arrow
 types-pytz==2025.2.0.20250516

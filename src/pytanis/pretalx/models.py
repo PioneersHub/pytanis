@@ -172,7 +172,11 @@ class Submission(BaseModel):
     @model_validator(mode='after')
     def one_slot(self):
         """The API returns slot as list of slots, we have one or None"""
-        self.slot = getattr(self, 'slots', [None])[0]
+        self.slot = self.slots
+        if isinstance(self.slot, list) and len(self.slot) > 1:
+            self.slot = self.slot[0]
+        else:
+            self.slot = None
         return self
 
 

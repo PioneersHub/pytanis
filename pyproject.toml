@@ -35,7 +35,7 @@ dependencies = [
     "pandas>=2",
     "tomli",
     "pydantic>=2.5",
-    "httpx>=0.28.1",
+    "httpx",
     "httpx-auth",
     "structlog",
     "tqdm",
