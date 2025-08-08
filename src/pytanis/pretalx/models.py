@@ -173,7 +173,7 @@ class Submission(BaseModel):
     def one_slot(self):
         """The API returns slot as list of slots, we have one or None"""
         self.slot = self.slots
-        if isinstance(self.slot, list) and len(self.slot) > 1:
+        if isinstance(self.slot, list) and len(self.slot) > 0:
             self.slot = self.slot[0]
         else:
             self.slot = None
