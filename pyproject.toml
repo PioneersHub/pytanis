@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling", "hatch-vcs>=0.5.0", "setuptools"]
+requires = ["hatchling", "hatch-vcs>=0.5.0", "setuptools", "wheel"]
 build-backend = "hatchling.build"
 
 ####################
@@ -35,7 +35,7 @@ dependencies = [
     "pandas>=2",
     "tomli",
     "pydantic>=2.5",
-    "httpx",
+    "httpx>=0.28.1",
     "httpx-auth",
     "structlog",
     "tqdm",
@@ -97,12 +97,13 @@ Source = "https://github.com/PioneersHub/pytanis"
 allow-direct-references = true
 
 [tool.hatch.version]
-source = "vcs"
-# For tags: use exact version. For dev: add .devN suffix
-raw-options = { version_scheme = "release-branch-semver", local_scheme = "no-local-version" }
+# Temporarily disable VCS versioning due to compatibility issues
+# source = "vcs"
+# raw-options = { version_scheme = "release-branch-semver", local_scheme = "no-local-version" }
+path = "src/pytanis/__init__.py"
 
-[tool.hatch.build.hooks.vcs]
-version-file = "src/pytanis/_version.py"
+# [tool.hatch.build.hooks.vcs]
+# version-file = "src/pytanis/_version.py"
 
 [tool.hatch.build]
 packages = ["src/pytanis"]

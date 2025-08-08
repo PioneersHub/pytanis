@@ -1,3 +1,5 @@
+__version__ = '0.9.1'  # Temporary version for testing build
+
 from importlib.metadata import PackageNotFoundError, version
 from typing import TYPE_CHECKING
 
