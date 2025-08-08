@@ -71,7 +71,7 @@ jupyter = [
 # Schedule optimization
 optimization = [
     "pyomo>=6.9.1",
-    "pyomo[optional]", # for optimizing the schedule
+#    "pyomo[optional]", # for optimizing the schedule
     "highspy", # for MIP/LP/QP solver in pyomo
 ]
 
