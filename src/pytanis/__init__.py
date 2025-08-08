@@ -1,4 +1,6 @@
-__version__ = '0.9.1'  # Temporary version for testing build
+"""PyTanis - Python client for Pretalx."""
+
+__version__ = '0.9.1'
 
 from importlib.metadata import PackageNotFoundError, version
 from typing import TYPE_CHECKING
