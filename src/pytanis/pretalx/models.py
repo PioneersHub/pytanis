@@ -10,6 +10,7 @@ ToDo:
 
 from datetime import date, datetime
 from enum import Enum
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -150,13 +151,14 @@ class Submission(BaseModel):
     do_not_record: bool
     is_featured: bool
     slot: Slot | None = None  # only available after schedule_web release
+    slots: list[Slot] | None = None  # only available after schedule_web release
     slot_count: int
     image: str | None = None
     answers: list[Answer] | None = None  # needs organizer permissions and `questions` query parameter
     notes: str | None = None  # needs organizer permissions
     internal_notes: str | None = None  # needs organizer permissions
     resources: list[Resource]
-    tags: list[str] | None = None  # needs organizer permissions
+    tags: list[Any] | None = None  # needs organizer permissions
     tag_ids: list[int] | None = None  # needs organizer permissions
 
     @model_validator(mode='after')
@@ -165,6 +167,12 @@ class Submission(BaseModel):
         if self.submission_type:
             self.submission_type_id = getattr(self.submission_type, 'id', None)
             self.submission_type = getattr(self.submission_type, 'name', None)
+        return self
+
+    @model_validator(mode='after')
+    def one_slot(self):
+        """The API returns slot as list of slots, we have one or None"""
+        self.slot = getattr(self, 'slots', [None])[0]
         return self
 
 

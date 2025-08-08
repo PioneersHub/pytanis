@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling", "hatch-vcs>=0.5.0"]
+requires = ["hatchling", "hatch-vcs>=0.5.0", "setuptools"]
 build-backend = "hatchling.build"
 
 ####################
@@ -262,7 +262,7 @@ ban-relative-imports = "all"
 #####################
 
 [tool.hatch.env]
-requires = ["hatch-pip-compile"]
+requires = ["hatch-pip-compile", "setuptools"]
 
 # Default
 [tool.hatch.envs.default]
@@ -313,6 +313,7 @@ check-all = [
 # Docs environment
 [tool.hatch.envs.docs]
 type = "virtual"
+detached = true
 dependencies = [
     "mkdocs~=1.5",
     "mkdocs-material~=9.4",
@@ -333,6 +334,7 @@ dependencies = [
     "pygments~=2.13",
     # Validation
     "linkchecker~=10.3",
+    "setuptools",
     ]
 [tool.hatch.envs.docs.env-vars]
 SOURCE_DATE_EPOCH = "1580601600"
@@ -353,6 +355,7 @@ build-check = [
 # Lint environment
 [tool.hatch.envs.lint]
 type = "virtual"
+detached = true
 dependencies = [
     "mypy~=1.15.0",
     "ruff~=0.9.7",
