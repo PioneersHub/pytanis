@@ -398,4 +398,4 @@ dependencies = [
 [tool.hatch.envs.notebook.scripts]
 lab = "jupyter lab --allow-root {args}"
 notebook = "jupyter notebook --allow-root {args}"
-console = "ipython {args}
+console = "ipython {args}"
