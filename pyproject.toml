@@ -35,7 +35,7 @@ dependencies = [
     "pandas>=2",
     "tomli",
     "pydantic>=2.5",
-    "httpx",
+    "httpx>=0.27.0,<0.28.0",  # important! issues with hatch
     "httpx-auth",
     "structlog",
     "tqdm",
@@ -398,4 +398,4 @@ dependencies = [
 [tool.hatch.envs.notebook.scripts]
 lab = "jupyter lab --allow-root {args}"
 notebook = "jupyter notebook --allow-root {args}"
-console = "ipython {args}"
+console = "ipython {args}
