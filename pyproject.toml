@@ -10,7 +10,7 @@ build-backend = "hatchling.build"
 name = "Pytanis"
 description = "Utilities for the program organization of conferences using Pretalx"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = "MIT"
 keywords = ["pretalx", "conference", "cfp", "google sheet", "gsheet", "helpdesk"]
 authors = [
@@ -20,8 +20,8 @@ authors = [
 classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
+#    "Programming Language :: Python :: 3.10",
+#    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
@@ -35,7 +35,7 @@ dependencies = [
     "pandas>=2",
     "tomli",
     "pydantic>=2.5",
-    "httpx>=0.27.0,<0.28.0",  # important! issues with hatch
+    "httpx",
     "httpx-auth",
     "structlog",
     "tqdm",
@@ -263,7 +263,7 @@ requires = ["hatch-pip-compile", "setuptools"]
 # Default
 [tool.hatch.envs.default]
 type = "pip-compile"
-python = "3.10"
+python = "3.12"
 features = ["all"]
 pip-compile-installer = "pip"  # or "uv"
 pip-compile-constraint = "default"  # keep locks between default & others consistent
