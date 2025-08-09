@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling", "hatch-vcs>=0.5.0"]
+requires = ["hatchling", "setuptools-scm", "setuptools", "wheel"]
 build-backend = "hatchling.build"
 
 ####################
@@ -10,7 +10,7 @@ build-backend = "hatchling.build"
 name = "Pytanis"
 description = "Utilities for the program organization of conferences using Pretalx"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = "MIT"
 keywords = ["pretalx", "conference", "cfp", "google sheet", "gsheet", "helpdesk"]
 authors = [
@@ -20,8 +20,8 @@ authors = [
 classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
+#    "Programming Language :: Python :: 3.10",
+#    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
@@ -71,7 +71,7 @@ jupyter = [
 # Schedule optimization
 optimization = [
     "pyomo>=6.9.1",
-    "pyomo[optional]", # for optimizing the schedule
+#    "pyomo[optional]", # for optimizing the schedule
     "highspy", # for MIP/LP/QP solver in pyomo
 ]
 
@@ -97,12 +97,8 @@ Source = "https://github.com/PioneersHub/pytanis"
 allow-direct-references = true
 
 [tool.hatch.version]
-source = "vcs"
-# For tags: use exact version. For dev: add .devN suffix
-raw-options = { version_scheme = "release-branch-semver", local_scheme = "no-local-version" }
-
-[tool.hatch.build.hooks.vcs]
-version-file = "src/pytanis/_version.py"
+path = "src/pytanis/__init__.py"
+pattern = "__version__ = [\"'](?P<version>[^\"']*)[\"']"
 
 [tool.hatch.build]
 packages = ["src/pytanis"]
@@ -262,12 +258,12 @@ ban-relative-imports = "all"
 #####################
 
 [tool.hatch.env]
-requires = ["hatch-pip-compile"]
+requires = ["hatch-pip-compile", "setuptools"]
 
 # Default
 [tool.hatch.envs.default]
 type = "pip-compile"
-python = "3.10"
+python = "3.12"
 features = ["all"]
 pip-compile-installer = "pip"  # or "uv"
 pip-compile-constraint = "default"  # keep locks between default & others consistent
@@ -282,7 +278,7 @@ dependencies = [
     "pytest-vcr",
     "pytest-sugar",
     "hypothesis",
-    "hatch-vcs",
+    "setuptools-scm",
 ]
 [tool.hatch.envs.default.scripts]
 cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/pytanis --cov=tests {args}"
@@ -313,6 +309,7 @@ check-all = [
 # Docs environment
 [tool.hatch.envs.docs]
 type = "virtual"
+detached = true
 dependencies = [
     "mkdocs~=1.5",
     "mkdocs-material~=9.4",
@@ -333,6 +330,7 @@ dependencies = [
     "pygments~=2.13",
     # Validation
     "linkchecker~=10.3",
+    "setuptools",
     ]
 [tool.hatch.envs.docs.env-vars]
 SOURCE_DATE_EPOCH = "1580601600"
@@ -353,6 +351,7 @@ build-check = [
 # Lint environment
 [tool.hatch.envs.lint]
 type = "virtual"
+detached = true
 dependencies = [
     "mypy~=1.15.0",
     "ruff~=0.9.7",

@@ -7,3 +7,6 @@
 # Event slug for integration tests
 # Can be overridden with PRETALX_TEST_EVENT environment variable
 event_slug = "pyconde-pydata-2025"
+
+[Pretalx]
+timeout = 120
