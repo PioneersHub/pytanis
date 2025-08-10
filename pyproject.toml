@@ -32,7 +32,7 @@ classifiers = [
 ]
 dependencies = [
     # Core dependencies only
-    "pandas>=2",
+    "pandas>=2,<3",
     "tomli",
     "pydantic>=2.5",
     "httpx",
@@ -40,7 +40,8 @@ dependencies = [
     "structlog",
     "tqdm",
     "openpyxl>=3.1.5", # For local Excel file support
-    "pandas-stubs==2.2.3.250527",
+    "pandas-stubs>=2,<3"
+
 ]
 dynamic = ["version"]
 
@@ -229,7 +230,7 @@ ignore = [
     "PLC1901", # empty string comparisons
     "PLW2901", # `for` loop variable overwritten
     "SIM114", # Combine `if` branches using logical `or` operator
-    "E203", # Whitespace before :, needed for black compatability and also `ruff format`
+    "E203", # Whitespace before :, needed for black compatibility and also `ruff format`
     "ISC001", # causes unexpected behaviour with formatter
     "PLR0904", # more than 20 public methods
 ]
@@ -385,7 +386,7 @@ all = [
 
 # Notebook environment
 # Notebooks should be related to conference work and are considered to be moved to an own project in the future.
-# Moved to an optional environment to reduce compatibilty conflicts (subdependencies have severe security warnings)
+# Moved to an optional environment to reduce compatibility conflicts (subdependencies have severe security warnings)
 [tool.hatch.envs.notebook]
 python = ">=3.11"
 type = "pip-compile"
