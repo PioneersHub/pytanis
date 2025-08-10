@@ -92,6 +92,9 @@ def speakers_as_df(
             for answer in speaker.answers:
                 # The API returns also questions that are 'per proposal/submission', we get these using the
                 # submission endpoint and don't want them here due to ambiguity if several submission were made.
+                if isinstance(answer, int):
+                    # answers can be a list of ints now / API v1
+                    continue
                 if answer.person is not None:
                     row[f'{question_prefix}{answer.question.question.en}'] = answer.answer
         rows.append(row)
@@ -214,7 +217,11 @@ def extract_organisation(
         # Look for "Company / Institute" in speaker answers
         if full_speaker.answers:
             # Filter to only include speaker-specific answers
-            speaker_answers = [answer for answer in full_speaker.answers if answer.person is not None]
+            speaker_answers = [
+                answer
+                for answer in full_speaker.answers
+                if not isinstance(answer, int) and answer.person is not None and hasattr(answer, 'person')
+            ]
 
             # Find the organisation using our helper function
             organisation = find_answer_by_pattern(speaker_answers, 'Company / Institute')

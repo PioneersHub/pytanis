@@ -71,11 +71,17 @@ class Option(BaseModel):
     answer: MultiLingualStr
 
 
+class AnswerQuestion(BaseModel):
+    model_config = ConfigDict(extra='ignore')
+    id: int
+    question: MultiLingualStr
+
+
 class Answer(BaseModel):
     id: int
     answer: str
     answer_file: str | None = None
-    question: AnswerQuestionRef
+    question: AnswerQuestionRef | AnswerQuestion | Any
     submission: str | None = None
     review: int | None = None
     person: str | None = None
@@ -93,7 +99,7 @@ class SubmissionSpeaker(BaseModel):
 class Speaker(SubmissionSpeaker):
     submissions: list[str]  # submission codes
     availabilities: list[SpeakerAvailability] | None = None  # maybe needs organizer permissions?
-    answers: list[Answer] | None = None  # maybe needs organizer permissions?
+    answers: list[Answer | int] | None = None  # api v1 depends on expand now
 
 
 class Slot(BaseModel):
@@ -151,14 +157,13 @@ class Submission(BaseModel):
     do_not_record: bool
     is_featured: bool
     slot: Slot | None = None  # only available after schedule_web release
-    slots: list[Slot] | None = None  # only available after schedule_web release
     slot_count: int
     image: str | None = None
     answers: list[Answer] | None = None  # needs organizer permissions and `questions` query parameter
     notes: str | None = None  # needs organizer permissions
     internal_notes: str | None = None  # needs organizer permissions
     resources: list[Resource]
-    tags: list[Any] | None = None  # needs organizer permissions
+    tags: list[str] | None = None  # needs organizer permissions
     tag_ids: list[int] | None = None  # needs organizer permissions
 
     @model_validator(mode='after')
@@ -167,16 +172,6 @@ class Submission(BaseModel):
         if self.submission_type:
             self.submission_type_id = getattr(self.submission_type, 'id', None)
             self.submission_type = getattr(self.submission_type, 'name', None)
-        return self
-
-    @model_validator(mode='after')
-    def one_slot(self):
-        """The API returns slot as list of slots, we have one or None"""
-        self.slot = self.slots
-        if isinstance(self.slot, list) and len(self.slot) > 0:
-            self.slot = self.slot[0]
-        else:
-            self.slot = None
         return self
 
 
