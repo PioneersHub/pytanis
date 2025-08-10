@@ -1,11 +1,15 @@
 # Changelog
 
-## Version 0.9.2 (2025-08-10)
+## Patch 0.9.3 (2025-08-10)
+
+- Updated Submission and Tag models for better fit for API v1
+
+## Patch 0.9.2 (2025-08-10)
 
 - Updated requirements & typos thanks to @jbsilva
 - Speaker.answers update to fit Pretalx API v1: can handle now both non-expanded and expanded answers
 
-## Version 0.9.1 (2025-08-09)
+## Patch 0.9.1 (2025-08-09)
 
 - **Removed support for Python pre-3.12**: build problems with hatch / httpx
 - Speaker slot: update to fit Pretalx API v1, reduction to one slot for simplification

@@ -124,6 +124,14 @@ class State(Enum):
     deleted = 'deleted'
 
 
+class Tag(BaseModel):
+    model_config = ConfigDict(extra='ignore')
+    id: int
+    tag: str
+    description: MultiLingualStr | Any
+    is_public: bool
+
+
 class TransSubmissionType(BaseModel):
     """Model to keep previous and new models aligned due to changes in API v1"""
 
@@ -140,6 +148,8 @@ class Submission(BaseModel):
     - submission_type_id: no longer exists, will be set via submission_type now
     - is_featured is documented but does not show, defaults to False now
     """
+
+    model_config = ConfigDict(extra='ignore')
 
     code: str
     speakers: list[SubmissionSpeaker]
@@ -163,8 +173,7 @@ class Submission(BaseModel):
     notes: str | None = None  # needs organizer permissions
     internal_notes: str | None = None  # needs organizer permissions
     resources: list[Resource]
-    tags: list[str] | None = None  # needs organizer permissions
-    tag_ids: list[int] | None = None  # needs organizer permissions
+    tags: list[Tag] | None = None  # needs organizer permissions
 
     @model_validator(mode='after')
     def mangle_submission_type(self):
@@ -258,12 +267,6 @@ class Question(QuestionSimple):
     contains_personal_data: bool
     is_public: bool
     is_visible_to_reviewers: bool
-
-
-class Tag(BaseModel):
-    tag: str
-    description: MultiLingualStr
-    color: str
 
 
 class SimpleTalk(BaseModel):
