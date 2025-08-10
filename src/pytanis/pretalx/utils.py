@@ -67,6 +67,8 @@ def subs_as_df(
         }
         if with_questions and sub.answers is not None:
             for answer in sub.answers:
+                if isinstance(answer, int):
+                    continue
                 row[f'{question_prefix}{answer.question.question.en}'] = answer.answer
         rows.append(row)
     return pd.DataFrame(rows)
@@ -130,7 +132,7 @@ def create_simple_talk_from_talk(talk: Talk) -> SimpleTalk:
 
 
 def find_answer_by_pattern(
-    answers: list[Answer], pattern: str, *, case_sensitive: bool = True, keywords: list[str] | None = None
+    answers: list[Answer | Any], pattern: str, *, case_sensitive: bool = True, keywords: list[str] | None = None
 ) -> str:
     """Find an answer by matching a pattern or keywords in the question text.
 
@@ -147,6 +149,8 @@ def find_answer_by_pattern(
         return ''
 
     for answer in answers:
+        if not isinstance(answer, Answer):
+            continue
         question_text = answer.question.question.en or ''
 
         # Check for exact pattern match
@@ -169,14 +173,23 @@ def extract_expertise_and_prerequisites(talk: Talk, simple_talk: SimpleTalk) -> 
         return
 
     # Extract domain expertise level
-    domain_expertise = find_answer_by_pattern(talk.answers, 'Expected audience expertise: Domain')
+    domain_expertise = find_answer_by_pattern(
+        talk.answers,
+        'Expected audience expertise: Domain',
+    )
 
     # Extract Python expertise level
-    python_expertise = find_answer_by_pattern(talk.answers, 'Expected audience expertise: Python')
+    python_expertise = find_answer_by_pattern(
+        talk.answers,
+        'Expected audience expertise: Python',
+    )
 
     # Extract prerequisites using keywords
     prerequisites = find_answer_by_pattern(
-        talk.answers, '', case_sensitive=False, keywords=['prerequisite', 'requirement', 'needed', 'necessary']
+        talk.answers,
+        '',
+        case_sensitive=False,
+        keywords=['prerequisite', 'requirement', 'needed', 'necessary'],
     )
 
     # Set the extracted values
