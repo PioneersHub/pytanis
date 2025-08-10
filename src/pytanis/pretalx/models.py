@@ -169,7 +169,7 @@ class Submission(BaseModel):
     slot: Slot | None = None  # only available after schedule_web release
     slot_count: int
     image: str | None = None
-    answers: list[Answer] | None = None  # needs organizer permissions and `questions` query parameter
+    answers: list[Answer | int | Any] | None = None  # needs organizer permissions and `questions` query parameter
     notes: str | None = None  # needs organizer permissions
     internal_notes: str | None = None  # needs organizer permissions
     resources: list[Resource]

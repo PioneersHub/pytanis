@@ -1,5 +1,9 @@
 # Changelog
 
+## Patch 0.9.5 (2025-08-10)
+
+- Updated Submission answers require accept list of Answer and int now (API v1 change)
+
 ## Patch 0.9.4 (2025-08-10)
 
 - Updated Submission and Tag models for better fit for API v1
