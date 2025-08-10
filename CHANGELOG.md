@@ -1,8 +1,12 @@
 # Changelog
 
-## Patch 0.9.3 (2025-08-10)
+## Patch 0.9.4 (2025-08-10)
 
 - Updated Submission and Tag models for better fit for API v1
+
+## Patch 0.9.3 (2025-08-10)
+
+ - removed
 
 ## Patch 0.9.2 (2025-08-10)
 

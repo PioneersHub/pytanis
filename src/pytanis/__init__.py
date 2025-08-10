@@ -1,6 +1,6 @@
 """PyTanis - Python client for Pretalx."""
 
-__version__ = '0.9.3'
+__version__ = '0.9.4'
 
 from importlib.metadata import PackageNotFoundError, version
 from typing import TYPE_CHECKING
