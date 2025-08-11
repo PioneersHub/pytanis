@@ -23,7 +23,6 @@ class Me(BaseModel):
 
 
 class MultiLingualStr(BaseModel):
-    # ToDo: Add here more available languages, not mentioned in the API
     model_config = ConfigDict(extra='allow')
 
     en: str | None = None  # we assume though that english is always given to simplify things
@@ -140,6 +139,23 @@ class TransSubmissionType(BaseModel):
     name: MultiLingualStr
 
 
+class SubmissionType(BaseModel):
+    """Submission type model for internal use in caching"""
+
+    id: int
+    name: MultiLingualStr
+    default_duration: int | None = None
+
+
+class Track(BaseModel):
+    """Track model for internal use in caching"""
+
+    id: int
+    name: MultiLingualStr
+    description: MultiLingualStr | None = None
+    color: str | None = None
+
+
 class Submission(BaseModel):
     """
     Pretalx introduced breaking API changes in 06/2025 with API "v1":
@@ -157,7 +173,7 @@ class Submission(BaseModel):
     title: str
     submission_type: TransSubmissionType | MultiLingualStr
     submission_type_id: int | None = None  # moved in API v1, will be set automatically for compatibility
-    track: MultiLingualStr | None = None
+    track: Track | int | None = None  # moved in API v1, will be set automatically for compatibility
     track_id: int | None = None
     state: State
     pending_state: State | None = None  # needs organizer permissions
@@ -172,8 +188,8 @@ class Submission(BaseModel):
     answers: list[Answer | int | Any] | None = None  # needs organizer permissions and `questions` query parameter
     notes: str | None = None  # needs organizer permissions
     internal_notes: str | None = None  # needs organizer permissions
-    resources: list[Resource]
-    tags: list[Tag] | None = None  # needs organizer permissions
+    resources: list[Resource | int | None]
+    tags: list[Tag | int | None] | None = None  # needs organizer permissions
 
     @model_validator(mode='after')
     def mangle_submission_type(self):
@@ -286,20 +302,3 @@ class SimpleTalk(BaseModel):
     abstract: str = ''  # abstract of the talk
     description: str = ''  # detailed description
     prerequisites: str = ''  # prerequisites from question
-
-
-class SubmissionType(BaseModel):
-    """Submission type model for internal use in caching"""
-
-    id: int
-    name: MultiLingualStr
-    default_duration: int | None = None
-
-
-class Track(BaseModel):
-    """Track model for internal use in caching"""
-
-    id: int
-    name: MultiLingualStr
-    description: MultiLingualStr | None = None
-    color: str | None = None

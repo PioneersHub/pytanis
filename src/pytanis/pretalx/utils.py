@@ -8,7 +8,7 @@ from typing import Any
 import pandas as pd
 
 from pytanis.pretalx.client import PretalxClient
-from pytanis.pretalx.models import Answer, Review, SimpleTalk, Speaker, Submission, Talk
+from pytanis.pretalx.models import Answer, MultiLingualStr, Review, SimpleTalk, Speaker, Submission, Talk, Track
 
 _logger = logging.getLogger(__name__)
 
@@ -48,12 +48,19 @@ def subs_as_df(
 
     Make sure to have `params={"questions": "all"}` for the PretalxAPI if `with_questions` is True.
     """
+
+    def track_en(track: Track | int | None) -> str | None:
+        """Helper to deal with v1 expanded API inconsistency & mypy issues"""
+        if hasattr(track, 'en') and isinstance(track, MultiLingualStr):
+            return track.en
+        return None
+
     rows = []
     for sub in subs:
         row = {
             Col.submission: sub.code,
             Col.title: sub.title,
-            Col.track: sub.track.en if sub.track else None,
+            Col.track: track_en(sub.track),
             Col.speaker_code: [speaker.code for speaker in sub.speakers],
             Col.speaker_name: [speaker.name for speaker in sub.speakers],
             Col.duration: sub.duration,
@@ -117,7 +124,7 @@ def reviews_as_df(reviews: Iterable[Review]) -> pd.DataFrame:
 def create_simple_talk_from_talk(talk: Talk) -> SimpleTalk:
     """Create a SimpleTalk object with basic information from a Talk object."""
     track_value = ''
-    if talk.track is not None and talk.track.en is not None:
+    if hasattr(talk, 'track') and isinstance(talk, MultiLingualStr):
         track_value = talk.track.en
 
     return SimpleTalk(
