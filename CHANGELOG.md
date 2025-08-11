@@ -1,5 +1,11 @@
 # Changelog
 
+## Patch 0.9.6 (2025-08-11)
+
+- replaced requests with httpx for consistency and removed requests dependency
+- removed optional installs mailgun and helpdesk (both do not require any extra installs anymore)
+- fix: track can also be an int in v1. Added Track model to Submission and flexible handling  (API v1 change)
+
 ## Patch 0.9.5 (2025-08-10)
 
 - Updated Submission answers require accept list of Answer and int now (API v1 change)

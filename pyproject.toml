@@ -71,7 +71,7 @@ optimization = [
 # Everything
 all = [
     # Include all optional groups
-    "pytanis[google,helpdesk,mailgun,jupyter,optimization]",
+    "pytanis[google,jupyter,optimization]",
     "pillow", # for the creation of social cards
 ]
 
