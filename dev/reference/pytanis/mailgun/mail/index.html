@@ -39,7 +39,7 @@ Cheers!
 <span class=linenos data-linenos=" 92 "></span>                <span class=n>msg</span> <span class=o>=</span> <span class=s1>&#39;Reply To Email for Mailgun is empty&#39;</span>
 <span class=linenos data-linenos=" 93 "></span>                <span class=k>raise</span> <span class=ne>RuntimeError</span><span class=p>(</span><span class=n>msg</span><span class=p>)</span>
 <span class=linenos data-linenos=" 94 "></span>
-<span class=linenos data-linenos=" 95 "></span>            <span class=n>response</span> <span class=o>=</span> <span class=n>requests</span><span class=o>.</span><span class=n>post</span><span class=p>(</span>
+<span class=linenos data-linenos=" 95 "></span>            <span class=n>response</span> <span class=o>=</span> <span class=n>httpx</span><span class=o>.</span><span class=n>post</span><span class=p>(</span>
 <span class=linenos data-linenos=" 96 "></span>                <span class=s1>&#39;https://api.eu.mailgun.net/v3/mg.pycon.de/messages&#39;</span><span class=p>,</span>
 <span class=linenos data-linenos=" 97 "></span>                <span class=n>auth</span><span class=o>=</span><span class=p>(</span><span class=s1>&#39;api&#39;</span><span class=p>,</span> <span class=bp>self</span><span class=o>.</span><span class=n>_config</span><span class=o>.</span><span class=n>Mailgun</span><span class=o>.</span><span class=n>token</span><span class=p>),</span>
 <span class=linenos data-linenos=" 98 "></span>                <span class=n>data</span><span class=o>=</span><span class=p>{</span>
