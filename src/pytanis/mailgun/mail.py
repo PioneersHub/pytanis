@@ -1,6 +1,6 @@
 import time
 
-import requests
+import httpx
 from pydantic import BaseModel, ConfigDict, model_validator
 from tqdm.auto import tqdm
 
@@ -92,7 +92,7 @@ class MailClient:
                     msg = 'Reply To Email for Mailgun is empty'
                     raise RuntimeError(msg)
 
-                response = requests.post(
+                response = httpx.post(
                     'https://api.eu.mailgun.net/v3/mg.pycon.de/messages',
                     auth=('api', self._config.Mailgun.token),
                     data={

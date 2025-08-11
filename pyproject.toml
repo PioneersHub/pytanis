@@ -54,14 +54,6 @@ google = [
     "webcolors",
 ]
 
-# HelpDesk support (no additional deps needed beyond core)
-helpdesk = []
-
-# Mailgun support (uses requests which might already be installed)
-mailgun = [
-    "requests",
-]
-
 # Jupyter and visualization support
 jupyter = [
     "jupyter>=1.1.1",
