@@ -91,7 +91,7 @@ class SubmissionSpeaker(BaseModel):
     code: str
     name: str
     biography: str | None = None
-    avatar: str | None = None
+    avatar_url: str | None = None
     email: str | None = None
 
 
