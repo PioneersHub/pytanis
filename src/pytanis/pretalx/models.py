@@ -182,7 +182,7 @@ class Submission(BaseModel):
     duration: int | None = None
     do_not_record: bool
     is_featured: bool
-    slot: Slot | None = None  # only available after schedule_web release
+    slots: list[Slot] | None = None  # only available after schedule_web release
     slot_count: int
     image: str | None = None
     answers: list[Answer | int | Any] | None = None  # needs organizer permissions and `questions` query parameter
