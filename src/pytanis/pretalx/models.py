@@ -10,6 +10,7 @@ ToDo:
 
 from datetime import date, datetime
 from enum import Enum
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -22,7 +23,6 @@ class Me(BaseModel):
 
 
 class MultiLingualStr(BaseModel):
-    # ToDo: Add here more available languages, not mentioned in the API
     model_config = ConfigDict(extra='allow')
 
     en: str | None = None  # we assume though that english is always given to simplify things
@@ -70,11 +70,17 @@ class Option(BaseModel):
     answer: MultiLingualStr
 
 
+class AnswerQuestion(BaseModel):
+    model_config = ConfigDict(extra='ignore')
+    id: int
+    question: MultiLingualStr
+
+
 class Answer(BaseModel):
     id: int
     answer: str
     answer_file: str | None = None
-    question: AnswerQuestionRef
+    question: AnswerQuestionRef | AnswerQuestion | Any
     submission: str | None = None
     review: int | None = None
     person: str | None = None
@@ -85,14 +91,14 @@ class SubmissionSpeaker(BaseModel):
     code: str
     name: str
     biography: str | None = None
-    avatar: str | None = None
+    avatar_url: str | None = None
     email: str | None = None
 
 
 class Speaker(SubmissionSpeaker):
     submissions: list[str]  # submission codes
     availabilities: list[SpeakerAvailability] | None = None  # maybe needs organizer permissions?
-    answers: list[Answer] | None = None  # maybe needs organizer permissions?
+    answers: list[Answer | int] | None = None  # api v1 depends on expand now
 
 
 class Slot(BaseModel):
@@ -117,12 +123,37 @@ class State(Enum):
     deleted = 'deleted'
 
 
+class Tag(BaseModel):
+    model_config = ConfigDict(extra='ignore')
+    id: int
+    tag: str
+    description: MultiLingualStr | Any
+    is_public: bool
+
+
 class TransSubmissionType(BaseModel):
     """Model to keep previous and new models aligned due to changes in API v1"""
 
     model_config = ConfigDict(extra='allow')
     id: int
     name: MultiLingualStr
+
+
+class SubmissionType(BaseModel):
+    """Submission type model for internal use in caching"""
+
+    id: int
+    name: MultiLingualStr
+    default_duration: int | None = None
+
+
+class Track(BaseModel):
+    """Track model for internal use in caching"""
+
+    id: int
+    name: MultiLingualStr
+    description: MultiLingualStr | None = None
+    color: str | None = None
 
 
 class Submission(BaseModel):
@@ -134,13 +165,15 @@ class Submission(BaseModel):
     - is_featured is documented but does not show, defaults to False now
     """
 
+    model_config = ConfigDict(extra='ignore')
+
     code: str
     speakers: list[SubmissionSpeaker]
     created: datetime | None = None  # needs organizer permissions
     title: str
     submission_type: TransSubmissionType | MultiLingualStr
     submission_type_id: int | None = None  # moved in API v1, will be set automatically for compatibility
-    track: MultiLingualStr | None = None
+    track: Track | int | None = None  # moved in API v1, will be set automatically for compatibility
     track_id: int | None = None
     state: State
     pending_state: State | None = None  # needs organizer permissions
@@ -152,12 +185,11 @@ class Submission(BaseModel):
     slot: Slot | None = None  # only available after schedule_web release
     slot_count: int
     image: str | None = None
-    answers: list[Answer] | None = None  # needs organizer permissions and `questions` query parameter
+    answers: list[Answer | int | Any] | None = None  # needs organizer permissions and `questions` query parameter
     notes: str | None = None  # needs organizer permissions
     internal_notes: str | None = None  # needs organizer permissions
-    resources: list[Resource]
-    tags: list[str] | None = None  # needs organizer permissions
-    tag_ids: list[int] | None = None  # needs organizer permissions
+    resources: list[Resource | int | None]
+    tags: list[Tag | int | None] | None = None  # needs organizer permissions
 
     @model_validator(mode='after')
     def mangle_submission_type(self):
@@ -253,12 +285,6 @@ class Question(QuestionSimple):
     is_visible_to_reviewers: bool
 
 
-class Tag(BaseModel):
-    tag: str
-    description: MultiLingualStr
-    color: str
-
-
 class SimpleTalk(BaseModel):
     """Simplified Talk model for generating JSON output
 
@@ -276,20 +302,3 @@ class SimpleTalk(BaseModel):
     abstract: str = ''  # abstract of the talk
     description: str = ''  # detailed description
     prerequisites: str = ''  # prerequisites from question
-
-
-class SubmissionType(BaseModel):
-    """Submission type model for internal use in caching"""
-
-    id: int
-    name: MultiLingualStr
-    default_duration: int | None = None
-
-
-class Track(BaseModel):
-    """Track model for internal use in caching"""
-
-    id: int
-    name: MultiLingualStr
-    description: MultiLingualStr | None = None
-    color: str | None = None

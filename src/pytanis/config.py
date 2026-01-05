@@ -49,11 +49,12 @@ class MailgunCfg(BaseModel):
 
 
 class PretalxCfg(BaseModel):
-    """Configuration related to the Pretalx API"""
+    """Pydantic model for the Pretalx configuration"""
 
-    api_token: str | None = None
+    api_token: str
     api_version: str = 'v1'
     api_base_url: str = 'https://pretalx.com/'
+    timeout: int | None = None
 
 
 class CommunicationCfg(BaseModel):

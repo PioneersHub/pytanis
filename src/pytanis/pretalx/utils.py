@@ -8,7 +8,7 @@ from typing import Any
 import pandas as pd
 
 from pytanis.pretalx.client import PretalxClient
-from pytanis.pretalx.models import Answer, Review, SimpleTalk, Speaker, Submission, Talk
+from pytanis.pretalx.models import Answer, MultiLingualStr, Review, SimpleTalk, Speaker, Submission, Talk, Track
 
 _logger = logging.getLogger(__name__)
 
@@ -48,12 +48,19 @@ def subs_as_df(
 
     Make sure to have `params={"questions": "all"}` for the PretalxAPI if `with_questions` is True.
     """
+
+    def track_en(track: Track | int | None) -> str | None:
+        """Helper to deal with v1 expanded API inconsistency & mypy issues"""
+        if hasattr(track, 'en') and isinstance(track, MultiLingualStr):
+            return track.en
+        return None
+
     rows = []
     for sub in subs:
         row = {
             Col.submission: sub.code,
             Col.title: sub.title,
-            Col.track: sub.track.en if sub.track else None,
+            Col.track: track_en(sub.track),
             Col.speaker_code: [speaker.code for speaker in sub.speakers],
             Col.speaker_name: [speaker.name for speaker in sub.speakers],
             Col.duration: sub.duration,
@@ -67,6 +74,8 @@ def subs_as_df(
         }
         if with_questions and sub.answers is not None:
             for answer in sub.answers:
+                if isinstance(answer, int):
+                    continue
                 row[f'{question_prefix}{answer.question.question.en}'] = answer.answer
         rows.append(row)
     return pd.DataFrame(rows)
@@ -92,6 +101,9 @@ def speakers_as_df(
             for answer in speaker.answers:
                 # The API returns also questions that are 'per proposal/submission', we get these using the
                 # submission endpoint and don't want them here due to ambiguity if several submission were made.
+                if isinstance(answer, int):
+                    # answers can be a list of ints now / API v1
+                    continue
                 if answer.person is not None:
                     row[f'{question_prefix}{answer.question.question.en}'] = answer.answer
         rows.append(row)
@@ -112,7 +124,7 @@ def reviews_as_df(reviews: Iterable[Review]) -> pd.DataFrame:
 def create_simple_talk_from_talk(talk: Talk) -> SimpleTalk:
     """Create a SimpleTalk object with basic information from a Talk object."""
     track_value = ''
-    if talk.track is not None and talk.track.en is not None:
+    if hasattr(talk, 'track') and isinstance(talk, MultiLingualStr):
         track_value = talk.track.en
 
     return SimpleTalk(
@@ -127,7 +139,7 @@ def create_simple_talk_from_talk(talk: Talk) -> SimpleTalk:
 
 
 def find_answer_by_pattern(
-    answers: list[Answer], pattern: str, *, case_sensitive: bool = True, keywords: list[str] | None = None
+    answers: list[Answer | Any], pattern: str, *, case_sensitive: bool = True, keywords: list[str] | None = None
 ) -> str:
     """Find an answer by matching a pattern or keywords in the question text.
 
@@ -144,6 +156,8 @@ def find_answer_by_pattern(
         return ''
 
     for answer in answers:
+        if not isinstance(answer, Answer):
+            continue
         question_text = answer.question.question.en or ''
 
         # Check for exact pattern match
@@ -166,14 +180,23 @@ def extract_expertise_and_prerequisites(talk: Talk, simple_talk: SimpleTalk) -> 
         return
 
     # Extract domain expertise level
-    domain_expertise = find_answer_by_pattern(talk.answers, 'Expected audience expertise: Domain')
+    domain_expertise = find_answer_by_pattern(
+        talk.answers,
+        'Expected audience expertise: Domain',
+    )
 
     # Extract Python expertise level
-    python_expertise = find_answer_by_pattern(talk.answers, 'Expected audience expertise: Python')
+    python_expertise = find_answer_by_pattern(
+        talk.answers,
+        'Expected audience expertise: Python',
+    )
 
     # Extract prerequisites using keywords
     prerequisites = find_answer_by_pattern(
-        talk.answers, '', case_sensitive=False, keywords=['prerequisite', 'requirement', 'needed', 'necessary']
+        talk.answers,
+        '',
+        case_sensitive=False,
+        keywords=['prerequisite', 'requirement', 'needed', 'necessary'],
     )
 
     # Set the extracted values
@@ -214,7 +237,11 @@ def extract_organisation(
         # Look for "Company / Institute" in speaker answers
         if full_speaker.answers:
             # Filter to only include speaker-specific answers
-            speaker_answers = [answer for answer in full_speaker.answers if answer.person is not None]
+            speaker_answers = [
+                answer
+                for answer in full_speaker.answers
+                if not isinstance(answer, int) and answer.person is not None and hasattr(answer, 'person')
+            ]
 
             # Find the organisation using our helper function
             organisation = find_answer_by_pattern(speaker_answers, 'Company / Institute')

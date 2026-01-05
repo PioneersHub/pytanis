@@ -1,5 +1,33 @@
 # Changelog
 
+## Patch 0.9.6 (2025-08-11)
+
+- replaced requests with httpx for consistency and removed requests dependency
+- removed optional installs mailgun and helpdesk (both do not require any extra installs anymore)
+- fix: track can also be an int in v1. Added Track model to Submission and flexible handling  (API v1 change)
+
+## Patch 0.9.5 (2025-08-10)
+
+- Updated Submission answers require accept list of Answer and int now (API v1 change)
+
+## Patch 0.9.4 (2025-08-10)
+
+- Updated Submission and Tag models for better fit for API v1
+
+## Patch 0.9.3 (2025-08-10)
+
+ - removed
+
+## Patch 0.9.2 (2025-08-10)
+
+- Updated requirements & typos thanks to @jbsilva
+- Speaker.answers update to fit Pretalx API v1: can handle now both non-expanded and expanded answers
+
+## Patch 0.9.1 (2025-08-09)
+
+- **Removed support for Python pre-3.12**: build problems with hatch / httpx
+- Speaker slot: update to fit Pretalx API v1, reduction to one slot for simplification
+- Added timeouts to httpx requests
 
 ## Version 0.9.0 (2025-06-26)
 
