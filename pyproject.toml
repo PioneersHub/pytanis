@@ -24,6 +24,7 @@ classifiers = [
 #    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: Implementation :: CPython",
     "Operating System :: OS Independent",
     "Topic :: Communications :: Email",
@@ -380,11 +381,12 @@ all = [
 # Notebooks should be related to conference work and are considered to be moved to an own project in the future.
 # Moved to an optional environment to reduce compatibility conflicts (subdependencies have severe security warnings)
 [tool.hatch.envs.notebook]
-python = ">=3.11"
 type = "pip-compile"
 pip-compile-constraint = "default"
 features = ["jupyter"]
 dependencies = [
+    "mypy",
+    "ruff",
     "jupyterlab",
     "ipython",
 ]
