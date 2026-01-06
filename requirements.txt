@@ -9,31 +9,22 @@
 # - pytest-sugar
 # - hypothesis
 # - setuptools-scm
+# - pandas<3,>=2
+# - tomli
+# - pydantic>=2.5
 # - httpx
 # - httpx-auth
-# - openpyxl>=3.1.5
-# - pandas-stubs==2.2.3.250527
-# - pandas>=2
-# - pydantic>=2.5
 # - structlog
-# - tomli
 # - tqdm
-# - gspread-dataframe
-# - gspread-formatting
-# - gspread<6.0
-# - highspy
-# - ipywidgets
-# - jupyter>=1.1.1
+# - openpyxl>=3.1.5
+# - pandas-stubs<3,>=2
+# - pytanis[google,jupyter,optimization]
 # - pillow
-# - pyomo>=6.9.1
-# - requests
-# - seaborn>=0.13.2
-# - webcolors
 #
 
 annotated-types==0.7.0
     # via pydantic
-anyio==4.7.0
+anyio==4.12.0
     # via
     #   httpx
     #   jupyter-server
@@ -41,49 +32,48 @@ appnope==0.1.4
     # via ipykernel
 argon2-cffi==25.1.0
     # via jupyter-server
-argon2-cffi-bindings==21.2.0
+argon2-cffi-bindings==25.1.0
     # via argon2-cffi
-arrow==1.3.0
+arrow==1.4.0
     # via isoduration
-asttokens==3.0.0
+asttokens==3.0.1
     # via stack-data
 async-lru==2.0.5
     # via jupyterlab
-attrs==25.3.0
+attrs==25.4.0
     # via
-    #   hypothesis
     #   jsonschema
     #   referencing
 babel==2.17.0
     # via jupyterlab-server
-beautifulsoup4==4.13.4
+beautifulsoup4==4.14.3
     # via nbconvert
-bleach==6.2.0
+bleach==6.3.0
     # via nbconvert
-cachetools==5.5.2
+cachetools==6.2.4
     # via google-auth
-certifi==2024.12.14
+certifi==2026.1.4
     # via
     #   httpcore
     #   httpx
     #   requests
-cffi==1.17.1
+cffi==2.0.0
     # via argon2-cffi-bindings
-charset-normalizer==3.4.2
+charset-normalizer==3.4.4
     # via requests
-comm==0.2.2
+comm==0.2.3
     # via
     #   ipykernel
     #   ipywidgets
-contourpy==1.3.2
+contourpy==1.3.3
     # via matplotlib
-coverage==7.9.1
+coverage==7.13.1
     # via
     #   hatch.envs.default
     #   pytest-cov
 cycler==0.12.1
     # via matplotlib
-debugpy==1.8.14
+debugpy==1.8.19
     # via ipykernel
 decorator==5.2.1
     # via ipython
@@ -91,73 +81,71 @@ defusedxml==0.7.1
     # via nbconvert
 et-xmlfile==2.0.0
     # via openpyxl
-exceptiongroup==1.3.0
-    # via
-    #   anyio
-    #   hypothesis
-    #   ipython
-    #   pytest
-executing==2.2.0
+executing==2.2.1
     # via stack-data
-fastjsonschema==2.21.1
+fastjsonschema==2.21.2
     # via nbformat
-fonttools==4.58.4
+fonttools==4.61.1
     # via matplotlib
 fqdn==1.5.1
     # via jsonschema
-google-auth==2.40.3
+google-auth==2.41.1
     # via
     #   google-auth-oauthlib
     #   gspread
-google-auth-oauthlib==1.2.2
+google-auth-oauthlib==1.2.3
     # via gspread
 gspread==5.12.4
     # via
-    #   hatch.envs.default
     #   gspread-dataframe
     #   gspread-formatting
+    #   pytanis
 gspread-dataframe==4.0.0
-    # via hatch.envs.default
+    # via pytanis
 gspread-formatting==1.2.1
-    # via hatch.envs.default
-h11==0.14.0
+    # via pytanis
+h11==0.16.0
     # via httpcore
-highspy==1.11.0
-    # via hatch.envs.default
-httpcore==1.0.7
+highspy==1.12.0
+    # via pytanis
+httpcore==1.0.9
     # via httpx
-httpx==0.27.2
+httpx==0.28.1
     # via
     #   hatch.envs.default
     #   httpx-auth
     #   jupyterlab
-httpx-auth==0.22.0
+    #   pytanis
+httpx-auth==0.23.1
+    # via
+    #   hatch.envs.default
+    #   pytanis
+hypothesis==6.149.0
     # via hatch.envs.default
-hypothesis==6.135.16
-    # via hatch.envs.default
-idna==3.10
+idna==3.11
     # via
     #   anyio
     #   httpx
     #   jsonschema
     #   requests
-    #   yarl
-iniconfig==2.1.0
+iniconfig==2.3.0
     # via pytest
-ipykernel==6.29.5
+ipykernel==7.1.0
     # via
     #   jupyter
     #   jupyter-console
     #   jupyterlab
-ipython==8.37.0
+ipython==9.8.0
     # via
     #   ipykernel
     #   ipywidgets
     #   jupyter-console
-ipywidgets==8.1.7
+ipython-pygments-lexers==1.1.1
+    # via ipython
+ipywidgets==8.1.8
     # via
-    #   hatch.envs.default
     #   jupyter
+    #   pytanis
 isoduration==20.11.0
     # via jsonschema
 jedi==0.19.2
@@ -168,20 +156,20 @@ jinja2==3.1.6
     #   jupyterlab
     #   jupyterlab-server
     #   nbconvert
-json5==0.12.0
+json5==0.13.0
     # via jupyterlab-server
 jsonpointer==3.0.0
     # via jsonschema
-jsonschema==4.24.0
+jsonschema==4.25.1
     # via
     #   jupyter-events
     #   jupyterlab-server
     #   nbformat
-jsonschema-specifications==2025.4.1
+jsonschema-specifications==2025.9.1
     # via jsonschema
 jupyter==1.1.1
-    # via hatch.envs.default
-jupyter-client==8.6.3
+    # via pytanis
+jupyter-client==8.7.0
     # via
     #   ipykernel
     #   jupyter-console
@@ -189,7 +177,7 @@ jupyter-client==8.6.3
     #   nbclient
 jupyter-console==6.6.3
     # via jupyter
-jupyter-core==5.8.1
+jupyter-core==5.9.1
     # via
     #   ipykernel
     #   jupyter-client
@@ -201,9 +189,9 @@ jupyter-core==5.8.1
     #   nbformat
 jupyter-events==0.12.0
     # via jupyter-server
-jupyter-lsp==2.2.5
+jupyter-lsp==2.3.0
     # via jupyterlab
-jupyter-server==2.16.0
+jupyter-server==2.17.0
     # via
     #   jupyter-lsp
     #   jupyterlab
@@ -212,35 +200,35 @@ jupyter-server==2.16.0
     #   notebook-shim
 jupyter-server-terminals==0.5.3
     # via jupyter-server
-jupyterlab==4.4.3
+jupyterlab==4.5.1
     # via
     #   jupyter
     #   notebook
 jupyterlab-pygments==0.3.0
     # via nbconvert
-jupyterlab-server==2.27.3
+jupyterlab-server==2.28.0
     # via
     #   jupyterlab
     #   notebook
-jupyterlab-widgets==3.0.15
+jupyterlab-widgets==3.0.16
     # via ipywidgets
-kiwisolver==1.4.8
+kiwisolver==1.4.9
     # via matplotlib
-markupsafe==3.0.2
+lark==1.3.1
+    # via rfc3987-syntax
+markupsafe==3.0.3
     # via
     #   jinja2
     #   nbconvert
-matplotlib==3.10.3
+matplotlib==3.10.8
     # via seaborn
-matplotlib-inline==0.1.7
+matplotlib-inline==0.2.1
     # via
     #   ipykernel
     #   ipython
-mistune==3.1.3
+mistune==3.2.0
     # via nbconvert
-multidict==6.6.0
-    # via yarl
-nbclient==0.10.2
+nbclient==0.10.4
     # via nbconvert
 nbconvert==7.16.6
     # via
@@ -253,13 +241,13 @@ nbformat==5.10.4
     #   nbconvert
 nest-asyncio==1.6.0
     # via ipykernel
-notebook==7.4.3
+notebook==7.5.1
     # via jupyter
 notebook-shim==0.2.4
     # via
     #   jupyterlab
     #   notebook
-numpy==2.2.1
+numpy==2.3.5
     # via
     #   contourpy
     #   highspy
@@ -270,9 +258,9 @@ numpy==2.2.1
 oauthlib==3.3.1
     # via requests-oauthlib
 openpyxl==3.1.5
-    # via hatch.envs.default
-overrides==7.7.0
-    # via jupyter-server
+    # via
+    #   hatch.envs.default
+    #   pytanis
 packaging==25.0
     # via
     #   ipykernel
@@ -283,26 +271,28 @@ packaging==25.0
     #   matplotlib
     #   nbconvert
     #   pytest
-    #   pytest-sugar
     #   setuptools-scm
-pandas==2.2.3
+pandas==2.3.3
     # via
     #   hatch.envs.default
     #   gspread-dataframe
+    #   pytanis
     #   seaborn
-pandas-stubs==2.2.3.250527
-    # via hatch.envs.default
+pandas-stubs==2.3.3.251219
+    # via
+    #   hatch.envs.default
+    #   pytanis
 pandocfilters==1.5.1
     # via nbconvert
-parso==0.8.4
+parso==0.8.5
     # via jedi
 pexpect==4.9.0
     # via ipython
-pillow==11.2.1
+pillow==12.1.0
     # via
     #   hatch.envs.default
     #   matplotlib
-platformdirs==4.3.8
+platformdirs==4.5.1
     # via jupyter-core
 pluggy==1.6.0
     # via
@@ -310,15 +300,13 @@ pluggy==1.6.0
     #   pytest-cov
 ply==3.11
     # via pyomo
-prometheus-client==0.22.1
+prometheus-client==0.23.1
     # via jupyter-server
-prompt-toolkit==3.0.51
+prompt-toolkit==3.0.52
     # via
     #   ipython
     #   jupyter-console
-propcache==0.3.2
-    # via yarl
-psutil==7.0.0
+psutil==7.2.1
     # via ipykernel
 ptyprocess==0.7.0
     # via
@@ -332,34 +320,39 @@ pyasn1==0.6.1
     #   rsa
 pyasn1-modules==0.4.2
     # via google-auth
-pycparser==2.22
+pycparser==2.23
     # via cffi
-pydantic==2.10.4
-    # via hatch.envs.default
-pydantic-core==2.27.2
+pydantic==2.12.5
+    # via
+    #   hatch.envs.default
+    #   pytanis
+pydantic-core==2.41.5
     # via pydantic
 pygments==2.19.2
     # via
     #   ipython
+    #   ipython-pygments-lexers
     #   jupyter-console
     #   nbconvert
     #   pytest
-pyomo==6.9.2
-    # via hatch.envs.default
-pyparsing==3.2.3
+pyomo==6.9.5
+    # via pytanis
+pyparsing==3.3.1
     # via matplotlib
-pytest==8.4.1
+pytanis==0.9.6
+    # via hatch.envs.default
+pytest==9.0.2
     # via
     #   hatch.envs.default
     #   pytest-cov
     #   pytest-mock
     #   pytest-sugar
     #   pytest-vcr
-pytest-cov==6.2.1
+pytest-cov==7.0.0
     # via hatch.envs.default
-pytest-mock==3.14.1
+pytest-mock==3.15.1
     # via hatch.envs.default
-pytest-sugar==1.0.0
+pytest-sugar==1.1.1
     # via hatch.envs.default
 pytest-vcr==1.0.2
     # via hatch.envs.default
@@ -369,28 +362,27 @@ python-dateutil==2.9.0.post0
     #   jupyter-client
     #   matplotlib
     #   pandas
-python-json-logger==3.3.0
+python-json-logger==4.0.0
     # via jupyter-events
-pytz==2024.2
+pytz==2025.2
     # via pandas
-pyyaml==6.0.2
+pyyaml==6.0.3
     # via
     #   jupyter-events
     #   vcrpy
-pyzmq==27.0.0
+pyzmq==27.1.0
     # via
     #   ipykernel
     #   jupyter-client
     #   jupyter-console
     #   jupyter-server
-referencing==0.36.2
+referencing==0.37.0
     # via
     #   jsonschema
     #   jsonschema-specifications
     #   jupyter-events
-requests==2.32.4
+requests==2.32.5
     # via
-    #   hatch.envs.default
     #   jupyterlab-server
     #   requests-oauthlib
 requests-oauthlib==2.0.0
@@ -403,36 +395,36 @@ rfc3986-validator==0.1.1
     # via
     #   jsonschema
     #   jupyter-events
-rpds-py==0.25.1
+rfc3987-syntax==1.1.0
+    # via jsonschema
+rpds-py==0.30.0
     # via
     #   jsonschema
     #   referencing
 rsa==4.9.1
     # via google-auth
 seaborn==0.13.2
-    # via hatch.envs.default
-send2trash==1.8.3
+    # via pytanis
+send2trash==2.0.0
     # via jupyter-server
-setuptools-scm==8.3.1
+setuptools-scm==9.2.2
     # via hatch.envs.default
 six==1.17.0
     # via
     #   gspread-dataframe
     #   python-dateutil
     #   rfc3339-validator
-sniffio==1.3.1
-    # via
-    #   anyio
-    #   httpx
 sortedcontainers==2.4.0
     # via hypothesis
-soupsieve==2.7
+soupsieve==2.8.1
     # via beautifulsoup4
 stack-data==0.6.3
     # via ipython
-structlog==24.4.0
-    # via hatch.envs.default
-termcolor==3.1.0
+structlog==25.5.0
+    # via
+    #   hatch.envs.default
+    #   pytanis
+termcolor==3.3.0
     # via pytest-sugar
 terminado==0.18.1
     # via
@@ -440,14 +432,11 @@ terminado==0.18.1
     #   jupyter-server-terminals
 tinycss2==1.4.0
     # via bleach
-tomli==2.2.1
+tomli==2.3.0
     # via
     #   hatch.envs.default
-    #   coverage
-    #   jupyterlab
-    #   pytest
-    #   setuptools-scm
-tornado==6.5.1
+    #   pytanis
+tornado==6.5.4
     # via
     #   ipykernel
     #   jupyter-client
@@ -456,10 +445,11 @@ tornado==6.5.1
     #   notebook
     #   terminado
 tqdm==4.67.1
-    # via hatch.envs.default
+    # via
+    #   hatch.envs.default
+    #   pytanis
 traitlets==5.14.3
     # via
-    #   comm
     #   ipykernel
     #   ipython
     #   ipywidgets
@@ -473,49 +463,43 @@ traitlets==5.14.3
     #   nbclient
     #   nbconvert
     #   nbformat
-types-python-dateutil==2.9.0.20250516
-    # via arrow
-types-pytz==2025.2.0.20250516
+types-pytz==2025.2.0.20251108
     # via pandas-stubs
-typing-extensions==4.12.2
+typing-extensions==4.15.0
     # via
     #   anyio
-    #   async-lru
     #   beautifulsoup4
-    #   exceptiongroup
-    #   ipython
-    #   mistune
-    #   multidict
     #   pydantic
     #   pydantic-core
     #   referencing
-tzdata==2024.2
-    # via pandas
+    #   typing-inspection
+typing-inspection==0.4.2
+    # via pydantic
+tzdata==2025.3
+    # via
+    #   arrow
+    #   pandas
 uri-template==1.3.0
     # via jsonschema
-urllib3==2.5.0
-    # via
-    #   requests
-    #   vcrpy
-vcrpy==7.0.0
+urllib3==2.6.2
+    # via requests
+vcrpy==8.1.1
     # via pytest-vcr
-wcwidth==0.2.13
+wcwidth==0.2.14
     # via prompt-toolkit
-webcolors==24.11.1
+webcolors==25.10.0
     # via
-    #   hatch.envs.default
     #   jsonschema
+    #   pytanis
 webencodings==0.5.1
     # via
     #   bleach
     #   tinycss2
-websocket-client==1.8.0
+websocket-client==1.9.0
     # via jupyter-server
-widgetsnbextension==4.0.14
+widgetsnbextension==4.0.15
     # via ipywidgets
-wrapt==1.17.2
-    # via vcrpy
-yarl==1.20.1
+wrapt==2.0.1
     # via vcrpy
 
 # The following packages are considered to be unsafe in a requirements file:

@@ -180,8 +180,8 @@ class Submission(BaseModel):
     abstract: str
     description: str
     duration: int | None = None
-    do_not_record: bool
-    is_featured: bool
+    do_not_record: bool | None = None
+    is_featured: bool = False
     slots: list[Slot] | None = None  # only available after schedule_web release
     slot_count: int
     image: str | None = None
