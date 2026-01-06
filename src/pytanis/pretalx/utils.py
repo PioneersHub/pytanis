@@ -51,8 +51,12 @@ def subs_as_df(
 
     def track_en(track: Track | int | None) -> str | None:
         """Helper to deal with v1 expanded API inconsistency & mypy issues"""
-        if hasattr(track, 'en') and isinstance(track, MultiLingualStr):
-            return track.en
+        if track is None:
+            return None
+        if isinstance(track, int):
+            return None
+        if isinstance(track, Track) and track.name:
+            return track.name.en
         return None
 
     rows = []
