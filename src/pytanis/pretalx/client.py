@@ -108,7 +108,12 @@ class PretalxClient:
         if (api_token := self._config.Pretalx.api_token) is not None:
             headers['Authorization'] = f'Token {api_token}'
 
-        url = URL('https://pretalx.com/').join(endpoint).copy_merge_params(params)
+        # get the pretalx base URL (defaults to pretalx.com)
+        base_url = self._config.Pretalx.api_base_url
+        if not base_url.endswith('/'):
+            base_url += '/'
+
+        url = URL(base_url).join(endpoint).copy_merge_params(params)
         _logger.info(f'GET: {url}')
         # we set the timeout to what is configured, otherwise 60 seconds as the Pretalx API is quite slow
         timeout = self._config.Pretalx.timeout if self._config.Pretalx.timeout else 60.0

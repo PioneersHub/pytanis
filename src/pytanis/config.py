@@ -53,6 +53,7 @@ class PretalxCfg(BaseModel):
 
     api_token: str
     api_version: str = 'v1'
+    api_base_url: str = 'https://pretalx.com/'
     timeout: int | None = None
 
 
