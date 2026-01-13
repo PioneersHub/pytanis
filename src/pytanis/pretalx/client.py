@@ -168,6 +168,7 @@ class PretalxClient:
             'question-options': 'question,question.submission_types,question.tracks',
             'answers': 'options,question,question.submission_types,question.tracks',
             'teams': 'invites,limit_tracks,members',
+            'reviews': 'user',
         }
         if (params is None or 'expand' not in params) and resource in expanders:
             # Always use full expansion by default unless explicitly overridden by providing params
