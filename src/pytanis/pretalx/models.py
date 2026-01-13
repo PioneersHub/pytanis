@@ -209,15 +209,47 @@ class User(BaseModel):
     email: str
 
 
+class ReviewUser(BaseModel):
+    code: str
+    name: str | None = None
+    email: str | None = None
+
+
 class Review(BaseModel):
     id: int
     submission: str
-    user: str
+    user: str | ReviewUser
+
     text: str | None = None
     score: float | None = None  # converted from str if present
-    created: datetime
-    updated: datetime
-    answers: list[str]  # ToDo: Check this type
+    created: datetime | None = None
+    updated: datetime | None = None
+    answers: list[Any] = Field(default_factory=list)  # API returns [] here; keep flexible
+
+    @model_validator(mode='before')
+    @classmethod
+    def _coerce_score(cls, data: Any):
+        """Pretalx sometimes returns score as string like '3.00'."""
+        if isinstance(data, dict) and (s := data.get('score')) is not None:  # noqa: SIM102
+            if isinstance(s, str):
+                try:  # noqa: SIM105
+                    data['score'] = float(s)
+                except ValueError:
+                    # leave as-is, pydantic will raise if it can't parse later
+                    pass
+        return data
+
+    @property
+    def reviewer_code(self) -> str:
+        return self.user if isinstance(self.user, str) else self.user.code
+
+    @property
+    def reviewer_name(self) -> str | None:
+        return None if isinstance(self.user, str) else self.user.name
+
+    @property
+    def reviewer_email(self) -> str | None:
+        return None if isinstance(self.user, str) else self.user.email
 
 
 class RoomAvailability(BaseModel):
