@@ -218,13 +218,13 @@ class ReviewUser(BaseModel):
 class Review(BaseModel):
     id: int
     submission: str
-    user: str | ReviewUser
+    user: str | ReviewUser  # ReviewUser will be used if expand=user is set in the endpoint call.
 
     text: str | None = None
     score: float | None = None  # converted from str if present
     created: datetime | None = None
     updated: datetime | None = None
-    answers: list[Any] = Field(default_factory=list)  # API returns [] here; keep flexible
+    answers: list[Answer] = Field(default_factory=list)  # API returns [] here; keep flexible
 
     @model_validator(mode='before')
     @classmethod
