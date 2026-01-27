@@ -24,8 +24,12 @@ def load_yaml(path: str | Path) -> dict[str, Any]:
         return yaml.safe_load(f)
 
 
-def load_track_mapping(path: str | Path = 'config/track_mapping.yaml') -> tuple[dict[str, str], dict[str, str]]:
-    """Flatten nested track mapping into single dict. loads the mapping of the submissions to reviews. this might have to be updated every year."""
+def load_track_mapping(
+    path: str | Path = 'config/track_mapping.yaml',
+) -> tuple[dict[str, str], dict[str, str]]:
+    """Flatten nested track mapping into single dict.
+    loads the mapping of the submissions to reviews.
+    this might have to be updated every year."""
     data = load_yaml(path)
     mapping: dict[str, str] = {}
     for section in ['general', 'pycon', 'pydata']:
@@ -33,7 +37,9 @@ def load_track_mapping(path: str | Path = 'config/track_mapping.yaml') -> tuple[
     return mapping, data.get('preference_aliases', {})
 
 
-def load_column_mapping(path: str | Path = 'config/column_mapping.yaml') -> dict[str, str]:
+def load_column_mapping(
+    path: str | Path = 'config/column_mapping.yaml',
+) -> dict[str, str]:
     """Google sheet to pretalx mapping"""
     return load_yaml(path)['gsheet_columns']
 
@@ -56,13 +62,15 @@ def build_reviews_df(revs: list[Any]) -> tuple[pd.DataFrame, pd.DataFrame]:
         counts.columns = [Col.submission, Col.nreviews]
     else:
         counts = pd.DataFrame({Col.submission: [], Col.nreviews: []})
-    df = pd.DataFrame({
-        'created': [r.created for r in revs],
-        'updated': [r.updated for r in revs],
-        Col.pretalx_user: [r.reviewer_name or r.reviewer_code for r in revs],
-        'score': [r.score for r in revs],
-        'review': [r.submission for r in revs],
-    })
+    df = pd.DataFrame(
+        {
+            'created': [r.created for r in revs],
+            'updated': [r.updated for r in revs],
+            Col.pretalx_user: [r.reviewer_name or r.reviewer_code for r in revs],
+            'score': [r.score for r in revs],
+            'review': [r.submission for r in revs],
+        }
+    )
     return df, counts
 
 
@@ -102,8 +110,12 @@ def prepare_reviewers(
         else:
             internal_col_map[src] = dst
     df = gsheet_df.rename(columns=internal_col_map).copy()
-    df[Col.track_prefs] = df[Col.track_prefs].apply(lambda x: x.replace(community_map[0], community_map[1]).split(', '))
-    df[Col.track_prefs] = df[Col.track_prefs].apply(lambda prefs: [pref_aliases.get(p, p) for p in prefs])
+    df[Col.track_prefs] = df[Col.track_prefs].apply(
+        lambda x: x.replace(community_map[0], community_map[1]).split(', ')
+    )
+    df[Col.track_prefs] = df[Col.track_prefs].apply(
+        lambda prefs: [pref_aliases.get(p, p) for p in prefs]
+    )
     df = df.loc[~df[Col.pretalx_activated].isna()]
     assign_all = df[Col.email].loc[df[Col.all_proposals] == 'x'].str.strip().tolist()
     revs_grouped = revs_df.groupby(Col.pretalx_user).agg(list).reset_index()
@@ -120,14 +132,14 @@ def prepare_reviewers(
 def validate_mappings(
     revs_user_df: pd.DataFrame,
     gsheet_df: pd.DataFrame,
-    col_mapping: dict[str, str],
 ) -> None:
     """Ensure all reviewers in pretalx can be mapped to gsheet."""
     pretalx_col = 'Pretalx Name'
     known = set(gsheet_df[pretalx_col])
     found = set(revs_user_df[Col.pretalx_user])
     if unmapped := found - known:
-        raise RuntimeError(f'Unmapped review authors: {", ".join(unmapped)}')
+        msg = f'Unmapped review authors: {", ".join(unmapped)}'
+        raise RuntimeError(msg)
 
 
 def plot_reviews_per_proposal(subs_df: pd.DataFrame) -> Axes:
@@ -164,7 +176,9 @@ def plot_reviewer_stats(reviewers_df: pd.DataFrame) -> None:
     ax.set_title('Reviews done per reviewer')
     plt.show()
 
-    top = reviewers_df[[Col.speaker_name, Col.done_nreviews]].sort_values(Col.done_nreviews, ascending=False)
+    top = reviewers_df[[Col.speaker_name, Col.done_nreviews]].sort_values(
+        Col.done_nreviews, ascending=False
+    )
     _, ax = plt.subplots(figsize=(12, 24))
     sns.barplot(top, y=Col.speaker_name, x=Col.done_nreviews)
     ax.set_title('Top reviewers')
@@ -201,18 +215,19 @@ def assign_proposals(
     COL_REM = 'Remaining Assignments'
     COL_N = 'Current #Assignments'
 
-    subs: pd.DataFrame = pickle.loads(pickle.dumps(subs_df))
-    revs: pd.DataFrame = pickle.loads(pickle.dumps(reviewers_df))
+    subs: pd.DataFrame = pickle.loads(pickle.dumps(subs_df))  # noqa: S301
+    revs: pd.DataFrame = pickle.loads(pickle.dumps(reviewers_df))  # noqa: S301
     revs[Col.curr_assignments] = revs['review'].map(list)
 
     reviewer_prefs: set[str] = {p for prefs in revs[Col.track_prefs] for p in prefs}
     sub_tracks: set[str] = set(subs[Col.track].dropna())
 
     if uncovered := sub_tracks - reviewer_prefs:
-        raise RuntimeError(f'No reviewers for tracks: {uncovered}')
-    if unused := reviewer_prefs - sub_tracks:
-        logging.warning(f'Unused reviewer preferences: {unused}')
-
+        msg = f'No reviewers for tracks: {uncovered}'
+        raise RuntimeError(msg)
+    unused = reviewer_prefs - sub_tracks
+    if unused:
+        logging.warning('Unused reviewer preferences: %s', unused)
     subs = subs.sort_values(Col.rem_nreviews, ascending=False)
     assigned_counts = revs[Col.curr_assignments].explode().value_counts()
     subs[COL_N] = subs[Col.submission].map(assigned_counts).fillna(0)
@@ -229,8 +244,7 @@ def assign_proposals(
 
         if not revs.loc[candidates].empty:
             return revs.loc[candidates, COL_N].idxmin()
-
-        logging.warning(f'No preferred reviewer for {sub_code}')
+        logging.warning('No preferred reviewer for %s', sub_code)
         return revs.loc[~already, COL_N].idxmin()
 
     while subs[COL_REM].sum() > 0:
@@ -262,7 +276,7 @@ def add_all_proposals_reviewers(
             row[Col.curr_assignments] = all_codes.copy()
             row[COL_N] = len(all_codes)
             rows.append(row)
-            logging.info(f'Added {email} with all proposals')
+            logging.info('Added %s with all proposals', email)
         else:
             logging.warning(f'{email} not found')
     if rows:
