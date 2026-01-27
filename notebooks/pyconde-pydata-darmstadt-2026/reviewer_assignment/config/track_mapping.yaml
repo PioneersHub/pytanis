@@ -1,0 +1,35 @@
+# submission to reviewer preference (1 to many)
+
+general:
+  "General: Autonomous Systems & AI Agents": "Autonomous Systems"
+  "General: Community": "Community & Professional Development"
+  "General: Community & Diversity": "Community & Professional Development"
+  "General: Ethics & Privacy": "Ethics"
+  "General: Industry & Academia Use-Cases": "Community & Professional Development"
+  "General: Infrastructure - Hardware & Cloud": "DevOps"
+  "General: Others": "Community & Professional Development"
+  "General: Education, Career & Life": "Community & Professional Development"
+  "General: Rust": "Software Engineering & Architecture"
+
+pycon:
+  "PyCon: Django & Web": "Web Frameworks & APIs"
+  "PyCon: Embedded Systems & Robotics": "Autonomous Systems"
+  "PyCon: MLOps & DevOps": "MLOps & Infrastructure ()"
+  "PyCon: Programming & Software Engineering & Testing": "Software Engineering & Architecture"
+  "PyCon: Python Language & Ecosystem": "Python Language & Internals"
+  "PyCon: Security": "Security"
+
+pydata:
+  "PyData: Data Handling & Data Engineering": "Data Engineering"
+  "PyData: Generative AI & Synthetic Data": "Deep Learning Foundations"
+  "PyData: Machine Learning & Deep Learning & Stats": "Classical ML & Tabular Data"
+  "PyData: Machine Learning & Deep Learning & Statistics": "Classical ML & Tabular Data"
+  "PyData: Natural Language Processing & Computer Vision": "Natural Language & Text AI"
+  "PyData: Natural Language Processing & Audio (incl. Generative AI NLP)": "Natural Language & Text AI"
+  "PyData: Computer Vision (incl. Generative AI CV)": "Computer Vision & Image AI"
+  "PyData: PyData & Scientific Libraries Stack": "Data Analysis & Statistics"
+  "PyData: Visualisation & Notebooks": "Visualization & Dashboards"
+
+# this happens when we have many to many
+preference_aliases:
+  "Privacy & Responsible AI": "Ethics"

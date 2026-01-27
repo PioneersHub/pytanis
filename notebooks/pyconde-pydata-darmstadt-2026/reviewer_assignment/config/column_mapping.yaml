@@ -1,0 +1,15 @@
+# Maps Google Sheet columns to internal column names
+gsheet_columns:
+  "Topics you want to review": track_prefs
+  "Email address": invitation_email
+  "Pretalx Mail": email
+  "Name": speaker_name
+  "Affiliation": affiliation
+  "Who do you know from the Committee?": committee_contact
+  "Availability during the Review Period": availability
+  "Additional comments regarding your availability during the review period.": availability_comment
+  "Activated in Pretalx": pretalx_activated
+  "Do you want your name to be listed as a reviewer on the conference website?": public
+  "Wants all proposals": all_proposals
+  "Any additional comments for the Program Committee": comment
+  "Pretalx Name": pretalx_user
