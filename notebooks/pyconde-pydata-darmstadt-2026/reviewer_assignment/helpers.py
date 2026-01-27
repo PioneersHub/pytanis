@@ -62,15 +62,13 @@ def build_reviews_df(revs: list[Any]) -> tuple[pd.DataFrame, pd.DataFrame]:
         counts.columns = [Col.submission, Col.nreviews]
     else:
         counts = pd.DataFrame({Col.submission: [], Col.nreviews: []})
-    df = pd.DataFrame(
-        {
-            'created': [r.created for r in revs],
-            'updated': [r.updated for r in revs],
-            Col.pretalx_user: [r.reviewer_name or r.reviewer_code for r in revs],
-            'score': [r.score for r in revs],
-            'review': [r.submission for r in revs],
-        }
-    )
+    df = pd.DataFrame({
+        'created': [r.created for r in revs],
+        'updated': [r.updated for r in revs],
+        Col.pretalx_user: [r.reviewer_name or r.reviewer_code for r in revs],
+        'score': [r.score for r in revs],
+        'review': [r.submission for r in revs],
+    })
     return df, counts
 
 
@@ -110,12 +108,8 @@ def prepare_reviewers(
         else:
             internal_col_map[src] = dst
     df = gsheet_df.rename(columns=internal_col_map).copy()
-    df[Col.track_prefs] = df[Col.track_prefs].apply(
-        lambda x: x.replace(community_map[0], community_map[1]).split(', ')
-    )
-    df[Col.track_prefs] = df[Col.track_prefs].apply(
-        lambda prefs: [pref_aliases.get(p, p) for p in prefs]
-    )
+    df[Col.track_prefs] = df[Col.track_prefs].apply(lambda x: x.replace(community_map[0], community_map[1]).split(', '))
+    df[Col.track_prefs] = df[Col.track_prefs].apply(lambda prefs: [pref_aliases.get(p, p) for p in prefs])
     df = df.loc[~df[Col.pretalx_activated].isna()]
     assign_all = df[Col.email].loc[df[Col.all_proposals] == 'x'].str.strip().tolist()
     revs_grouped = revs_df.groupby(Col.pretalx_user).agg(list).reset_index()
@@ -176,9 +170,7 @@ def plot_reviewer_stats(reviewers_df: pd.DataFrame) -> None:
     ax.set_title('Reviews done per reviewer')
     plt.show()
 
-    top = reviewers_df[[Col.speaker_name, Col.done_nreviews]].sort_values(
-        Col.done_nreviews, ascending=False
-    )
+    top = reviewers_df[[Col.speaker_name, Col.done_nreviews]].sort_values(Col.done_nreviews, ascending=False)
     _, ax = plt.subplots(figsize=(12, 24))
     sns.barplot(top, y=Col.speaker_name, x=Col.done_nreviews)
     ax.set_title('Top reviewers')
