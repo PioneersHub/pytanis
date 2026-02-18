@@ -8,7 +8,6 @@
 # - pytest-vcr
 # - pytest-sugar
 # - hypothesis
-# - setuptools-scm
 # - pandas<3,>=2
 # - tomli
 # - pydantic>=2.5
@@ -271,7 +270,6 @@ packaging==25.0
     #   matplotlib
     #   nbconvert
     #   pytest
-    #   setuptools-scm
 pandas==2.3.3
     # via
     #   hatch.envs.default
@@ -407,8 +405,6 @@ seaborn==0.13.2
     # via pytanis
 send2trash==2.0.0
     # via jupyter-server
-setuptools-scm==9.2.2
-    # via hatch.envs.default
 six==1.17.0
     # via
     #   gspread-dataframe

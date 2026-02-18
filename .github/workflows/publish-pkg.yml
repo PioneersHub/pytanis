@@ -58,7 +58,7 @@ jobs:
         if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
         run: |
           # Extract version from built wheel
-          WHEEL_VERSION=$(ls dist/*.whl | sed -E 's/.*-([0-9]+\.[0-9]+\.[0-9]+.*)-py3.*/\1/')
+          WHEEL_VERSION=$(ls dist/*.whl | sed -E 's/.*pytanis-([^-]+)-.*/\1/')
           # Get tag without 'v' prefix
           TAG_VERSION=${GITHUB_REF_NAME#v}
 
