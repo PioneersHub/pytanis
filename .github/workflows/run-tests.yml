@@ -25,7 +25,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.10' , '3.11', '3.12', '3.13']
+        python-version: ['3.12', '3.13', '3.14']
 
     steps:
     - uses: actions/checkout@v6
@@ -42,7 +42,7 @@ jobs:
       run: hatch run python --version
 
     - name: Linting
-      if: matrix.python-version == '3.10' && runner.os == 'Linux'
+      if: matrix.python-version == '3.12' && runner.os == 'Linux'
       run: hatch run lint:all
 
     - name: Run tests and track code coverage
