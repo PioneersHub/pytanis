@@ -1,8 +1,5 @@
 """PyTanis - Python client for Pretalx."""
 
-__version__ = '0.9.6'
-
-from importlib.metadata import PackageNotFoundError, version
 from typing import TYPE_CHECKING
 
 import structlog.stdlib
@@ -25,11 +22,9 @@ if TYPE_CHECKING:
     from pytanis.helpdesk import HelpDeskClient
 
 try:
-    __version__ = version('pytanis')
-except PackageNotFoundError:  # pragma: no cover
+    from pytanis._version import __version__
+except ImportError:  # pragma: no cover
     __version__ = 'unknown'
-finally:
-    del version, PackageNotFoundError
 
 __all__ = [
     'GSheetsClient',

@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling", "setuptools-scm", "setuptools", "wheel"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 ####################
@@ -89,8 +89,10 @@ Source = "https://github.com/PioneersHub/pytanis"
 allow-direct-references = true
 
 [tool.hatch.version]
-path = "src/pytanis/__init__.py"
-pattern = "__version__ = [\"'](?P<version>[^\"']*)[\"']"
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/pytanis/_version.py"
 
 [tool.hatch.build]
 packages = ["src/pytanis"]
@@ -270,7 +272,6 @@ dependencies = [
     "pytest-vcr",
     "pytest-sugar",
     "hypothesis",
-    "setuptools-scm",
 ]
 [tool.hatch.envs.default.scripts]
 cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/pytanis --cov=tests {args}"
