@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.10.0 (2026-02-18)
+
+- many internal changes due to the Pretalx API changes.
+
 ## Patch 0.9.6 (2025-08-11)
 
 - replaced requests with httpx for consistency and removed requests dependency
