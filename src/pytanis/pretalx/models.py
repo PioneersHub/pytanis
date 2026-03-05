@@ -102,6 +102,7 @@ class Speaker(SubmissionSpeaker):
 
 
 class Slot(BaseModel):
+    id: int | None = None
     start: datetime | None = None
     end: datetime | None = None
     room: MultiLingualStr | None = None

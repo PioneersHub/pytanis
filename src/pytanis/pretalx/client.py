@@ -96,6 +96,19 @@ class PretalxClient:
         self._caches_populated.clear()
         _logger.info('All caches cleared')
 
+    def _patch(self, endpoint: str, data: dict) -> Response:
+        """Send a PATCH request to the Pretalx API"""
+        headers = {'Pretalx-Version': self._config.Pretalx.api_version}
+        if (api_token := self._config.Pretalx.api_token) is not None:
+            headers['Authorization'] = f'Token {api_token}'
+        base_url = self._config.Pretalx.api_base_url
+        if not base_url.endswith('/'):
+            base_url += '/'
+        url = URL(base_url).join(endpoint)
+        _logger.info(f'PATCH: {url}')
+        timeout = self._config.Pretalx.timeout if self._config.Pretalx.timeout else 60.0
+        return httpx.patch(url, json=data, timeout=timeout, headers=headers, follow_redirects=True)
+
     def _get(self, endpoint: str, params: QueryParams | dict | None = None) -> Response:
         """Retrieve data via GET request"""
         if params is None:
@@ -331,6 +344,38 @@ class PretalxClient:
     def tracks(self, event_slug: str, *, params: QueryParams | dict | None = None) -> tuple[int, Iterator[Track]]:
         """Lists all tracks and their details"""
         return self._endpoint_lst(Track, event_slug, 'tracks', params=params)
+
+    def wip_slots(self, event_slug: str, *, params: QueryParams | dict | None = None) -> tuple[int, Iterator[JSONObj]]:
+        """Lists all WIP (work-in-progress) schedule slots for an event.
+
+        Returns raw JSON dicts with fields: id, submission, room, room_id, start, end.
+        Slots with ``submission=None`` are breaks or similar non-talk entries.
+
+        Note: Requires organizer permissions with scheduling access.
+        """
+        # The slots endpoint defaults to the latest *published* schedule.
+        # Use the special /schedules/wip/ path to get the WIP schedule ID, then filter by it.
+        wip_schedule = cast(JSONObj, self._get_one(f'/api/events/{event_slug}/schedules/wip/'))
+        wip_id = wip_schedule['id']
+        params_ = dict(params) if params else {}
+        params_['schedule'] = wip_id
+        endpoint = f'/api/events/{event_slug}/slots/'
+        return self._get_many(endpoint, params_)
+
+    def patch_slot(self, event_slug: str, slot_id: int, data: dict) -> JSONObj:
+        """Partially update a WIP schedule slot.
+
+        Args:
+            event_slug: The event identifier.
+            slot_id: The numeric slot ID to update.
+            data: Fields to update, e.g. ``{'room': room_id, 'start': iso_str, 'end': iso_str}``.
+
+        Note: Only slots in the WIP schedule can be changed - frozen schedule versions are read-only.
+        """
+        endpoint = f'/api/events/{event_slug}/slots/{slot_id}/'
+        resp = self._patch(endpoint, data)
+        resp.raise_for_status()
+        return cast(JSONObj, resp.json())
 
     @classmethod
     def __validate(cls, model_type, result):
