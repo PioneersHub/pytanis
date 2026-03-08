@@ -26,6 +26,7 @@ title usually had responsibility for presiding over councils of some kind, which
 - [x] tools to assign proposals to reviewers based on constraints like preferences
 - [x] tools to support the final selection process of proposals
 - [x] tools to support the creation of the final program schedule
+- [x] tools to support the update of the final program schedule to [Pretalx]
 
 ## Getting started
 
@@ -163,6 +164,40 @@ python scripts/run_pretalx_integration_tests.py --token YOUR_TOKEN --event pycon
 
 See [tests/pretalx/README_INTEGRATION.md](tests/pretalx/README_INTEGRATION.md) for more details.
 
+
+## Running the Schedule Notebook
+
+To run `notebooks/pyconde-pydata-darmstadt-2026/50_write_schedule_to_pretalx_v1.ipynb`, complete the standard setup in [Getting started](#getting-started) (Pretalx token + Google credentials). Then additionally:
+
+**1. Launch the notebook environment:**
+
+```bash
+hatch run notebook:lab
+```
+
+**2. Create the notebook-level `config.toml`** at `notebooks/pyconde-pydata-darmstadt-2026/config.toml`:
+
+```toml
+event_name = "pyconde-pydata-darmstadt-2026"
+schedule_spread_id = "<Google Sheet ID from the URL>"
+schedule_work_name = "<worksheet tab name>"
+```
+
+The `schedule_spread_id` is the long ID in the Google Sheet URL: `https://docs.google.com/spreadsheets/d/THIS_PART_HERE/edit`
+
+The tab should have column headers `Day,	Session,	Slot,	Time,	room_name_1, room_name 2, ...`. For instance:
+|   Day   | Session |  Slot  |      Time     |                                              Zeiss Plenary (Spectrum) Cap: 100%                                              |                                                   Titanium [2nd Floor] Cap: 23%                                                  |
+|:-------:|:-------:|:------:|:-------------:|:----------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------:|
+| Tuesday | Morning | First  | 11:45 - 12:10 | talk_title PyCon: talk_topics  talk_duration | talk_title PyCon: talk_topics  talk_duration               |
+| Tuesday | Morning | Second | 12:25 - 13:05 | talk_title PyCon: talk_topics  talk_duration Sponsored                                                               | talk_title PyCon: talk_topics  talk_duration |
+
+**3. Update the configuration cell** with the correct conference dates (`CONF_DATES`), timezone (`TIMEZONE`), and room name mappings (`ROOM_MAP`).
+
+**4. Use `DRY_RUN`** — set `DRY_RUN = True` to preview what would be written without touching Pretalx. Set it to `False` to actually write.
+
+**5. Convert the last markdown cell to code** — publish the schedule that has been automatically uploaded to Pretalx.
+
+
 ## Documentation
 
 The [documentation] is made with [Material for MkDocs] and is hosted by [GitHub Pages]. Your help to extend the
@@ -206,78 +241,3 @@ To start this project off a lot of inspiration and code was taken from [Alexande
 [Dev Containers Extension]: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
 [Mailgun]: https://www.mailgun.com/
 [pipx]: https://pipx.pypa.io/
-
-## Running the Schedule Notebook
-
-Step-by-step guide to run `notebooks/pyconde-pydata-darmstadt-2026/50_write_schedule_to_pretalx_v1.ipynb`.
-
-### Step 1 — Install pytanis and dependencies via hatch
-
-The notebook environment is defined in `pyproject.toml` under `[tool.hatch.envs.notebook]`. Run it through hatch (which manages its own Python 3.12 env):
-
-```bash
-source .venv/bin/activate
-hatch run notebook:lab
-```
-
-Hatch will install all required packages (including `structlog`, `pandas`, `pytanis`, `jupyter`) automatically on first run.
-
-### Step 2 — Create `~/.pytanis/config.toml`
-
-```bash
-mkdir -p ~/.pytanis
-```
-
-Then create `~/.pytanis/config.toml`:
-
-```toml
-[Pretalx]
-api_token = "your-pretalx-token"
-
-[Google]
-client_secret_json = "client_secret.json"
-token_json = "token.json"
-service_user_authentication = false
-```
-
-- Get your **Pretalx token** from the [Pretalx user settings].
-- Get **Google credentials** by following the [Python Quickstart for the Google API], download `client_secret.json` and place it in `~/.pytanis/`.
-
-### Step 3 — Create the notebook-level `config.toml`
-
-Create `notebooks/pyconde-pydata-darmstadt-2026/config.toml`:
-
-```toml
-event_name = "pyconde-pydata-darmstadt-2026"
-schedule_spread_id = "<Google Sheet ID from the URL>"
-schedule_work_name = "<worksheet tab name>"
-```
-
-The `schedule_spread_id` is the long ID in the Google Sheet URL:
-`https://docs.google.com/spreadsheets/d/THIS_PART_HERE/edit`
-
-### Step 4 — Authenticate with Google
-
-On first run, `GSheetsClient()` will open a browser for OAuth. Make sure:
-- `client_secret.json` is in `~/.pytanis/`
-- You are running in an environment with browser access (not a headless server)
-
-After auth, `token.json` will be saved automatically to `~/.pytanis/`.
-
-### Step 5 — Open and configure the notebook
-
-In JupyterLab, open the notebook and update the configuration cell with the correct conference dates and session start times.
-
-### Step 6 — Run with `DRY_RUN = True` first
-
-The notebook defaults to `DRY_RUN = True` — this prints what would be written without touching Pretalx. Run all cells and verify the output looks correct before setting `DRY_RUN = False`.
-
-### Summary checklist
-
-- [ ] `hatch run notebook:lab` works (deps installed)
-- [ ] `~/.pytanis/config.toml` created with Pretalx token
-- [ ] `~/.pytanis/client_secret.json` in place
-- [ ] `notebooks/pyconde-pydata-darmstadt-2026/config.toml` created with `event_name`, `schedule_spread_id`, `schedule_work_name`
-- [ ] Google OAuth completed (`token.json` generated)
-- [ ] Notebook config cell updated with correct dates/times
-- [ ] Dry run passes validation before writing
