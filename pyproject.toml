@@ -382,7 +382,7 @@ all = [
 [tool.hatch.envs.notebook]
 type = "pip-compile"
 pip-compile-constraint = "default"
-features = ["jupyter"]
+features = ["jupyter", "google"]
 dependencies = [
     "mypy",
     "ruff",
