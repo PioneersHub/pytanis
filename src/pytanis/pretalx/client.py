@@ -96,8 +96,8 @@ class PretalxClient:
         self._caches_populated.clear()
         _logger.info('All caches cleared')
 
-    def _patch(self, endpoint: str, data: dict) -> Response:
-        """Send a PATCH request to the Pretalx API"""
+    def _write(self, method: str, endpoint: str, data: dict) -> Response:
+        """Send a writing request (PATCH, POST) to the Pretalx API"""
         headers = {'Pretalx-Version': self._config.Pretalx.api_version}
         if (api_token := self._config.Pretalx.api_token) is not None:
             headers['Authorization'] = f'Token {api_token}'
@@ -105,9 +105,17 @@ class PretalxClient:
         if not base_url.endswith('/'):
             base_url += '/'
         url = URL(base_url).join(endpoint)
-        _logger.info(f'PATCH: {url}')
+        _logger.info(f'{method}: {url}')
         timeout = self._config.Pretalx.timeout if self._config.Pretalx.timeout else 60.0
-        return httpx.patch(url, json=data, timeout=timeout, headers=headers, follow_redirects=True)
+        return httpx.request(method, url, json=data, timeout=timeout, headers=headers, follow_redirects=True)
+
+    def _patch(self, endpoint: str, data: dict) -> Response:
+        """Send a PATCH request to the Pretalx API"""
+        return self._write('PATCH', endpoint, data)
+
+    def _post(self, endpoint: str, data: dict) -> Response:
+        """Send a POST request to the Pretalx API"""
+        return self._write('POST', endpoint, data)
 
     def _get(self, endpoint: str, params: QueryParams | dict | None = None) -> Response:
         """Retrieve data via GET request"""
@@ -374,6 +382,26 @@ class PretalxClient:
         """
         endpoint = f'/api/events/{event_slug}/slots/{slot_id}/'
         resp = self._patch(endpoint, data)
+        resp.raise_for_status()
+        return cast(JSONObj, resp.json())
+
+    def team(self, organiser: str, name: str) -> JSONObj:
+        """Return the team with exactly this name, with its members and open invites expanded.
+
+        Organiser endpoints need a token that is valid for all events of the organiser.
+        """
+        endpoint = f'/api/organisers/{organiser}/teams/'
+        resp = cast(JSONObj, self._get_one(endpoint, {'q': name, 'expand': 'members,invites'}))
+        teams = [team for team in resp['results'] if team['name'] == name]
+        if len(teams) != 1:
+            msg = f'Expected one team named {name!r} at organiser {organiser!r}, found {len(teams)}'
+            raise RuntimeError(msg)
+        return teams[0]
+
+    def invite_to_team(self, organiser: str, team_id: int, email: str) -> JSONObj:
+        """Invite an email address to a team. Pretalx sends the invitation mail."""
+        endpoint = f'/api/organisers/{organiser}/teams/{team_id}/invite/'
+        resp = self._post(endpoint, {'email': email})
         resp.raise_for_status()
         return cast(JSONObj, resp.json())
 
