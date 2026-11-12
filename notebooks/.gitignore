@@ -3,3 +3,10 @@
 # Except this file and .gitignore in sub directories
 !.gitignore
 **/.ipynb_checkpoints
+
+# Data the notebooks read or write (submissions, votes, assignments, models, timetables)
+*.pkl
+*.csv
+*.xlsx
+*.mps
+*.json
