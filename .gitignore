@@ -94,3 +94,9 @@ CLAUDE.local.md
 *.chat.md
 *conversation*.md
 *chatlog*.md
+
+# Google OAuth client secret (the dummy in tests/cfgs stays tracked)
+/client_secret.json
+
+# HiGHS solution files written by the scheduling notebooks
+*.sol

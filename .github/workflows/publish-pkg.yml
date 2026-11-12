@@ -39,6 +39,11 @@ jobs:
           echo "Nearest tag for current commit:"
           git describe --tags --always || echo "⚠️ No tag found for current commit"
 
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
       - name: Install Hatch & pre-commit
         run: pip install --upgrade --pre hatch pre-commit
 
