@@ -1,0 +1,10 @@
+user_objective_scale = -7
+mip_heuristic_effort = 0.2
+
+# Stop when best possible improvement < 1 unscaled unit
+# scaled by 10^-7: 1 / 10^7 = 1e-7
+mip_abs_gap = 1e-7
+
+# DO NOT set mip_rel_gap — it would cut off your lower objective tiers
+mip_heuristic_effort = 0.5
+threads = 14
